@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { withCookies } from 'react-cookie';
-const client = require('../../rest/client');
-const follow = require('../../rest/follow');
+const client = require('../rest/client');
+const follow = require('../rest/follow');
 const root = 'http://localhost:8080/api';
 
 class CreateArticle extends React.Component {

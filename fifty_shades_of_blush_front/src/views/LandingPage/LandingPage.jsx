@@ -1,16 +1,17 @@
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
+
 import Container from '@material-ui/core/Container';
-import Header from './components/header/Header';
-import RecentArticles from './components/recentArticles/RecentArticles';
-import CreateArticle from './components/createArticle/CreateArticle.js'
+import Header from '../components/header/Header';
+import RecentArticles from '../components/recentArticles/RecentArticles.jsx';
+import CreateArticle from '../components/createArticle/CreateArticle.jsx'
 
 const when = require('when');
-const client = require('./rest/client');
-const follow = require('./rest/follow');
+const client = require('../components/rest/client');
+const follow = require('../components/rest/follow');
 const root = 'http://localhost:8080/api';
 
-class App extends React.Component {
+class LandingPage extends React.Component {
 
   constructor(props) {
     super(props);
@@ -58,16 +59,16 @@ class App extends React.Component {
 
     return (
       <CookiesProvider>
-        <div className="App">
-          <Container maxWidth="lg">
-            <Header />
-            <RecentArticles articles={this.state.articles} />
-            <CreateArticle attributes={this.state.attributes}/>
-          </Container>
-        </div>
+          <div className="App">
+            <Container maxWidth="lg">
+              <Header />
+              <RecentArticles articles={this.state.articles} />
+              <CreateArticle attributes={this.state.attributes} />
+            </Container>
+          </div>
       </CookiesProvider>
     );
   }
 }
 
-export default App;
+export default LandingPage;

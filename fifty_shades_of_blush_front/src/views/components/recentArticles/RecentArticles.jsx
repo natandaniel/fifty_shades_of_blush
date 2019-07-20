@@ -1,6 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import RecentArticle from './RecentArticle';
+import RecentArticle from './RecentArticle.jsx';
 import './RecentArticles.css'
 
 
@@ -29,4 +29,3 @@ class RecentArticles extends React.Component {
 }
 
 export default RecentArticles;
-
