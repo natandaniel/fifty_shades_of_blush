@@ -54,7 +54,6 @@ export default function Header() {
 
         <div className={classes.root}>
             <Toolbar className={classes.toolbar}>
-                <Button size="small">Subscribe</Button>
                 <Typography
                     component="h2"
                     variant="h5"
@@ -65,14 +64,8 @@ export default function Header() {
                 >
                     Fifty Shades Of Blush
               </Typography>
-                <IconButton>
-                    <SearchIcon />
-                </IconButton>
-                <Button variant="outlined" size="small">
-                    Sign up
-              </Button>
             </Toolbar>
-            <img className={classes.headerImg} src={headerBgImg} width="700" height="282" alt="banner"/>
+            <img className={classes.headerImg} src={headerBgImg} width="700" height="282" alt="banner" />
             <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
                 {sections.map(section => (
                     <Link
@@ -80,8 +73,9 @@ export default function Header() {
                         noWrap
                         key={section}
                         variant="body2"
-                        href="#"
+                        href={"/" + section}
                         className={classes.toolbarLink}
+                        to={"/" + section}
                     >
                         {section}
                     </Link>

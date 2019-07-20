@@ -1,10 +1,8 @@
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
-
-import Container from '@material-ui/core/Container';
-import Header from '../components/header/Header';
 import RecentArticles from '../components/recentArticles/RecentArticles.jsx';
-import CreateArticle from '../components/createArticle/CreateArticle.jsx'
+import CreateArticle from '../components/createArticle/CreateArticle.jsx';
+import Header from '../components/header/Header.jsx'
 
 const when = require('when');
 const client = require('../components/rest/client');
@@ -59,13 +57,11 @@ class LandingPage extends React.Component {
 
     return (
       <CookiesProvider>
-          <div className="App">
-            <Container maxWidth="lg">
-              <Header />
-              <RecentArticles articles={this.state.articles} />
-              <CreateArticle attributes={this.state.attributes} />
-            </Container>
-          </div>
+        <div className="App">
+          <Header/>
+          <RecentArticles articles={this.state.articles} />
+          <CreateArticle attributes={this.state.attributes} />
+        </div>
       </CookiesProvider>
     );
   }
