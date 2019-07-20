@@ -1,7 +1,9 @@
 import React from 'react';
+import { CookiesProvider } from 'react-cookie';
 import Container from '@material-ui/core/Container';
 import Header from './components/header/Header';
 import RecentArticles from './components/recentArticles/RecentArticles';
+import CreateArticle from './components/createArticle/CreateArticle.js'
 
 const when = require('when');
 const client = require('./rest/client');
@@ -12,12 +14,12 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { articles: [], pageSize: 5 };
-  } 
+    this.state = { articles: [], recentArticles: [], attributes: [], authenticatedUser: {}, page: 1, links: {} };
+  }
 
-  loadFromServer(pageSize) {
+  loadFromServer() {
     follow(client, root, [
-      { rel: 'articles', params: { size: pageSize } }]
+      { rel: 'articles', params: {} }]
     ).then(articleCollections => {
       return client({
         method: 'GET',
@@ -43,25 +45,27 @@ class App extends React.Component {
         page: this.page,
         articles: articles,
         attributes: Object.keys(this.schema.properties),
-        pageSize: pageSize,
         links: this.links
       });
     });
   }
- 
+
   componentDidMount() {
-		this.loadFromServer(this.state.pageSize);
-	}
+    this.loadFromServer();
+  }
 
   render() {
 
     return (
-      <div className="App">
-        <Container maxWidth="lg">
-          <Header />
-          <RecentArticles articles={this.state.articles} />
-        </Container>
-      </div>
+      <CookiesProvider>
+        <div className="App">
+          <Container maxWidth="lg">
+            <Header />
+            <RecentArticles articles={this.state.articles} />
+            <CreateArticle attributes={this.state.attributes}/>
+          </Container>
+        </div>
+      </CookiesProvider>
     );
   }
 }
