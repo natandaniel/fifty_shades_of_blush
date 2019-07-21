@@ -25,7 +25,7 @@ class CreateArticle extends React.Component {
             method: 'POST',
             path: response.entity._links.self.href,
             entity: newArticle,
-            headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': this.state.csrfToken }
+            headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': this.state.csrfToken, 'Authorization': 'Basic bmF0YW5kYW5pZWw6bmF0YW5kYW5pZWw=' }
           })
         })
       }

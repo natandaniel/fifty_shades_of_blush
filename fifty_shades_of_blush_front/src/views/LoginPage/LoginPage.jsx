@@ -15,6 +15,8 @@ import Container from '@material-ui/core/Container';
 
 import loginPageStyle from "../../assets/jss/views/loginPage.jsx";
 
+const root = 'http://localhost:8080/api';
+
 
 class LoginPage extends React.Component {
 
@@ -35,7 +37,7 @@ class LoginPage extends React.Component {
           <Typography component="h1" variant="h5">
             Sign in
         </Typography>
-          <form className={classes.form} noValidate>
+          <form className={classes.form} method="POST" action={root + "/login"}>
             <TextField
               variant="outlined"
               margin="normal"

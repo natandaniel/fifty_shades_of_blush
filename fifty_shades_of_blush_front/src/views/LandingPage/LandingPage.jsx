@@ -20,17 +20,17 @@ class LandingPage extends React.Component {
     follow(client, root, [
       { rel: 'articles', params: {} }]
     ).then(articleCollection => {
+      this.page = articleCollection.entity.page;
+      this.links = articleCollection.entity._links;
       return client({
         method: 'GET',
         path: articleCollection.entity._links.profile.href,
         headers: { 'Accept': 'application/schema+json' }
       }).then(schema => {
         this.schema = schema.entity;
-        this.links = articleCollection.entity._links;
         return articleCollection;
       });
     }).then(articleCollection => {
-      this.page = articleCollection.entity.page;
       return client({
         method: 'GET',
         path: articleCollection.entity._links.recent.href
@@ -63,12 +63,9 @@ class LandingPage extends React.Component {
     return (
       <CookiesProvider>
         <div className="App">
-
           <Header />
-
           <RecentArticles articles={this.state.recentArticles} />
           <CreateArticle attributes={this.state.attributes} />
-
         </div>
       </CookiesProvider >
     );
