@@ -13,36 +13,41 @@ class LandingPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { articles: [], recentArticles: [], attributes: [], authenticatedUser: {}, page: 1, links: {} };
+    this.state = { articles: [], recentArticles: [], attributes: [], authenticatedUser: {}, page: {}, links: {} };
   }
 
   loadFromServer() {
     follow(client, root, [
       { rel: 'articles', params: {} }]
-    ).then(articleCollections => {
+    ).then(articleCollection => {
       return client({
         method: 'GET',
-        path: articleCollections.entity._links.profile.href,
+        path: articleCollection.entity._links.profile.href,
         headers: { 'Accept': 'application/schema+json' }
       }).then(schema => {
         this.schema = schema.entity;
-        this.links = articleCollections.entity._links;
-        return articleCollections;
+        this.links = articleCollection.entity._links;
+        return articleCollection;
       });
-    }).then(articleCollections => {
-      this.page = articleCollections.entity.page;
-      return articleCollections.entity._embedded.articles.map(article =>
-        client({
-          method: 'GET',
-          path: article._links.self.href
-        })
-      );
+    }).then(articleCollection => {
+      this.page = articleCollection.entity.page;
+      return client({
+        method: 'GET',
+        path: articleCollection.entity._links.recent.href
+      }).then(recents => {
+        return recents.entity._embedded.articleResources.map(article =>
+          client({
+            method: 'GET',
+            path: article._links.self.href
+          })
+        );
+      });
     }).then(articlePromises => {
       return when.all(articlePromises);
-    }).done(articles => {
+    }).done(recentArticles => {
       this.setState({
         page: this.page,
-        articles: articles,
+        recentArticles: recentArticles,
         attributes: Object.keys(this.schema.properties),
         links: this.links
       });
@@ -58,11 +63,14 @@ class LandingPage extends React.Component {
     return (
       <CookiesProvider>
         <div className="App">
-          <Header/>
-          <RecentArticles articles={this.state.articles} />
+
+          <Header />
+
+          <RecentArticles articles={this.state.recentArticles} />
           <CreateArticle attributes={this.state.attributes} />
+
         </div>
-      </CookiesProvider>
+      </CookiesProvider >
     );
   }
 }
