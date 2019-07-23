@@ -1,12 +1,14 @@
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
-import RecentArticles from '../components/recentArticles/RecentArticles.jsx';
-import CreateArticle from '../components/createArticle/CreateArticle.jsx';
-import Header from '../components/header/Header.jsx'
+import Paper from '@material-ui/core/Paper';
+import RecentArticles from '../../components/recentArticles/RecentArticles.jsx';
+import Header from '../../components/header/Header.jsx'
+
+import '../../assets/css/landingPage.css'
 
 const when = require('when');
-const client = require('../components/rest/client');
-const follow = require('../components/rest/follow');
+const client = require('../../components/rest/client');
+const follow = require('../../components/rest/follow');
 const root = 'http://localhost:8080/api';
 
 class LandingPage extends React.Component {
@@ -93,7 +95,7 @@ class LandingPage extends React.Component {
           recentLifestyleArticles: recentLifestyleArticles
         });
       })
-    
+
     });
   }
 
@@ -107,10 +109,14 @@ class LandingPage extends React.Component {
       <CookiesProvider>
         <div className="App">
           <Header />
-          <RecentArticles recentArticles={this.state.recentBeautyArticles} />
-          <RecentArticles recentArticles={this.state.recentFashionArticles} />
-          <RecentArticles recentArticles={this.state.recentTravelArticles} />
-          <RecentArticles recentArticles={this.state.recentLifestyleArticles} />
+          <div className="root">
+          <Paper className="paper">
+              <RecentArticles recentArticles={this.state.recentBeautyArticles} />
+              <RecentArticles recentArticles={this.state.recentFashionArticles} />
+              <RecentArticles recentArticles={this.state.recentTravelArticles} />
+              <RecentArticles recentArticles={this.state.recentLifestyleArticles} />
+          </Paper>
+          </div>
         </div>
       </CookiesProvider >
     );

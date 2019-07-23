@@ -1,8 +1,6 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import RecentArticle from './RecentArticle.jsx';
-import './RecentArticles.css'
-
 
 class RecentArticles extends React.Component {
 
@@ -13,16 +11,14 @@ class RecentArticles extends React.Component {
     render() {
 
         const recentArticles = this.props.recentArticles.map(article =>
-            <Grid item xs key={article.entity._links.self.href}>
+            <Grid item xs={6} key={article.entity._links.self.href}>
                 <RecentArticle article={article} />
             </Grid>);
 
         return (
-            <div className="root">
-                <Grid container spacing={3}>
-                    {recentArticles}
-                </Grid>
-            </div>
+            <Grid container spacing={2}>
+                {recentArticles}
+            </Grid>
         );
     }
 
