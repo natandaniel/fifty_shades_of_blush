@@ -13,27 +13,18 @@ class LandingPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { articles: [], recentArticles: [], attributes: [], authenticatedUser: {}, page: {}, links: {} };
+    this.state = { recentBeautyArticles: [], recentFashionArticles: [], recentTravelArticles: [], recentLifestyleArticles: [] };
   }
 
   loadFromServer() {
+
     follow(client, root, [
       { rel: 'articles', params: {} }]
     ).then(articleCollection => {
-      this.page = articleCollection.entity.page;
-      this.links = articleCollection.entity._links;
-      return client({
+
+      client({
         method: 'GET',
-        path: articleCollection.entity._links.profile.href,
-        headers: { 'Accept': 'application/schema+json' }
-      }).then(schema => {
-        this.schema = schema.entity;
-        return articleCollection;
-      });
-    }).then(articleCollection => {
-      return client({
-        method: 'GET',
-        path: articleCollection.entity._links.recent.href
+        path: articleCollection.entity._links.recentBeauty.href
       }).then(recents => {
         return recents.entity._embedded.articleResources.map(article =>
           client({
@@ -41,16 +32,68 @@ class LandingPage extends React.Component {
             path: article._links.self.href
           })
         );
-      });
-    }).then(articlePromises => {
-      return when.all(articlePromises);
-    }).done(recentArticles => {
-      this.setState({
-        page: this.page,
-        recentArticles: recentArticles,
-        attributes: Object.keys(this.schema.properties),
-        links: this.links
-      });
+      }).then(articlePromises => {
+        return when.all(articlePromises);
+      }).done(recentBeautyArticles => {
+        this.setState({
+          recentBeautyArticles: recentBeautyArticles
+        });
+      })
+
+      client({
+        method: 'GET',
+        path: articleCollection.entity._links.recentFashion.href
+      }).then(recents => {
+        return recents.entity._embedded.articleResources.map(article =>
+          client({
+            method: 'GET',
+            path: article._links.self.href
+          })
+        );
+      }).then(articlePromises => {
+        return when.all(articlePromises);
+      }).done(recentFashionArticles => {
+        this.setState({
+          recentFashionArticles: recentFashionArticles
+        });
+      })
+
+      client({
+        method: 'GET',
+        path: articleCollection.entity._links.recentTravel.href
+      }).then(recents => {
+        return recents.entity._embedded.articleResources.map(article =>
+          client({
+            method: 'GET',
+            path: article._links.self.href
+          })
+        );
+      }).then(articlePromises => {
+        return when.all(articlePromises);
+      }).done(recentTravelArticles => {
+        this.setState({
+          recentTravelArticles: recentTravelArticles
+        });
+      })
+
+      client({
+        method: 'GET',
+        path: articleCollection.entity._links.recentLifestyle.href
+      }).then(recents => {
+        return recents.entity._embedded.articleResources.map(article =>
+          client({
+            method: 'GET',
+            path: article._links.self.href
+          })
+        );
+      }).then(articlePromises => {
+        return when.all(articlePromises);
+      }).done(recentLifestyleArticles => {
+        this.setState({
+          recentLifestyleArticles: recentLifestyleArticles
+        });
+      })
+    
     });
   }
 
@@ -64,8 +107,10 @@ class LandingPage extends React.Component {
       <CookiesProvider>
         <div className="App">
           <Header />
-          <RecentArticles articles={this.state.recentArticles} />
-          <CreateArticle attributes={this.state.attributes} />
+          <RecentArticles recentArticles={this.state.recentBeautyArticles} />
+          <RecentArticles recentArticles={this.state.recentFashionArticles} />
+          <RecentArticles recentArticles={this.state.recentTravelArticles} />
+          <RecentArticles recentArticles={this.state.recentLifestyleArticles} />
         </div>
       </CookiesProvider >
     );

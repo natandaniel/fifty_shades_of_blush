@@ -12,7 +12,7 @@ class RecentArticles extends React.Component {
 
     render() {
 
-        const recentArticles = this.props.articles.map(article =>
+        const recentArticles = this.props.recentArticles.map(article =>
             <Grid item xs key={article.entity._links.self.href}>
                 <RecentArticle article={article} />
             </Grid>);
