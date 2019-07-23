@@ -1,8 +1,8 @@
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
-import Paper from '@material-ui/core/Paper';
 import RecentArticles from '../../components/recentArticles/RecentArticles.jsx';
 import Header from '../../components/header/Header.jsx'
+import Footer from '../../components/footer/Footer.jsx'
 
 import '../../assets/css/landingPage.css'
 
@@ -107,17 +107,12 @@ class LandingPage extends React.Component {
 
     return (
       <CookiesProvider>
-        <div className="App">
-          <Header />
-          <div className="root">
-          <Paper className="paper">
-              <RecentArticles recentArticles={this.state.recentBeautyArticles} />
-              <RecentArticles recentArticles={this.state.recentFashionArticles} />
-              <RecentArticles recentArticles={this.state.recentTravelArticles} />
-              <RecentArticles recentArticles={this.state.recentLifestyleArticles} />
-          </Paper>
-          </div>
-        </div>
+        <Header />
+        <RecentArticles recentArticles={this.state.recentBeautyArticles} />
+        <RecentArticles recentArticles={this.state.recentFashionArticles} />
+        <RecentArticles recentArticles={this.state.recentTravelArticles} />
+        <RecentArticles recentArticles={this.state.recentLifestyleArticles} />
+        <Footer/>
       </CookiesProvider >
     );
   }

@@ -15,15 +15,14 @@ class RecentArticle extends React.Component {
       }
 
   render() {
-
     return (
         <Card className="card" key={this.props.article.entity._links.self.href}>
           <CardActionArea>
             <CardMedia
               component="img"
               alt={this.props.article.entity.type}
-              height="280"
-              image={require("../../assets/img/header-bg.JPG")}
+              height="200"
+              image={require(`../../assets/img/${this.props.article.entity.imgName}.jpg`)}
               title={this.props.article.entity.title}
             />
             <CardContent>
