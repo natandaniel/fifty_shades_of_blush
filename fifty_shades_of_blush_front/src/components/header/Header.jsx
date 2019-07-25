@@ -38,10 +38,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const sections = [
-    'Beauty',
-    'Fashion',
-    'Travel',
-    'Lifestyle'
+    'beauty',
+    'fashion',
+    'travel',
+    'lifestyle'
 ];
 
 export default function Header() {
@@ -74,7 +74,7 @@ export default function Header() {
                         className={classes.toolbarLink}
                         to={"/" + section}
                     >
-                        {section}
+                        {section.toUpperCase()}
                     </Link>
                 ))}
             </Toolbar>

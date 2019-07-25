@@ -20,11 +20,11 @@ ReactDOM.render(
     <Container maxWidth="lg">
       <Switch>
         <Route exact path="/" component={LandingPage} />
-        <Route path="/Login" component={LoginPage} />
-        <Route path="/Beauty" component={BeautyPage} />
-        <Route path="/Fashion" component={FashionPage} />
-        <Route path="/Travel" component={TravelPage} />
-        <Route path="/Lifestyle" component={LifestylePage} />
+        <Route path="/login" component={LoginPage} />
+        <Route path="/beauty" component={BeautyPage} />
+        <Route path="/fashion" component={FashionPage} />
+        <Route path="/travel" component={TravelPage} />
+        <Route path="/lifestyle" component={LifestylePage} />
       </Switch>
     </Container>
   </Router>,
