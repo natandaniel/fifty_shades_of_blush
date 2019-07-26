@@ -1,9 +1,6 @@
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
 import RecentArticles from '../../components/recentArticles/RecentArticles.jsx';
-import Header from '../../components/header/Header.jsx'
-import Footer from '../../components/footer/Footer.jsx'
-
 import '../../assets/css/landingPage.css'
 
 const when = require('when');
@@ -107,12 +104,10 @@ class LandingPage extends React.Component {
 
     return (
       <CookiesProvider>
-        <Header />
         <RecentArticles recentArticles={this.state.recentBeautyArticles} />
         <RecentArticles recentArticles={this.state.recentFashionArticles} />
         <RecentArticles recentArticles={this.state.recentTravelArticles} />
         <RecentArticles recentArticles={this.state.recentLifestyleArticles} />
-        <Footer/>
       </CookiesProvider >
     );
   }
