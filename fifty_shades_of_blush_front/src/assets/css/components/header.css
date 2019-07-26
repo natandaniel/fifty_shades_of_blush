@@ -1,7 +1,7 @@
 .root {
     flex-grow: 1;
     background: white;
-    margin-bottom: 50px;
+    margin-bottom: 5px;
 }
 
 .headerImg {
@@ -20,17 +20,31 @@
     overflow-x: hidden;
     background: black;
     color: white;
-    top: 0
+    top: 0;
 }
 
 .toolbarLink {
     padding: 1px;
     flex-shrink: 0;
 }
+
+
+.toolbarLink:hover {
+    color: pink;
+    text-decoration: none !important;
+  }
   
 
 .sticky {
     position: fixed !important;
     top: 0;
     z-index: 10;
+  }
+
+  .paper {
+    padding: auto;
+    margin: auto;
+    text-align: center;
+    background: black !important;
+    color: white !important;
   }
