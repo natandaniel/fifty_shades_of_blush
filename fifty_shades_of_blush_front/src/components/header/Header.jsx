@@ -1,41 +1,10 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
+import '../../assets/css/components/header.css'
 
 const headerBgImg = require("./header-bg.JPG");
-
-const useStyles = makeStyles(theme => ({
-    root: {
-        flexGrow: 1,
-    },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
-    title: {
-        flexGrow: 1,
-    },
-    toolbar: {
-        borderBottom: `1px solid ${theme.palette.divider}`,
-    },
-    toolbarTitle: {
-        flex: 1,
-    },
-    toolbarSecondary: {
-        justifyContent: 'space-between',
-        overflowX: 'auto',
-    },
-    toolbarLink: {
-        padding: theme.spacing(1),
-        flexShrink: 0,
-    },
-    headerImg: {
-        display: 'block',
-        marginLeft: 'auto',
-        marginRight: 'auto',
-    }
-}));
 
 const sections = [
     'beauty',
@@ -44,41 +13,39 @@ const sections = [
     'lifestyle'
 ];
 
-export default function Header() {
-    const classes = useStyles();
 
-    return (
+class Header extends React.Component {
 
-        <div className={classes.root}>
-            <Toolbar className={classes.toolbar}>
-                <Typography
-                    component="h2"
-                    variant="h5"
-                    color="inherit"
-                    align="center"
-                    noWrap
-                    className={classes.toolbarTitle}
-                >
-                    Fifty Shades Of Blush
-              </Typography>
-            </Toolbar>
-            <img className={classes.headerImg} src={headerBgImg} width="700" height="282" alt="banner" />
-            <Toolbar component="nav" variant="dense" className={classes.toolbarSecondary}>
-                {sections.map(section => (
-                    <Link
-                        color="inherit"
-                        noWrap
-                        key={section}
-                        variant="body2"
-                        href={"/" + section}
-                        className={classes.toolbarLink}
-                        to={"/" + section}
-                    >
-                        {section.toUpperCase()}
-                    </Link>
-                ))}
-            </Toolbar>
+    constructor(props) {
+        super(props);
+        this.state = {};
+    }
 
-        </div>
-    );
+    render() {
+
+        return (
+            <div className="root">
+                <img className="headerImg" src={headerBgImg} width="700" height="282" alt="banner" />
+                <Container>
+                    <Toolbar component="nav" variant="dense" className="toolbar">
+                        {sections.map(section => (
+                            <Link
+                                color="inherit"
+                                noWrap
+                                key={section}
+                                variant="body2"
+                                href={"/" + section}
+                                className="toolbarLink"
+                                to={"/" + section}
+                            >
+                                {section.toUpperCase()}
+                            </Link>
+                        ))}
+                    </Toolbar>
+                </Container>
+            </div>
+        );
+    }
 }
+
+export default Header;

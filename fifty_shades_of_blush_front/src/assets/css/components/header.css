@@ -1,0 +1,33 @@
+.root {
+    flex-grow: 1;
+    background: white;
+    margin-bottom: 50px;
+}
+
+.headerImg {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.title {
+    flex-grow: 1;
+}
+
+.toolbar {
+    justify-content: space-between;
+    overflow-x: auto;
+    background: black;
+    color: white;
+    top: 0
+}
+
+.toolbarLink {
+    padding: 1px;
+    flex-shrink: 0;
+}
+
+.sticky {
+    position: fixed;
+    top: 0
+}
