@@ -21,13 +21,32 @@ class Header extends React.Component {
         this.state = {};
     }
 
+
+    addStickyClass = (navbar, sticky, width) => {
+        if (window.pageYOffset >= sticky) {
+            navbar.classList.add("sticky")
+            console.log(width)
+            navbar.style.width = '77%';
+        } else {
+            navbar.classList.remove("sticky");
+            navbar.style.width = null;
+        }
+    }
+
+    componentDidMount() {
+        const navbar = document.getElementById("navbar");
+        const sticky = navbar.offsetTop;
+        const width = navbar.offsetWidth;
+        window.addEventListener('scroll', () => this.addStickyClass(navbar, sticky, width));
+    }
+
     render() {
 
         return (
             <div className="root">
                 <img className="headerImg" src={headerBgImg} width="700" height="282" alt="banner" />
                 <Container>
-                    <Toolbar component="nav" variant="dense" className="toolbar">
+                    <Toolbar id="navbar" component="nav" variant="dense" className="toolbar">
                         {sections.map(section => (
                             <Link
                                 color="inherit"
