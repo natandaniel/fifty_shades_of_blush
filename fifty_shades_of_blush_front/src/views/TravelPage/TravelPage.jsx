@@ -1,6 +1,6 @@
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
-import Header from '../../components/header/Header.jsx'
+import RecentArticles from '../../components/recentArticles/RecentArticles.jsx';
 
 const when = require('when');
 const client = require('../../components/rest/client');
@@ -48,9 +48,7 @@ class TravelPage extends React.Component {
 
     return (
       <CookiesProvider>
-        <div className="App">
-          <Header />
-        </div>
+         <RecentArticles recentArticles={this.state.travelArticles} />
       </CookiesProvider >
     );
   }
