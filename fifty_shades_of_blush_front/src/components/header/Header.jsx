@@ -18,15 +18,14 @@ class Header extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {navbarWidth:0};
     }
 
 
-    addStickyClass = (navbar, sticky, width) => {
+    addStickyClass = (navbar, sticky) => {
         if (window.pageYOffset >= sticky) {
-            navbar.classList.add("sticky")
-            console.log(width)
-            navbar.style.width = '77%';
+            navbar.style.width = this.state.navbarWidth + 'px';
+            navbar.classList.add("sticky");
         } else {
             navbar.classList.remove("sticky");
             navbar.style.width = null;
@@ -36,8 +35,8 @@ class Header extends React.Component {
     componentDidMount() {
         const navbar = document.getElementById("navbar");
         const sticky = navbar.offsetTop;
-        const width = navbar.offsetWidth;
-        window.addEventListener('scroll', () => this.addStickyClass(navbar, sticky, width));
+        this.setState({navbarWidth : navbar.offsetWidth});
+        window.addEventListener('scroll', () => this.addStickyClass(navbar, sticky));
     }
 
     render() {
