@@ -13,11 +13,15 @@ import FashionPage from './views/FashionPage/FashionPage.jsx';
 import TravelPage from './views/TravelPage/TravelPage.jsx';
 import LifestylePage from './views/LifestylePage/LifestylePage.jsx';
 
+import Header from './components/header/Header.jsx'
+import Footer from './components/footer/Footer.jsx'
+
 var hist = createBrowserHistory();
 
 ReactDOM.render(
   <Router history={hist}>
-    <Container maxWidth="lg">
+    <Header/>
+    <Container className="mainContainer" maxWidth="lg">
       <Switch>
         <Route exact path="/" component={LandingPage} />
         <Route path="/login" component={LoginPage} />
@@ -27,6 +31,7 @@ ReactDOM.render(
         <Route path="/lifestyle" component={LifestylePage} />
       </Switch>
     </Container>
+    <Footer/>
   </Router>,
   document.getElementById("root")
 );
