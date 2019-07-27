@@ -1,26 +1,31 @@
 .root {
     flex-grow: 1;
     background: white;
-    margin-bottom: 5px;
+    margin-bottom: 66px;
 }
 
 .headerImg {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    height: 280px;
 }
 
 .title {
     flex-grow: 1;
 }
 
-
 .toolbar {
+
     justify-content: space-between;
     overflow-x: hidden;
     background: black;
     color: white;
-    top: 0;
+}
+
+.link{
+    padding : 0px !important;
+    text-align:center;
 }
 
 .toolbarLink {
@@ -34,17 +39,99 @@
     text-decoration: none !important;
   }
   
-
 .sticky {
     position: fixed !important;
     top: 0;
     z-index: 10;
   }
 
-  .paper {
-    padding: auto;
-    margin: auto;
-    text-align: center;
-    background: black !important;
-    color: white !important;
+  @media only screen and (max-width: 1680px) {
+    .headerImg {
+        height: 270px;
+    }
+  }
+
+  @media only screen and (max-width: 1080px) {
+    .headerImg {
+        height: 225px;
+    }
+  }
+
+  @media only screen and (max-width: 1024px) {
+    .headerImg {
+        height: 212px;
+    }
+  }
+
+  @media only screen and (max-width: 960px) {
+    .headerImg {
+        height: 198px;
+    }
+  }
+
+  @media only screen and (max-width: 854px) {
+    .headerImg {
+        height: 178px;
+    }
+  }
+
+  @media only screen and (max-width: 828px) {
+    .headerImg {
+        height: 172px;
+    }
+  }
+
+  @media only screen and (max-width: 800px) {
+    .headerImg {
+        height: 166px;
+    }
+  }
+
+  @media only screen and (max-width: 768px) {
+    .headerImg {
+        height: 159px;
+    }
+  }
+
+  
+  @media only screen and (max-width: 750px) {
+    .headerImg {
+        height: 155px;
+    }
+  }
+
+  @media only screen and (max-width: 720px) {
+    .headerImg {
+        height: 148px;
+    }
+  }
+
+  @media only screen and (max-width: 640px) {
+    .headerImg {
+        height: 131px;
+    }
+  }
+
+  @media only screen and (max-width: 600px) {
+    .headerImg {
+        height: 122px;
+    }
+  }
+
+  @media only screen and (max-width: 540px) {
+    .headerImg {
+        height: 112px;
+    }
+  }
+
+  @media only screen and (max-width: 480px) {
+    .headerImg {
+        height: 99px;
+    }
+  }
+  
+  @media only screen and (max-width: 320px) {
+    .headerImg {
+        height: 63px;
+    }
   }

@@ -11,7 +11,7 @@ class RecentArticles extends React.Component {
     render() {
 
         const recentArticles = this.props.recentArticles.map(article =>
-            <Grid item xs={6} key={article.entity._links.self.href}>
+            <Grid item md={6} xs={12} key={article.entity._links.self.href}>
                 <RecentArticle article={article} />
             </Grid>);
 

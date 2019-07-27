@@ -1,7 +1,6 @@
 import React from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
 import Container from '@material-ui/core/Container';
-import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import '../../assets/css/components/header.css'
@@ -9,18 +8,19 @@ import '../../assets/css/components/header.css'
 const headerBgImg = require("./header-bg.JPG");
 
 const sections = [
+    'HOME',
     'beauty',
     'fashion',
-    'HOME',
     'travel',
-    'lifestyle'
+    'lifestyle',
+    'about me'
 ];
 
 function FormRow() {
     return (
         <React.Fragment>
             {sections.map(section => (
-                <Grid item xs key={section}><Paper className="paper"><Link
+                <Grid item xs key={section} className="link"><Link
                     color="inherit"
                     noWrap
                     variant="body2"
@@ -29,7 +29,7 @@ function FormRow() {
                     to={"/" + section}
                 >
                     {section.toUpperCase()}
-                </Link></Paper></Grid>
+                </Link></Grid>
             ))}
         </React.Fragment>
     );
@@ -59,6 +59,7 @@ class Header extends React.Component {
     componentDidMount() {
         const navbar = document.getElementById("navbar");
         const sticky = navbar.offsetTop;
+        console.log(sticky);
         this.setState({ navbarWidth: navbar.offsetWidth });
         window.addEventListener('scroll', () => this.addStickyClass(navbar, sticky));
     }
@@ -66,13 +67,11 @@ class Header extends React.Component {
     render() {
         return (
             <div className="root">
-                <img className="headerImg" src={headerBgImg} width="700" height="282" alt="banner" />
                 <Container>
+                <img id="banner" className="headerImg" src={headerBgImg} width="55%" alt="banner" />
                     <Toolbar id="navbar" component="nav" variant="dense" className="toolbar">
-                        <Grid container>
-                            <Grid container item xs={12} spacing={1}>
-                                <FormRow />
-                            </Grid>
+                        <Grid container item xs={12} spacing={1}>
+                            <FormRow />
                         </Grid>
                     </Toolbar>
                 </Container>
