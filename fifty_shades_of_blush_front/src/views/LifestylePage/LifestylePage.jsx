@@ -1,6 +1,7 @@
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
-import RecentArticles from '../../components/recentArticles/RecentArticles.jsx';
+
+import ArticleCardGrid from '../../components/article/ArticleCardGrid.jsx';
 
 const when = require('when');
 const client = require('../../components/rest/client');
@@ -48,7 +49,7 @@ class LifestylePage extends React.Component {
 
     return (
       <CookiesProvider>
-        <RecentArticles recentArticles={this.state.lifestyleArticles} />
+        <ArticleCardGrid recentArticles={this.state.lifestyleArticles} />
       </CookiesProvider >
     );
   }

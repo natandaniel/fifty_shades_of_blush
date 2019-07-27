@@ -2,9 +2,9 @@ import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import '../../assets/css/components/latestArticle.css';
+import '../../assets/css/components/article/article.css';
 
-class LatestArticle extends React.Component {
+class Article extends React.Component {
 
   constructor(props) {
     super(props);
@@ -13,14 +13,14 @@ class LatestArticle extends React.Component {
   render() {
 
 
-    const paragraph = this.props.latestArticleParagraphs.map(paragraph =>
+    const paragraph = this.props.articleParagraphs.map(paragraph =>
       <div>
         <Typography key={paragraph.entity._links.self.href}>{paragraph.entity.content}</Typography>
         <br />
       </div>
     );
 
-    const latest = this.props.latestArticle.map(article =>
+    const latest = this.props.article.map(article =>
       <div key={article.entity._links.self.href}>
         <Paper className="root">
           <Grid container spacing={2}>
@@ -61,4 +61,4 @@ class LatestArticle extends React.Component {
   }
 }
 
-export default LatestArticle;
+export default Article;

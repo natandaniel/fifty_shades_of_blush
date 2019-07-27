@@ -1,8 +1,8 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import RecentArticle from './RecentArticle.jsx';
+import ArticleCard from './ArticleCard.jsx';
 
-class RecentArticles extends React.Component {
+class ArticleCardGrid extends React.Component {
 
     constructor(props) {
         super(props);
@@ -12,7 +12,7 @@ class RecentArticles extends React.Component {
 
         const recentArticles = this.props.recentArticles.map(article =>
             <Grid item md={6} xs={12} key={article.entity._links.self.href}>
-                <RecentArticle article={article} />
+                <ArticleCard article={article} />
             </Grid>);
 
         return (
@@ -24,4 +24,4 @@ class RecentArticles extends React.Component {
 
 }
 
-export default RecentArticles;
+export default ArticleCardGrid;

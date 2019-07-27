@@ -3,10 +3,9 @@ import { CookiesProvider } from 'react-cookie';
 
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
-import Toolbar from '@material-ui/core/Toolbar';
 
-import RecentArticles from '../../components/recentArticles/RecentArticles.jsx';
-import LatestArticle from '../../components/recentArticles/LatestArticle.jsx';
+import ArticleCardGrid from '../../components/article/ArticleCardGrid.jsx';
+import Article from '../../components/article/Article.jsx';
 
 import '../../assets/css/landingPage.css'
 import { Typography } from '@material-ui/core';
@@ -178,7 +177,7 @@ class LandingPage extends React.Component {
         </Grid>
         <Grid item md={4} xs={1}></Grid>
         <Grid item md={12}>
-          <RecentArticles recentArticles={section === 'beauty' ? this.state.recentBeautyArticles : (
+          <ArticleCardGrid recentArticles={section === 'beauty' ? this.state.recentBeautyArticles : (
             section === 'fashion' ? this.state.recentFashionArticles : (section === 'travel' ? this.state.recentTravelArticles : this.state.recentLifestyleArticles))} />
         </Grid>
       </Grid>
@@ -186,7 +185,7 @@ class LandingPage extends React.Component {
 
     return (
       <CookiesProvider>
-        <LatestArticle key={this.state.latestArticleKey} latestArticle={this.state.latestArticle} latestArticleParagraphs={this.state.latestArticleParagraphs} />
+        <Article key={this.state.latestArticleKey} article={this.state.latestArticle} articleParagraphs={this.state.latestArticleParagraphs} />
         {blocks}
       </CookiesProvider >
     );
