@@ -1,7 +1,11 @@
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
+
 import RecentArticles from '../../components/recentArticles/RecentArticles.jsx';
+import LatestArticle from '../../components/recentArticles/LatestArticle.jsx';
+
 import '../../assets/css/landingPage.css'
+
 
 const when = require('when');
 const client = require('../../components/rest/client');
@@ -12,7 +16,7 @@ class LandingPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { recentBeautyArticles: [], recentFashionArticles: [], recentTravelArticles: [], recentLifestyleArticles: [] };
+    this.state = { latestArticle: [], recentBeautyArticles: [], recentFashionArticles: [], recentTravelArticles: [], recentLifestyleArticles: [] };
   }
 
   loadFromServer() {
@@ -20,6 +24,24 @@ class LandingPage extends React.Component {
     follow(client, root, [
       { rel: 'articles', params: {} }]
     ).then(articleCollection => {
+
+      client({
+        method: 'GET',
+        path: articleCollection.entity._links.latest.href
+      }).then(recents => {
+        return recents.entity._embedded.articleResources.map(article =>
+          client({
+            method: 'GET',
+            path: article._links.self.href
+          })
+        );
+      }).then(articlePromises => {
+        return when.all(articlePromises);
+      }).done(latestArticle => {
+        this.setState({
+          latestArticle: latestArticle
+        });
+      })
 
       client({
         method: 'GET',
@@ -104,6 +126,7 @@ class LandingPage extends React.Component {
 
     return (
       <CookiesProvider>
+        <LatestArticle latestArticle={this.state.latestArticle}/>
         <RecentArticles recentArticles={this.state.recentBeautyArticles} />
         <RecentArticles recentArticles={this.state.recentFashionArticles} />
         <RecentArticles recentArticles={this.state.recentTravelArticles} />

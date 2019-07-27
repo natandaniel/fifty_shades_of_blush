@@ -21,7 +21,7 @@ class RecentArticle extends React.Component {
           <CardMedia
             component="img"
             alt={this.props.article.entity.type}
-            height="200"
+            max-height="200px"
             image={require(`../../assets/img/${this.props.article.entity.imgName}.jpg`)}
             title={this.props.article.entity.title}
           />

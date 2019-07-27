@@ -8,7 +8,7 @@ import '../../assets/css/components/header.css'
 const headerBgImg = require("./header-bg.JPG");
 
 const sections = [
-    'HOME',
+    'home',
     'beauty',
     'fashion',
     'travel',
@@ -20,11 +20,11 @@ function FormRow() {
     return (
         <React.Fragment>
             {sections.map(section => (
-                <Grid item xs key={section} className="link"><Link
+                <Grid item md={2} xs={12} key={section} className="link"><Link
                     color="inherit"
                     noWrap
                     variant="body2"
-                    href={section === 'HOME' ? "/" : "/" + section}
+                    href={section === 'home' ? "/" : "/" + section}
                     className="toolbarLink"
                     to={"/" + section}
                 >
