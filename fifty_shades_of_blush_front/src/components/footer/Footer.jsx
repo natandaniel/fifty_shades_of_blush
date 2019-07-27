@@ -30,7 +30,7 @@ export default function Footer() {
                     50 Shades Of Blush
           </Button>
                 <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
-                    Copyright
+                    ©Copyright 2019 
           </Typography>
             </Container>
         </footer>
