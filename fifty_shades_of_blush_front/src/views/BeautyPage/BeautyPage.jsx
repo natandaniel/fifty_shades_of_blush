@@ -13,7 +13,10 @@ class BeautyPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { beautyArticles: [], latestBeautyArticleKey: "", latestBeautyArticle: [], latestBeautyArticleParagraphs: []};
+    this.state = { beautyArticles: [], displayedArticleKey: "", displayedArticle: [], displayedArticleParagraphs: [] };
+    this.getBeautyArticles = this.getBeautyArticles.bind(this);
+    this.getLatestBeautyArticleWithParagraphs = this.getLatestBeautyArticleWithParagraphs.bind(this);
+    this.updateDisplayedArticle = this.updateDisplayedArticle.bind(this);
   }
 
   loadFromServer() {
@@ -23,68 +26,80 @@ class BeautyPage extends React.Component {
     ).then(articleCollection => {
 
       this.setState({
-        latestBeautyArticleKey: articleCollection.entity._links.latestBeauty.href
+        displayedArticleKey: articleCollection.entity._links.latestBeauty.href
       });
 
-      client({
-        method: 'GET',
-        path: articleCollection.entity._links.beauty.href
-      }).then(beautyArticleCollection => {
-        return beautyArticleCollection.entity._embedded.articleResources.map(beautyArticle =>
-          client({
-            method: 'GET',
-            path: beautyArticle._links.self.href
-          })
-        );
-      }).then(beautyArticlePromises => {
-        return when.all(beautyArticlePromises);
-      }).done(beautyArticles => {
-        this.setState({
-          beautyArticles: beautyArticles
-        });
-      })
+      this.getBeautyArticles(articleCollection.entity._links.beauty.href);
+      this.getLatestBeautyArticleWithParagraphs(articleCollection.entity._links.latestBeauty.href);
+    });
+  }
 
-      client({
-        method: 'GET',
-        path: articleCollection.entity._links.latestBeauty.href
-      }).then(latestBeautyArticleCollection => {
-        return latestBeautyArticleCollection.entity._embedded.articleResources.map(beautyArticle =>
-          client({
-            method: 'GET',
-            path: beautyArticle._links.self.href
-          })
-        );
-      }).then(latestBeautyArticlePromise => {
-        return when.all(latestBeautyArticlePromise);
-      }).done(latestBeautyArticle => {
+  getBeautyArticles(beautyUri) {
+    client({
+      method: 'GET',
+      path: beautyUri
+    }).then(beautyArticleCollection => {
+      return beautyArticleCollection.entity._embedded.articleResources.map(beautyArticle =>
+        client({
+          method: 'GET',
+          path: beautyArticle._links.self.href
+        })
+      );
+    }).then(beautyArticlePromises => {
+      return when.all(beautyArticlePromises);
+    }).done(beautyArticles => {
+      this.setState({
+        beautyArticles: beautyArticles
+      });
+    })
+  }
 
-        this.setState({
-          latestBeautyArticle: latestBeautyArticle
-        });
+  getLatestBeautyArticleWithParagraphs(latestBeautyUri) {
+    client({
+      method: 'GET',
+      path: latestBeautyUri
+    }).then(latestBeautyArticleCollection => {
+      return latestBeautyArticleCollection.entity._embedded.articleResources.map(beautyArticle =>
+        client({
+          method: 'GET',
+          path: beautyArticle._links.self.href
+        })
+      );
+    }).then(latestBeautyArticlePromise => {
+      return when.all(latestBeautyArticlePromise);
+    }).done(displayedArticle => {
 
-        this.state.latestBeautyArticle.map(latestBeautyArticle =>
+      this.setState({
+        displayedArticle: displayedArticle
+      });
 
-          client({
-            method: 'GET',
-            path: latestBeautyArticle.entity._links.paragraphs.href
-          }).then(result => {
-            return result.entity._embedded.articleContents.map(articleContent =>
-              client({
-                method: 'GET',
-                path: articleContent._links.self.href
-              })
-            );
-          }).then(articleContentPromises => {
-            return when.all(articleContentPromises);
-          }).done(paragraphs => {
-            this.setState({
-              latestBeautyArticleParagraphs: paragraphs
-            });
-          }));;
-      })
+      this.state.displayedArticle.map(displayedArticle =>
 
+        client({
+          method: 'GET',
+          path: displayedArticle.entity._links.paragraphs.href
+        }).then(result => {
+          return result.entity._embedded.articleContents.map(articleContent =>
+            client({
+              method: 'GET',
+              path: articleContent._links.self.href
+            })
+          );
+        }).then(articleContentPromises => {
+          return when.all(articleContentPromises);
+        }).done(paragraphs => {
+          this.setState({
+            displayedArticleParagraphs: paragraphs
+          });
+        }));;
+    })
+  }
 
-
+  updateDisplayedArticle(displayedArticleKey, displayedArticle, displayedArticleParagraphs) {
+    this.setState({
+      displayedArticleKey: displayedArticleKey,
+      displayedArticle: displayedArticle,
+      displayedArticleParagraphs: displayedArticleParagraphs
     });
   }
 
@@ -96,8 +111,8 @@ class BeautyPage extends React.Component {
 
     return (
       <CookiesProvider>
-        <Article key={this.state.latestBeautyArticleKey} article={this.state.latestBeautyArticle} articleParagraphs={this.state.latestBeautyArticleParagraphs} />
-        <ArticleCardGrid recentArticles={this.state.beautyArticles.slice(1)} />
+        <Article key={this.state.displayedArticleKey} article={this.state.displayedArticle} articleParagraphs={this.state.displayedArticleParagraphs} />
+        <ArticleCardGrid recentArticles={this.state.beautyArticles.slice(1)} displayedArticleHandler={this.updateDisplayedArticle} />
       </CookiesProvider >
     );
   }
