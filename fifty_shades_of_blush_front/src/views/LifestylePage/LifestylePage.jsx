@@ -13,7 +13,10 @@ class LifestylePage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { lifestyleArticles: [], latestLifestyleArticleKey: "", latestLifestyleArticle: [], latestLifestyleArticleParagraphs: [] };
+    this.state = { lifestyleArticles: [], displayedArticleKey: "", displayedArticle: [], displayedArticleParagraphs: [] };
+    this.getLifestyleArticles = this.getLifestyleArticles.bind(this);
+    this.getLatestLifestyleArticleWithParagraphs = this.getLatestLifestyleArticleWithParagraphs.bind(this);
+    this.updateDisplayedArticle = this.updateDisplayedArticle.bind(this);
   }
 
   loadFromServer() {
@@ -23,66 +26,80 @@ class LifestylePage extends React.Component {
     ).then(articleCollection => {
 
       this.setState({
-        latestLifestyleArticleKey: articleCollection.entity._links.latestLifestyle.href
+        displayedArticleKey: articleCollection.entity._links.latestLifestyle.href
       });
 
-      client({
-        method: 'GET',
-        path: articleCollection.entity._links.lifestyle.href
-      }).then(lifestyleArticleCollection => {
-        return lifestyleArticleCollection.entity._embedded.articleResources.map(lifestyleArticle =>
-          client({
-            method: 'GET',
-            path: lifestyleArticle._links.self.href
-          })
-        );
-      }).then(lifestyleArticlePromises => {
-        return when.all(lifestyleArticlePromises);
-      }).done(lifestyleArticles => {
-        this.setState({
-          lifestyleArticles: lifestyleArticles
-        });
-      })
+      this.getLifestyleArticles(articleCollection.entity._links.lifestyle.href);
+      this.getLatestLifestyleArticleWithParagraphs(articleCollection.entity._links.latestLifestyle.href);
+    });
+  }
 
-      client({
-        method: 'GET',
-        path: articleCollection.entity._links.latestLifestyle.href
-      }).then(latestLifestyleArticleCollection => {
-        return latestLifestyleArticleCollection.entity._embedded.articleResources.map(lifestyleArticle =>
-          client({
-            method: 'GET',
-            path: lifestyleArticle._links.self.href
-          })
-        );
-      }).then(latestLifestyleArticlePromise => {
-        return when.all(latestLifestyleArticlePromise);
-      }).done(latestLifestyleArticle => {
+  getLifestyleArticles(lifestyleUri) {
+    client({
+      method: 'GET',
+      path: lifestyleUri
+    }).then(lifestyleArticleCollection => {
+      return lifestyleArticleCollection.entity._embedded.articleResources.map(lifestyleArticle =>
+        client({
+          method: 'GET',
+          path: lifestyleArticle._links.self.href
+        })
+      );
+    }).then(lifestyleArticlePromises => {
+      return when.all(lifestyleArticlePromises);
+    }).done(lifestyleArticles => {
+      this.setState({
+        lifestyleArticles: lifestyleArticles
+      });
+    })
+  }
 
-        this.setState({
-          latestLifestyleArticle: latestLifestyleArticle
-        });
+  getLatestLifestyleArticleWithParagraphs(latestLifestyleUri) {
+    client({
+      method: 'GET',
+      path: latestLifestyleUri
+    }).then(latestLifestyleArticleCollection => {
+      return latestLifestyleArticleCollection.entity._embedded.articleResources.map(lifestyleArticle =>
+        client({
+          method: 'GET',
+          path: lifestyleArticle._links.self.href
+        })
+      );
+    }).then(latestLifestyleArticlePromise => {
+      return when.all(latestLifestyleArticlePromise);
+    }).done(displayedArticle => {
 
-        this.state.latestLifestyleArticle.map(latestLifestyleArticle =>
+      this.setState({
+        displayedArticle: displayedArticle
+      });
 
-          client({
-            method: 'GET',
-            path: latestLifestyleArticle.entity._links.paragraphs.href
-          }).then(result => {
-            return result.entity._embedded.articleContents.map(articleContent =>
-              client({
-                method: 'GET',
-                path: articleContent._links.self.href
-              })
-            );
-          }).then(articleContentPromises => {
-            return when.all(articleContentPromises);
-          }).done(paragraphs => {
-            this.setState({
-              latestLifestyleArticleParagraphs: paragraphs
-            });
-          }));;
-      })
+      this.state.displayedArticle.map(displayedArticle =>
 
+        client({
+          method: 'GET',
+          path: displayedArticle.entity._links.paragraphs.href
+        }).then(result => {
+          return result.entity._embedded.articleContents.map(articleContent =>
+            client({
+              method: 'GET',
+              path: articleContent._links.self.href
+            })
+          );
+        }).then(articleContentPromises => {
+          return when.all(articleContentPromises);
+        }).done(paragraphs => {
+          this.setState({
+            displayedArticleParagraphs: paragraphs
+          });
+        }));;
+    })
+  }
+
+  updateDisplayedArticle(displayedArticleKey, displayedArticle, displayedArticleParagraphs) {
+    this.setState({
+      displayedArticleKey: displayedArticleKey,
+      displayedArticle: displayedArticle,
+      displayedArticleParagraphs: displayedArticleParagraphs
     });
   }
 
@@ -94,8 +111,8 @@ class LifestylePage extends React.Component {
 
     return (
       <CookiesProvider>
-        <Article key={this.state.latestLifestyleArticleKey} article={this.state.latestLifestyleArticle} articleParagraphs={this.state.latestLifestyleArticleParagraphs} />
-        <ArticleCardGrid recentArticles={this.state.lifestyleArticles.slice(1)} />
+        <Article key={this.state.displayedArticleKey} article={this.state.displayedArticle} articleParagraphs={this.state.displayedArticleParagraphs} />
+        <ArticleCardGrid recentArticles={this.state.lifestyleArticles} displayedArticleHandler={this.updateDisplayedArticle} />
       </CookiesProvider >
     );
   }

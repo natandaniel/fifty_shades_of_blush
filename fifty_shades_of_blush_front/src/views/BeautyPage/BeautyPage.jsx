@@ -13,7 +13,7 @@ class BeautyPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { beautyArticles: [], displayedArticleKey: "", displayedArticle: [], displayedArticleParagraphs: [] };
+    this.state = { beautyArticles: [], displayedArticleKey: "", displayedArticle: [], displayedArticleParagraphs: []};
     this.getBeautyArticles = this.getBeautyArticles.bind(this);
     this.getLatestBeautyArticleWithParagraphs = this.getLatestBeautyArticleWithParagraphs.bind(this);
     this.updateDisplayedArticle = this.updateDisplayedArticle.bind(this);
@@ -111,8 +111,8 @@ class BeautyPage extends React.Component {
 
     return (
       <CookiesProvider>
-        <Article key={this.state.displayedArticleKey} article={this.state.displayedArticle} articleParagraphs={this.state.displayedArticleParagraphs} />
-        <ArticleCardGrid recentArticles={this.state.beautyArticles.slice(1)} displayedArticleHandler={this.updateDisplayedArticle} />
+        <Article id="displayedArticle" key={this.state.displayedArticleKey} article={this.state.displayedArticle} articleParagraphs={this.state.displayedArticleParagraphs} />
+        <ArticleCardGrid recentArticles={this.state.beautyArticles} displayedArticleHandler={this.updateDisplayedArticle}/>
       </CookiesProvider >
     );
   }

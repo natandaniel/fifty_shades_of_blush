@@ -7,11 +7,10 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import '../../assets/css/components/article/articleCard.css';
+import {scrollIt} from '../../tools/scrolling/scrollIt';
 
 const when = require('when');
 const client = require('../../components/rest/client');
-
-
 
 class ArticleCard extends React.Component {
 
@@ -39,6 +38,12 @@ class ArticleCard extends React.Component {
         return when.all(articleContentPromises);
       }).done(paragraphs => {
         this.props.displayedArticleHandler(article.entity._links.self.href, [article], paragraphs);
+        scrollIt(
+          document.querySelector('.articleInfo'),
+          1000,
+          'easeOutQuad',
+          () => console.log(`Just finished scrolling to ${window.pageYOffset}px`)
+        );
       })
     })
   }

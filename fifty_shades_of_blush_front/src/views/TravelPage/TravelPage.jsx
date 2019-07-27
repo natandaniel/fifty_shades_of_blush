@@ -13,7 +13,10 @@ class TravelPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { travelArticles: [], latestTravelArticleKey: "", latestTravelArticle: [], latestTravelArticleParagraphs: []};
+    this.state = { travelArticles: [], displayedArticleKey: "", displayedArticle: [], displayedArticleParagraphs: []};
+    this.getTravelArticles = this.getTravelArticles.bind(this);
+    this.getLatestTravelArticleWithParagraphs = this.getLatestTravelArticleWithParagraphs.bind(this);
+    this.updateDisplayedArticle = this.updateDisplayedArticle.bind(this);
   }
 
   loadFromServer() {
@@ -23,68 +26,80 @@ class TravelPage extends React.Component {
     ).then(articleCollection => {
 
       this.setState({
-        latestTravelArticleKey: articleCollection.entity._links.latestTravel.href
+        displayedArticleKey: articleCollection.entity._links.latestTravel.href
       });
 
-      client({
-        method: 'GET',
-        path: articleCollection.entity._links.travel.href
-      }).then(travelArticleCollection => {
-        return travelArticleCollection.entity._embedded.articleResources.map(travelArticle =>
-          client({
-            method: 'GET',
-            path: travelArticle._links.self.href
-          })
-        );
-      }).then(travelArticlePromises => {
-        return when.all(travelArticlePromises);
-      }).done(travelArticles => {
-        this.setState({
-          travelArticles: travelArticles
-        });
-      })
+      this.getTravelArticles(articleCollection.entity._links.travel.href);
+      this.getLatestTravelArticleWithParagraphs(articleCollection.entity._links.latestTravel.href)
+    });
+  }
 
-      client({
-        method: 'GET',
-        path: articleCollection.entity._links.latestTravel.href
-      }).then(latestTravelArticleCollection => {
-        return latestTravelArticleCollection.entity._embedded.articleResources.map(travelArticle =>
-          client({
-            method: 'GET',
-            path: travelArticle._links.self.href
-          })
-        );
-      }).then(latestTravelArticlePromise => {
-        return when.all(latestTravelArticlePromise);
-      }).done(latestTravelArticle => {
+  getTravelArticles(travelArticlesUri) {
+    client({
+      method: 'GET',
+      path: travelArticlesUri
+    }).then(travelArticleCollection => {
+      return travelArticleCollection.entity._embedded.articleResources.map(travelArticle =>
+        client({
+          method: 'GET',
+          path: travelArticle._links.self.href
+        })
+      );
+    }).then(travelArticlePromises => {
+      return when.all(travelArticlePromises);
+    }).done(travelArticles => {
+      this.setState({
+        travelArticles: travelArticles
+      });
+    })
+  }
 
-        this.setState({
-          latestTravelArticle: latestTravelArticle
-        });
+  getLatestTravelArticleWithParagraphs(latestTravelArticleUri) {
+    client({
+      method: 'GET',
+      path: latestTravelArticleUri
+    }).then(latestTravelArticleCollection => {
+      return latestTravelArticleCollection.entity._embedded.articleResources.map(travelArticle =>
+        client({
+          method: 'GET',
+          path: travelArticle._links.self.href
+        })
+      );
+    }).then(latestTravelArticlePromise => {
+      return when.all(latestTravelArticlePromise);
+    }).done(displayedArticle => {
 
-        this.state.latestTravelArticle.map(latestTravelArticle =>
+      this.setState({
+        displayedArticle: displayedArticle
+      });
 
-          client({
-            method: 'GET',
-            path: latestTravelArticle.entity._links.paragraphs.href
-          }).then(result => {
-            return result.entity._embedded.articleContents.map(articleContent =>
-              client({
-                method: 'GET',
-                path: articleContent._links.self.href
-              })
-            );
-          }).then(articleContentPromises => {
-            return when.all(articleContentPromises);
-          }).done(paragraphs => {
-            this.setState({
-              latestTravelArticleParagraphs: paragraphs
-            });
-          }));;
-      })
+      this.state.displayedArticle.map(displayedArticle =>
 
+        client({
+          method: 'GET',
+          path: displayedArticle.entity._links.paragraphs.href
+        }).then(result => {
+          return result.entity._embedded.articleContents.map(articleContent =>
+            client({
+              method: 'GET',
+              path: articleContent._links.self.href
+            })
+          );
+        }).then(articleContentPromises => {
+          return when.all(articleContentPromises);
+        }).done(paragraphs => {
+          this.setState({
+            displayedArticleParagraphs: paragraphs
+          });
+        }));;
+    })
+  }
 
-
+  updateDisplayedArticle(displayedArticleKey, displayedArticle, displayedArticleParagraphs) {
+    this.setState({
+      displayedArticleKey: displayedArticleKey,
+      displayedArticle: displayedArticle,
+      displayedArticleParagraphs: displayedArticleParagraphs
     });
   }
 
@@ -96,8 +111,8 @@ class TravelPage extends React.Component {
 
     return (
       <CookiesProvider>
-        <Article key={this.state.latestTravelArticleKey} article={this.state.latestTravelArticle} articleParagraphs={this.state.latestTravelArticleParagraphs} />
-        <ArticleCardGrid recentArticles={this.state.travelArticles.slice(1)} />
+        <Article key={this.state.displayedArticleKey} article={this.state.displayedArticle} articleParagraphs={this.state.displayedArticleParagraphs} />
+        <ArticleCardGrid recentArticles={this.state.travelArticles} displayedArticleHandler={this.updateDisplayedArticle}/>
       </CookiesProvider >
     );
   }
