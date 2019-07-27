@@ -97,7 +97,7 @@ class BeautyPage extends React.Component {
     return (
       <CookiesProvider>
         <Article key={this.state.latestBeautyArticleKey} article={this.state.latestBeautyArticle} articleParagraphs={this.state.latestBeautyArticleParagraphs} />
-        <ArticleCardGrid recentArticles={this.state.beautyArticles} />
+        <ArticleCardGrid recentArticles={this.state.beautyArticles.slice(1)} />
       </CookiesProvider >
     );
   }

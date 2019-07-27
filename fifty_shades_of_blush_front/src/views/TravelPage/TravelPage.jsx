@@ -1,6 +1,8 @@
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
+
 import ArticleCardGrid from '../../components/article/ArticleCardGrid.jsx';
+import Article from '../../components/article/Article.jsx';
 
 const when = require('when');
 const client = require('../../components/rest/client');
@@ -11,7 +13,7 @@ class TravelPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { travelArticles: []};
+    this.state = { travelArticles: [], latestTravelArticleKey: "", latestTravelArticle: [], latestTravelArticleParagraphs: []};
   }
 
   loadFromServer() {
@@ -20,23 +22,69 @@ class TravelPage extends React.Component {
       { rel: 'articles', params: {} }]
     ).then(articleCollection => {
 
+      this.setState({
+        latestTravelArticleKey: articleCollection.entity._links.latestTravel.href
+      });
+
       client({
         method: 'GET',
         path: articleCollection.entity._links.travel.href
-      }).then(recents => {
-        return recents.entity._embedded.articleResources.map(article =>
+      }).then(travelArticleCollection => {
+        return travelArticleCollection.entity._embedded.articleResources.map(travelArticle =>
           client({
             method: 'GET',
-            path: article._links.self.href
+            path: travelArticle._links.self.href
           })
         );
-      }).then(articlePromises => {
-        return when.all(articlePromises);
+      }).then(travelArticlePromises => {
+        return when.all(travelArticlePromises);
       }).done(travelArticles => {
         this.setState({
           travelArticles: travelArticles
         });
       })
+
+      client({
+        method: 'GET',
+        path: articleCollection.entity._links.latestTravel.href
+      }).then(latestTravelArticleCollection => {
+        return latestTravelArticleCollection.entity._embedded.articleResources.map(travelArticle =>
+          client({
+            method: 'GET',
+            path: travelArticle._links.self.href
+          })
+        );
+      }).then(latestTravelArticlePromise => {
+        return when.all(latestTravelArticlePromise);
+      }).done(latestTravelArticle => {
+
+        this.setState({
+          latestTravelArticle: latestTravelArticle
+        });
+
+        this.state.latestTravelArticle.map(latestTravelArticle =>
+
+          client({
+            method: 'GET',
+            path: latestTravelArticle.entity._links.paragraphs.href
+          }).then(result => {
+            return result.entity._embedded.articleContents.map(articleContent =>
+              client({
+                method: 'GET',
+                path: articleContent._links.self.href
+              })
+            );
+          }).then(articleContentPromises => {
+            return when.all(articleContentPromises);
+          }).done(paragraphs => {
+            this.setState({
+              latestTravelArticleParagraphs: paragraphs
+            });
+          }));;
+      })
+
+
+
     });
   }
 
@@ -48,7 +96,8 @@ class TravelPage extends React.Component {
 
     return (
       <CookiesProvider>
-         <ArticleCardGrid recentArticles={this.state.travelArticles} />
+        <Article key={this.state.latestTravelArticleKey} article={this.state.latestTravelArticle} articleParagraphs={this.state.latestTravelArticleParagraphs} />
+        <ArticleCardGrid recentArticles={this.state.travelArticles.slice(1)} />
       </CookiesProvider >
     );
   }
