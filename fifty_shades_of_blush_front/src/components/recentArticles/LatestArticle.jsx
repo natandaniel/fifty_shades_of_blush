@@ -12,9 +12,17 @@ class LatestArticle extends React.Component {
 
   render() {
 
+
+    const paragraph = this.props.latestArticleParagraphs.map(paragraph =>
+      <div>
+        <Typography key={paragraph.entity._links.self.href}>{paragraph.entity.content}</Typography>
+        <br />
+      </div>
+    );
+
     const latest = this.props.latestArticle.map(article =>
       <div key={article.entity._links.self.href}>
-        <Paper className="root" key={article.entity._links.self.href}>
+        <Paper className="root">
           <Grid container spacing={2}>
             <Grid item md={5} xs={12}>
               <div className="articleInfo">
@@ -38,12 +46,13 @@ class LatestArticle extends React.Component {
             </Grid>
             <Grid item >
               <div className="article">
-                <Typography>{article.entity.body}</Typography>
+                {paragraph}
               </div>
             </Grid>
           </Grid>
         </Paper>
       </div>);
+
     return (
       <div>
         {latest}

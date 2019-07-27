@@ -27,7 +27,7 @@ class LandingPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { latestArticle: [], recentBeautyArticles: [], recentFashionArticles: [], recentTravelArticles: [], recentLifestyleArticles: [] };
+    this.state = { latestArticle: [], latestArticleKey: "", latestArticleParagraphs: [], recentBeautyArticles: [], recentFashionArticles: [], recentTravelArticles: [], recentLifestyleArticles: [] };
   }
 
   loadFromServer() {
@@ -36,11 +36,15 @@ class LandingPage extends React.Component {
       { rel: 'articles', params: {} }]
     ).then(articleCollection => {
 
+      this.setState({
+        latestArticleKey: articleCollection.entity._links.latest.href
+      });
+
       client({
         method: 'GET',
         path: articleCollection.entity._links.latest.href
-      }).then(recents => {
-        return recents.entity._embedded.articleResources.map(article =>
+      }).then(latest => {
+        return latest.entity._embedded.articleResources.map(article =>
           client({
             method: 'GET',
             path: article._links.self.href
@@ -49,10 +53,32 @@ class LandingPage extends React.Component {
       }).then(articlePromises => {
         return when.all(articlePromises);
       }).done(latestArticle => {
+
         this.setState({
           latestArticle: latestArticle
         });
+
+        this.state.latestArticle.map(latestArticle =>
+
+          client({
+            method: 'GET',
+            path: latestArticle.entity._links.paragraphs.href
+          }).then(result => {
+            return result.entity._embedded.articleContents.map(articleContent =>
+              client({
+                method: 'GET',
+                path: articleContent._links.self.href
+              })
+            );
+          }).then(articleContentPromises => {
+            return when.all(articleContentPromises);
+          }).done(paragraphs => {
+            this.setState({
+              latestArticleParagraphs: paragraphs
+            });
+          }));;
       })
+
 
       client({
         method: 'GET',
@@ -136,7 +162,7 @@ class LandingPage extends React.Component {
   render() {
 
     const blocks = sections.map(section => (
-      <Grid className="section" container spacing={2} item md={12}>
+      <Grid key={section} className="section" container spacing={2} item md={12}>
         <Grid item md={4} xs={1}></Grid>
         <Grid item md={4} xs={10}>
           <div className="linkBlock">
@@ -160,7 +186,7 @@ class LandingPage extends React.Component {
 
     return (
       <CookiesProvider>
-        <LatestArticle latestArticle={this.state.latestArticle} />
+        <LatestArticle key={this.state.latestArticleKey} latestArticle={this.state.latestArticle} latestArticleParagraphs={this.state.latestArticleParagraphs} />
         {blocks}
       </CookiesProvider >
     );
