@@ -32,7 +32,9 @@ class LatestArticle extends React.Component {
               </div>
             </Grid>
             <Grid item md={7} xs={12}>
-              <img className="img" src={require(`../../assets/img/${article.entity.imgName}.jpg`)} width="55%" alt="article" />
+              <div className="imgHolder">
+                <img className="img" src={require(`../../assets/img/${article.entity.imgName}.jpg`)} width="55%" alt="article" />
+              </div>
             </Grid>
             <Grid item >
               <div className="article">

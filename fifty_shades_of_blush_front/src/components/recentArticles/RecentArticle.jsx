@@ -41,7 +41,7 @@ class RecentArticle extends React.Component {
         </CardActionArea>
         <CardActions>
           <Button size="small" color="primary">
-            Read more
+            Read
             </Button>
         </CardActions>
       </Card>

@@ -1,16 +1,27 @@
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
 
+import Grid from '@material-ui/core/Grid';
+import Link from '@material-ui/core/Link';
+import Toolbar from '@material-ui/core/Toolbar';
+
 import RecentArticles from '../../components/recentArticles/RecentArticles.jsx';
 import LatestArticle from '../../components/recentArticles/LatestArticle.jsx';
 
 import '../../assets/css/landingPage.css'
-
+import { Typography } from '@material-ui/core';
 
 const when = require('when');
 const client = require('../../components/rest/client');
 const follow = require('../../components/rest/follow');
 const root = 'http://localhost:8080/api';
+
+const sections = [
+  'beauty',
+  'fashion',
+  'travel',
+  'lifestyle'
+];
 
 class LandingPage extends React.Component {
 
@@ -124,13 +135,33 @@ class LandingPage extends React.Component {
 
   render() {
 
+    const blocks = sections.map(section => (
+      <Grid className="section" container spacing={2} item md={12}>
+        <Grid item md={4} xs={1}></Grid>
+        <Grid item md={4} xs={10}>
+          <div className="linkBlock">
+            <Link
+              color="inherit"
+              href={"/" + section}
+              to={"/" + section}
+              classes={{ textDecoration: 'muiLink' }}
+            >
+              <Typography className="link">  {"latest " + section + " articles"}</Typography>
+            </Link>
+          </div>
+        </Grid>
+        <Grid item md={4} xs={1}></Grid>
+        <Grid item md={12}>
+          <RecentArticles recentArticles={section === 'beauty' ? this.state.recentBeautyArticles : (
+            section === 'fashion' ? this.state.recentFashionArticles : (section === 'travel' ? this.state.recentTravelArticles : this.state.recentLifestyleArticles))} />
+        </Grid>
+      </Grid>
+    ));
+
     return (
       <CookiesProvider>
-        <LatestArticle latestArticle={this.state.latestArticle}/>
-        <RecentArticles recentArticles={this.state.recentBeautyArticles} />
-        <RecentArticles recentArticles={this.state.recentFashionArticles} />
-        <RecentArticles recentArticles={this.state.recentTravelArticles} />
-        <RecentArticles recentArticles={this.state.recentLifestyleArticles} />
+        <LatestArticle latestArticle={this.state.latestArticle} />
+        {blocks}
       </CookiesProvider >
     );
   }

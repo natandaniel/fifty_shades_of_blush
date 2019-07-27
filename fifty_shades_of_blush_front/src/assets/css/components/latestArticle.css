@@ -3,6 +3,10 @@
     margin:auto;
 }
 
+.imgHolder{
+    padding: 2%;
+}
+
 .img{
     width: 100%;
     float:right;
