@@ -27,6 +27,7 @@ class LandingPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = { latestArticle: [], latestArticleKey: "", latestArticleParagraphs: [], recentBeautyArticles: [], recentFashionArticles: [], recentTravelArticles: [], recentLifestyleArticles: [] };
+    this.updateDisplayedArticle = this.updateDisplayedArticle.bind(this);
   }
 
   loadFromServer() {
@@ -154,6 +155,14 @@ class LandingPage extends React.Component {
     });
   }
 
+  updateDisplayedArticle(displayedArticleKey, displayedArticle, displayedArticleParagraphs) {
+    this.setState({
+      latestArticleKey: displayedArticleKey,
+      latestArticle: displayedArticle,
+      latestArticleParagraphs: displayedArticleParagraphs
+    });
+  }
+
   componentDidMount() {
     this.loadFromServer();
   }
@@ -165,19 +174,20 @@ class LandingPage extends React.Component {
         <Grid item md={4} xs={1}></Grid>
         <Grid item md={4} xs={10}>
           <div className="linkBlock">
+          <Typography className="link">  {"recent " + section + " articles"}</Typography>
             <Link
               color="inherit"
               href={"/" + section}
               to={"/" + section}
               classes={{ textDecoration: 'muiLink' }}
             >
-              <Typography className="link">  {"latest " + section + " articles"}</Typography>
+              <Typography className="link">  {"all articles here"}</Typography>
             </Link>
           </div>
         </Grid>
         <Grid item md={4} xs={1}></Grid>
         <Grid item md={12}>
-          <ArticleCardGrid recentArticles={section === 'beauty' ? this.state.recentBeautyArticles : (
+          <ArticleCardGrid displayedArticleHandler={this.updateDisplayedArticle} recentArticles={section === 'beauty' ? this.state.recentBeautyArticles : (
             section === 'fashion' ? this.state.recentFashionArticles : (section === 'travel' ? this.state.recentTravelArticles : this.state.recentLifestyleArticles))} />
         </Grid>
       </Grid>

@@ -1,7 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
+import { scrollIt } from '../../tools/scrolling/scrollIt';
 
 const useStyles = makeStyles(theme => ({
     footer: {
@@ -19,9 +21,14 @@ export default function Footer() {
 
         <footer className={classes.footer}>
             <Container maxWidth="lg">
-                <Typography variant="h6" align="center" gutterBottom>
+                <Button size="small" color="inherit" onClick={() => scrollIt(
+                    document.querySelector('.root'),
+                    1000,
+                    'easeOutQuad',
+                    () => console.log(`Just finished scrolling to ${window.pageYOffset}px`)
+                )}>
                     50 Shades Of Blush
-          </Typography>
+          </Button>
                 <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
                     Copyright
           </Typography>
