@@ -12,7 +12,7 @@ class ArticleCardGrid extends React.Component {
 
         const recentArticles = this.props.recentArticles.map(article =>
             <Grid item md={6} xs={12} key={article.entity._links.self.href}>
-                <ArticleCard article={article} />
+                <ArticleCard article={article} displayedArticleHandler={this.props.displayedArticleHandler}/>
             </Grid>);
 
         return (

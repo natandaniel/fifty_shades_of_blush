@@ -20,7 +20,7 @@ class Article extends React.Component {
       </div>
     );
 
-    const latest = this.props.article.map(article =>
+    const display = this.props.article.map(article =>
       <div key={article.entity._links.self.href}>
         <Paper className="root">
           <Grid container spacing={2}>
@@ -55,7 +55,7 @@ class Article extends React.Component {
 
     return (
       <div>
-        {latest}
+        {display}
       </div>
     );
   }

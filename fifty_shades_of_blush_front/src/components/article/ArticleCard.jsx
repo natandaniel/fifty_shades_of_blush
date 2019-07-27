@@ -8,10 +8,39 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import '../../assets/css/components/article/articleCard.css';
 
+const when = require('when');
+const client = require('../../components/rest/client');
+
+
+
 class ArticleCard extends React.Component {
 
   constructor(props) {
     super(props);
+    this.displayArticle = this.displayArticle.bind(this);
+  }
+
+  displayArticle(articleUri){
+    client({
+      method: 'GET',
+      path: articleUri
+    }).then(article => {
+      client({
+        method: 'GET',
+        path: article.entity._links.paragraphs.href
+      }).then(result => {
+        return result.entity._embedded.articleContents.map(articleContent =>
+          client({
+            method: 'GET',
+            path: articleContent._links.self.href
+          })
+        );
+      }).then(articleContentPromises => {
+        return when.all(articleContentPromises);
+      }).done(paragraphs => {
+        this.props.displayedArticleHandler(article.entity._links.self.href, [article], paragraphs);
+      })
+    })
   }
 
   render() {
@@ -40,7 +69,7 @@ class ArticleCard extends React.Component {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary">
+          <Button size="small" color="primary" onClick={()=>this.displayArticle(this.props.article.entity._links.self.href)}>
             Read
             </Button>
         </CardActions>
