@@ -13,7 +13,10 @@ class FashionPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { fashionArticles: [], latestFashionArticleKey: "", latestFashionArticle: [], latestFashionArticleParagraphs: []};
+    this.state = { fashionArticles: [], displayedArticleKey: "", displayedArticle: [], displayedArticleParagraphs: []};
+    this.getFashionArticles = this.getFashionArticles.bind(this);
+    this.getLatestFashionArticleWithParagraphs = this.getLatestFashionArticleWithParagraphs.bind(this);
+    this.updateDisplayedArticle = this.updateDisplayedArticle.bind(this);
   }
 
   loadFromServer() {
@@ -23,68 +26,80 @@ class FashionPage extends React.Component {
     ).then(articleCollection => {
 
       this.setState({
-        latestFashionArticleKey: articleCollection.entity._links.latestFashion.href
+        displayedArticleKey: articleCollection.entity._links.latestFashion.href
       });
 
-      client({
-        method: 'GET',
-        path: articleCollection.entity._links.fashion.href
-      }).then(beautyArticleCollection => {
-        return beautyArticleCollection.entity._embedded.articleResources.map(beautyArticle =>
-          client({
-            method: 'GET',
-            path: beautyArticle._links.self.href
-          })
-        );
-      }).then(fashionArticlePromises => {
-        return when.all(fashionArticlePromises);
-      }).done(fashionArticles => {
-        this.setState({
-          fashionArticles: fashionArticles
-        });
-      })
+      this.getFashionArticles(articleCollection.entity._links.fashion.href);
+      this.getLatestFashionArticleWithParagraphs(articleCollection.entity._links.latestFashion.href);
+    });
+  }
 
-      client({
-        method: 'GET',
-        path: articleCollection.entity._links.latestFashion.href
-      }).then(latestFashionArticleCollection => {
-        return latestFashionArticleCollection.entity._embedded.articleResources.map(fashionArticle =>
-          client({
-            method: 'GET',
-            path: fashionArticle._links.self.href
-          })
-        );
-      }).then(latestFashionArticlePromise => {
-        return when.all(latestFashionArticlePromise);
-      }).done(latestFashionArticle => {
+  getFashionArticles(fashionUri) {
+    client({
+      method: 'GET',
+      path: fashionUri
+    }).then(fashionArticleCollection => {
+      return fashionArticleCollection.entity._embedded.articleResources.map(fashionArticle =>
+        client({
+          method: 'GET',
+          path: fashionArticle._links.self.href
+        })
+      );
+    }).then(fashionArticlePromises => {
+      return when.all(fashionArticlePromises);
+    }).done(fashionArticles => {
+      this.setState({
+        fashionArticles: fashionArticles
+      });
+    })
+  }
 
-        this.setState({
-          latestFashionArticle: latestFashionArticle
-        });
+  getLatestFashionArticleWithParagraphs(latestFashionUri) {
+    client({
+      method: 'GET',
+      path: latestFashionUri
+    }).then(latestFashionArticleCollection => {
+      return latestFashionArticleCollection.entity._embedded.articleResources.map(fashionArticle =>
+        client({
+          method: 'GET',
+          path: fashionArticle._links.self.href
+        })
+      );
+    }).then(latestFashionArticlePromise => {
+      return when.all(latestFashionArticlePromise);
+    }).done(displayedArticle => {
 
-        this.state.latestFashionArticle.map(latestFashionArticle =>
+      this.setState({
+        displayedArticle: displayedArticle
+      });
 
-          client({
-            method: 'GET',
-            path: latestFashionArticle.entity._links.paragraphs.href
-          }).then(result => {
-            return result.entity._embedded.articleContents.map(articleContent =>
-              client({
-                method: 'GET',
-                path: articleContent._links.self.href
-              })
-            );
-          }).then(articleContentPromises => {
-            return when.all(articleContentPromises);
-          }).done(paragraphs => {
-            this.setState({
-              latestFashionArticleParagraphs: paragraphs
-            });
-          }));;
-      })
+      this.state.displayedArticle.map(displayedArticle =>
 
+        client({
+          method: 'GET',
+          path: displayedArticle.entity._links.paragraphs.href
+        }).then(result => {
+          return result.entity._embedded.articleContents.map(articleContent =>
+            client({
+              method: 'GET',
+              path: articleContent._links.self.href
+            })
+          );
+        }).then(articleContentPromises => {
+          return when.all(articleContentPromises);
+        }).done(paragraphs => {
+          this.setState({
+            displayedArticleParagraphs: paragraphs
+          });
+        }));;
+    })
+  }
 
-
+  updateDisplayedArticle(displayedArticleKey, displayedArticle, displayedArticleParagraphs) {
+    this.setState({
+      displayedArticleKey: displayedArticleKey,
+      displayedArticle: displayedArticle,
+      displayedArticleParagraphs: displayedArticleParagraphs
     });
   }
 
@@ -96,8 +111,8 @@ class FashionPage extends React.Component {
 
     return (
       <CookiesProvider>
-        <Article key={this.state.latestFashionArticleKey} article={this.state.latestFashionArticle} articleParagraphs={this.state.latestFashionArticleParagraphs} />
-        <ArticleCardGrid recentArticles={this.state.fashionArticles.slice(1)} />
+        <Article id="displayedArticle" key={this.state.displayedArticleKey} article={this.state.displayedArticle} articleParagraphs={this.state.displayedArticleParagraphs} />
+        <ArticleCardGrid recentArticles={this.state.fashionArticles} displayedArticleHandler={this.updateDisplayedArticle}/>
       </CookiesProvider >
     );
   }
