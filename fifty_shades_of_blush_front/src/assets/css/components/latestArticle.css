@@ -4,14 +4,15 @@
 }
 
 .img{
-max-width: 700px;
-max-height: 280px;
-margin: 10px 10px;
-float:left;
+    width: 100%;
+    float:right;
 }
 
 .articleInfo{
-    width: auto;
-    height:auto;
-    margin-left : 50px;
+    text-align: center;
+    padding: 15%;
+}
+
+.article{
+    padding: 3%;
 }
