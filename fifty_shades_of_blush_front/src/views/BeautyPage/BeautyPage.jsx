@@ -9,8 +9,8 @@ import Article from '../../components/article/Article.jsx';
 
 
 const when = require('when');
-const client = require('../../components/rest/client');
-const follow = require('../../components/rest/follow');
+const client = require('../../tools/rest/client');
+const follow = require('../../tools/rest/follow');
 const root = 'http://localhost:8080/api';
 
 class BeautyPage extends React.Component {

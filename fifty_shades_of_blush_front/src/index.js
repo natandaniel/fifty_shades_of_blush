@@ -6,6 +6,7 @@ import { createBrowserHistory } from "history";
 
 import * as serviceWorker from './serviceWorker';
 
+import LoginPage from './views/LoginPage/LoginPage.jsx';
 import LandingPage from './views/LandingPage/LandingPage.jsx';
 import AdminPage from "./views/AdminPage/AdminPage.jsx";
 import BeautyPage from './views/BeautyPage/BeautyPage.jsx';
@@ -22,6 +23,7 @@ ReactDOM.render(
   <Router history={hist}>
       <Switch>
         <Route exact path="/" component={LandingPage} />
+        <Route exact path="/login" component={LoginPage} />
         <Route exact path="/admin" component={AdminPage} />
         <Route path="/beauty" component={BeautyPage} />
         <Route path="/fashion" component={FashionPage} />

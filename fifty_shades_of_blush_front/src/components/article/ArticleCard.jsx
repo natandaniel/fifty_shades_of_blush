@@ -10,7 +10,7 @@ import '../../assets/css/components/article/articleCard.css';
 import {scrollIt} from '../../tools/scrolling/scrollIt';
 
 const when = require('when');
-const client = require('../../components/rest/client');
+const client = require('../../tools/rest/client');
 
 class ArticleCard extends React.Component {
 

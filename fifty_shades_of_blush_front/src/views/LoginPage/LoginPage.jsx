@@ -37,16 +37,16 @@ class LoginPage extends React.Component {
           <Typography component="h1" variant="h5">
             Sign in
         </Typography>
-          <form className={classes.form} method="POST" action={root + "/login"}>
+          <form className={classes.form} method="POST" action={root + "/authenticate"}>
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
+              id="username"
+              label="username"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
