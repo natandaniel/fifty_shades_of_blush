@@ -1,6 +1,9 @@
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
 
+import Container from '@material-ui/core/Container';
+import Header from '../../components/header/Header.jsx'
+import Footer from '../../components/footer/Footer.jsx'
 import ArticleCardGrid from '../../components/article/ArticleCardGrid.jsx';
 import Article from '../../components/article/Article.jsx';
 
@@ -13,7 +16,7 @@ class FashionPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { fashionArticles: [], displayedArticleKey: "", displayedArticle: [], displayedArticleParagraphs: []};
+    this.state = { fashionArticles: [], displayedArticleKey: "", displayedArticle: [], displayedArticleParagraphs: [] };
     this.getFashionArticles = this.getFashionArticles.bind(this);
     this.getLatestFashionArticleWithParagraphs = this.getLatestFashionArticleWithParagraphs.bind(this);
     this.updateDisplayedArticle = this.updateDisplayedArticle.bind(this);
@@ -111,8 +114,12 @@ class FashionPage extends React.Component {
 
     return (
       <CookiesProvider>
-        <Article id="displayedArticle" key={this.state.displayedArticleKey} article={this.state.displayedArticle} articleParagraphs={this.state.displayedArticleParagraphs} />
-        <ArticleCardGrid recentArticles={this.state.fashionArticles} displayedArticleHandler={this.updateDisplayedArticle}/>
+        <Container className="mainContainer" maxWidth="lg">
+          <Header />
+          <Article id="displayedArticle" key={this.state.displayedArticleKey} article={this.state.displayedArticle} articleParagraphs={this.state.displayedArticleParagraphs} />
+          <ArticleCardGrid recentArticles={this.state.fashionArticles} displayedArticleHandler={this.updateDisplayedArticle} />
+          <Footer />
+        </Container>
       </CookiesProvider >
     );
   }

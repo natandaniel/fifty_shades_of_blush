@@ -1,6 +1,9 @@
 import React from 'react';
 import { CookiesProvider } from 'react-cookie';
 
+import Container from '@material-ui/core/Container';
+import Header from '../../components/header/Header.jsx'
+import Footer from '../../components/footer/Footer.jsx'
 import ArticleCardGrid from '../../components/article/ArticleCardGrid.jsx';
 import Article from '../../components/article/Article.jsx';
 
@@ -111,8 +114,12 @@ class LifestylePage extends React.Component {
 
     return (
       <CookiesProvider>
-        <Article key={this.state.displayedArticleKey} article={this.state.displayedArticle} articleParagraphs={this.state.displayedArticleParagraphs} />
-        <ArticleCardGrid recentArticles={this.state.lifestyleArticles} displayedArticleHandler={this.updateDisplayedArticle} />
+        <Container className="mainContainer" maxWidth="lg">
+          <Header />
+          <Article key={this.state.displayedArticleKey} article={this.state.displayedArticle} articleParagraphs={this.state.displayedArticleParagraphs} />
+          <ArticleCardGrid recentArticles={this.state.lifestyleArticles} displayedArticleHandler={this.updateDisplayedArticle} />
+          <Footer />
+        </Container>
       </CookiesProvider >
     );
   }

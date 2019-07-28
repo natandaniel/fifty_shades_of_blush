@@ -3,7 +3,10 @@ import { CookiesProvider } from 'react-cookie';
 
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
+import Container from '@material-ui/core/Container';
 
+import Header from '../../components/header/Header.jsx'
+import Footer from '../../components/footer/Footer.jsx'
 import ArticleCardGrid from '../../components/article/ArticleCardGrid.jsx';
 import Article from '../../components/article/Article.jsx';
 
@@ -174,7 +177,7 @@ class LandingPage extends React.Component {
         <Grid item md={4} xs={1}></Grid>
         <Grid item md={4} xs={10}>
           <div className="linkBlock">
-          <Typography className="link">  {"recent " + section + " articles"}</Typography>
+            <Typography className="link">  {"recent " + section + " articles"}</Typography>
             <Link
               color="inherit"
               href={"/" + section}
@@ -195,8 +198,12 @@ class LandingPage extends React.Component {
 
     return (
       <CookiesProvider>
-        <Article key={this.state.latestArticleKey} article={this.state.latestArticle} articleParagraphs={this.state.latestArticleParagraphs} />
-        {blocks}
+        <Container className="mainContainer" maxWidth="lg">
+          <Header />
+          <Article key={this.state.latestArticleKey} article={this.state.latestArticle} articleParagraphs={this.state.latestArticleParagraphs} />
+          {blocks}
+          <Footer />
+        </Container>
       </CookiesProvider >
     );
   }
