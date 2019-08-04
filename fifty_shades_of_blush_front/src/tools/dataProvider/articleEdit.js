@@ -1,12 +1,9 @@
 import React from 'react';
 import {
-    ArrayInput,
     Edit,
     SimpleForm,
     TextInput,
     DisabledInput,
-    BooleanInput,
-    DateInput
 } from 'react-admin';
 
 export const ArticleEdit = props => (

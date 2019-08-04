@@ -1,9 +1,11 @@
 import React from 'react';
-import { Admin, Resource} from 'react-admin';
+import { Admin, Resource, fetchUtils, ListGuesser, EditGuesser} from 'react-admin';
 import jsonHalRestProvider from 'ra-data-json-hal';
+import { withCookies } from 'react-cookie';
 
 import authProvider from '../../tools/authProvider/authProvider';
 
+import Dashboard from '../../tools/dataProvider/dashboard';
 import {ArticleList} from '../../tools/dataProvider/articleList';
 import {ArticleEdit} from '../../tools/dataProvider/articleEdit';
 import {ArticleCreate} from '../../tools/dataProvider/articleCreate';
@@ -12,20 +14,41 @@ import {ArticleContentEdit} from '../../tools/dataProvider/articleContentEdit';
 import {UserList} from '../../tools/dataProvider/userList';
 import {UserEdit} from '../../tools/dataProvider/userEdit';
 
-class AdminPage extends React.Component {
 
+const _fetch = require('../../tools/dataProvider/fetch');
+
+class AdminPage extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {};
+        const {cookies} = props;
+        this.state.csrfToken = cookies.get('XSRF-TOKEN');
     }
 
     render() {
+
+        const httpClient = (url, options = {}, resource, type) => {
+
+            if (!options.headers) {
+                options.headers = new Headers({ Accept: 'application/json' });
+            }
+            options.headers.set('X-XSRF-TOKEN', this.state.csrfToken);
+
+            const token = localStorage.getItem('token');
+            options.user = {
+                authenticated: true,
+                token: token
+            }
+            return _fetch.fetchJson(url, options, resource, type);
+        }
+        const dataProvider = jsonHalRestProvider('http://localhost:8080/api', httpClient);
         
         return (
-            <Admin authProvider={authProvider} dataProvider={jsonHalRestProvider('http://localhost:8080/api')} >
-                  <Resource name="articles"  list={ArticleList} edit={ArticleEdit} create={ArticleCreate}/>
-                  <Resource name="articleContents"  list={ArticleContentList} edit={ArticleContentEdit}/>
-                  <Resource name="users"  list={UserList} edit={UserEdit}/>
+            <Admin dashboard={Dashboard} authProvider={authProvider} dataProvider={dataProvider} >
+                  <Resource name="articles"  list={ListGuesser} edit={EditGuesser}/>
+                  <Resource name="articleContents"  list={ListGuesser} edit={EditGuesser} options={{ label: 'Paragraphs' }}/>
+                  <Resource name="users"  list={ListGuesser} edit={EditGuesser}/>
             </Admin>
         );
     }
@@ -34,4 +57,4 @@ class AdminPage extends React.Component {
 }
 
 
-export default AdminPage;
+export default withCookies(AdminPage);

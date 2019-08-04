@@ -14,8 +14,8 @@ class Article extends React.Component {
 
 
     const paragraph = this.props.articleParagraphs.map(paragraph =>
-      <div>
-        <Typography key={paragraph.entity._links.self.href}>{paragraph.entity.content}</Typography>
+      <div  key={paragraph.entity._links.self.href}>
+        <Typography>{paragraph.entity.content}</Typography>
         <br />
       </div>
     );
