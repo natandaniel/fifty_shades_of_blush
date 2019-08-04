@@ -17,7 +17,7 @@ export const UserList = props => (
             <TextField source="status" />
             <DateField source="createdAt" />
             <DateField source="updatedAt" />
-            <TextField source="_links.self.href" />
+            <UrlField  source="_links.self.href" />
             <TextField source="id" />
         </Datagrid>
     </List>

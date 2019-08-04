@@ -1,5 +1,5 @@
 import React from 'react';
-import { Admin, Resource, fetchUtils, ListGuesser, EditGuesser} from 'react-admin';
+import { Admin, Resource} from 'react-admin';
 import jsonHalRestProvider from 'ra-data-json-hal';
 import { withCookies } from 'react-cookie';
 
@@ -31,7 +31,7 @@ class AdminPage extends React.Component {
         const httpClient = (url, options = {}, resource, type) => {
 
             if (!options.headers) {
-                options.headers = new Headers({ Accept: 'application/json' });
+                options.headers = new Headers({ Accept: 'application/json'});
             }
             options.headers.set('X-XSRF-TOKEN', this.state.csrfToken);
 
@@ -42,13 +42,13 @@ class AdminPage extends React.Component {
             }
             return _fetch.fetchJson(url, options, resource, type);
         }
-        const dataProvider = jsonHalRestProvider('http://localhost:8080/api', httpClient);
+        const dataProvider = jsonHalRestProvider('http://localhost:8080/api');
         
         return (
             <Admin dashboard={Dashboard} authProvider={authProvider} dataProvider={dataProvider} >
-                  <Resource name="articles"  list={ListGuesser} edit={EditGuesser}/>
-                  <Resource name="articleContents"  list={ListGuesser} edit={EditGuesser} options={{ label: 'Paragraphs' }}/>
-                  <Resource name="users"  list={ListGuesser} edit={EditGuesser}/>
+                  <Resource name="articles"  list={ArticleList} edit={ArticleEdit}/>
+                  <Resource name="articleContents"  list={ArticleContentList} edit={ArticleContentEdit} options={{ label: 'Paragraphs' }}/>
+                  <Resource name="users"  list={UserList} edit={UserEdit}/>
             </Admin>
         );
     }

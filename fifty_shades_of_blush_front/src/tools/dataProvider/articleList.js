@@ -16,7 +16,7 @@ export const ArticleList = props => (
       <TextField source="type" />
       <DateField source="createdAt" />
       <DateField source="updatedAt" />
-      <TextField source="_links.self.href" />
+      <UrlField  source="_links.self.href" />
       <TextField source="id" />
     </Datagrid>
   </List>

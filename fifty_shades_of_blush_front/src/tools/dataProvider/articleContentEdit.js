@@ -9,13 +9,12 @@ import {
 export const ArticleContentEdit = props => (
     <Edit {...props}>
         <SimpleForm>
-
-        <TextInput source="content" label="CONTENT"/>
-        <DisabledInput source="createdAt" label="CREATED AT"/>
-        <DisabledInput source="updatedAt" label="MODIFIED AT"/>
-        <DisabledInput source="_links.self.href" label="URI"/>
-        <DisabledInput source="_links.article.href" label="ARTICLE URI"/>
-
+            <DisabledInput source="id" label="ID" />
+            <TextInput source="content" label="CONTENT" />
+            <DisabledInput source="createdAt" label="CREATED AT" />
+            <DisabledInput source="updatedAt" label="MODIFIED AT" />
+            <DisabledInput source="_links.self.href" label="URI" />
+            <DisabledInput source="_links.article.href" label="ARTICLE URI" />
         </SimpleForm>
-</Edit>
-  );
+    </Edit>
+);
