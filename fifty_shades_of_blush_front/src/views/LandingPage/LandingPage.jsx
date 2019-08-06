@@ -198,12 +198,12 @@ class LandingPage extends React.Component {
 
     return (
       <CookiesProvider>
+        <Header />
         <Container className="mainContainer" maxWidth="lg">
-          <Header />
           <Article key={this.state.latestArticleKey} article={this.state.latestArticle} articleParagraphs={this.state.latestArticleParagraphs} />
           {blocks}
-          <Footer />
         </Container>
+        <Footer />
       </CookiesProvider >
     );
   }
