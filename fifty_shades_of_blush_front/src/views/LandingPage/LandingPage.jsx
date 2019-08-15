@@ -32,7 +32,7 @@ class LandingPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { articleAttributes: [], latestArticle: [], latestArticleKey: "", latestArticleParagraphs: [], recentBeautyArticles: [], recentFashionArticles: [], recentTravelArticles: [], recentLifestyleArticles: [] };
+    this.state = { authenticatedUser: {}, isAuthenticated: false, articleAttributes: [], latestArticle: [], latestArticleKey: "", latestArticleParagraphs: [], recentBeautyArticles: [], recentFashionArticles: [], recentTravelArticles: [], recentLifestyleArticles: [] };
     this.updateDisplayedArticle = this.updateDisplayedArticle.bind(this);
   }
 
@@ -205,12 +205,10 @@ class LandingPage extends React.Component {
 
   componentDidMount() {
     this.loadFromServer();
+    this.setState({ authenticatedUser: this.props.location.state.authenticatedUser, isAuthenticated: this.props.location.state.isAuthenticated });
   }
 
   render() {
-
-    console.log(cookies.getAll);
-
     const blocks = sections.map(section => (
       <Grid key={section} className="section" container spacing={2} item md={12}>
         <Grid item md={4} xs={1}></Grid>
@@ -239,7 +237,6 @@ class LandingPage extends React.Component {
       <div>
         <Header />
         <Container className="mainContainer" maxWidth="lg">
-          <CreateArticle attributes={this.state.articleAttributes} />
           <Article key={this.state.latestArticleKey} article={this.state.latestArticle} articleParagraphs={this.state.latestArticleParagraphs} />
           {blocks}
         </Container>
