@@ -1,5 +1,5 @@
 import React from 'react';
-import { CookiesProvider } from 'react-cookie';
+import Cookies from 'universal-cookie';
 
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
@@ -9,6 +9,7 @@ import Header from '../../components/header/Header.jsx'
 import Footer from '../../components/footer/Footer.jsx'
 import ArticleCardGrid from '../../components/article/ArticleCardGrid.jsx';
 import Article from '../../components/article/Article.jsx';
+import CreateArticle from '../../components/article/CreateArticle.jsx';
 
 import '../../assets/css/landingPage.css'
 import { Typography } from '@material-ui/core';
@@ -25,11 +26,13 @@ const sections = [
   'lifestyle'
 ];
 
+const cookies = new Cookies();
+
 class LandingPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { latestArticle: [], latestArticleKey: "", latestArticleParagraphs: [], recentBeautyArticles: [], recentFashionArticles: [], recentTravelArticles: [], recentLifestyleArticles: [] };
+    this.state = { articleAttributes: [], latestArticle: [], latestArticleKey: "", latestArticleParagraphs: [], recentBeautyArticles: [], recentFashionArticles: [], recentTravelArticles: [], recentLifestyleArticles: [] };
     this.updateDisplayedArticle = this.updateDisplayedArticle.bind(this);
   }
 
@@ -39,123 +42,157 @@ class LandingPage extends React.Component {
       { rel: 'articles', params: {} }]
     ).then(articleCollection => {
 
+
       this.setState({
         latestArticleKey: articleCollection.entity._links.latest.href
       });
 
-      client({
-        method: 'GET',
-        path: articleCollection.entity._links.latest.href
-      }).then(latest => {
-        return latest.entity._embedded.articleResources.map(article =>
-          client({
-            method: 'GET',
-            path: article._links.self.href
-          })
-        );
-      }).then(articlePromises => {
-        return when.all(articlePromises);
-      }).done(latestArticle => {
-
-        this.setState({
-          latestArticle: latestArticle
-        });
-
-        this.state.latestArticle.map(latestArticle =>
-
-          client({
-            method: 'GET',
-            path: latestArticle.entity._links.paragraphs.href
-          }).then(result => {
-            return result.entity._embedded.articleContents.map(articleContent =>
-              client({
-                method: 'GET',
-                path: articleContent._links.self.href
-              })
-            );
-          }).then(articleContentPromises => {
-            return when.all(articleContentPromises);
-          }).done(paragraphs => {
-            this.setState({
-              latestArticleParagraphs: paragraphs
-            });
-          }));;
-      })
-
-
-      client({
-        method: 'GET',
-        path: articleCollection.entity._links.recentBeauty.href
-      }).then(recents => {
-        return recents.entity._embedded.articleResources.map(article =>
-          client({
-            method: 'GET',
-            path: article._links.self.href
-          })
-        );
-      }).then(articlePromises => {
-        return when.all(articlePromises);
-      }).done(recentBeautyArticles => {
-        this.setState({
-          recentBeautyArticles: recentBeautyArticles
-        });
-      })
-
-      client({
-        method: 'GET',
-        path: articleCollection.entity._links.recentFashion.href
-      }).then(recents => {
-        return recents.entity._embedded.articleResources.map(article =>
-          client({
-            method: 'GET',
-            path: article._links.self.href
-          })
-        );
-      }).then(articlePromises => {
-        return when.all(articlePromises);
-      }).done(recentFashionArticles => {
-        this.setState({
-          recentFashionArticles: recentFashionArticles
-        });
-      })
-
-      client({
-        method: 'GET',
-        path: articleCollection.entity._links.recentTravel.href
-      }).then(recents => {
-        return recents.entity._embedded.articleResources.map(article =>
-          client({
-            method: 'GET',
-            path: article._links.self.href
-          })
-        );
-      }).then(articlePromises => {
-        return when.all(articlePromises);
-      }).done(recentTravelArticles => {
-        this.setState({
-          recentTravelArticles: recentTravelArticles
-        });
-      })
-
-      client({
-        method: 'GET',
-        path: articleCollection.entity._links.recentLifestyle.href
-      }).then(recents => {
-        return recents.entity._embedded.articleResources.map(article =>
-          client({
-            method: 'GET',
-            path: article._links.self.href
-          })
-        );
-      }).then(articlePromises => {
-        return when.all(articlePromises);
-      }).done(recentLifestyleArticles => {
-        this.setState({
-          recentLifestyleArticles: recentLifestyleArticles
-        });
-      })
-
+      this.getArticleAttributes(articleCollection);
+      this.getLatestArticle(articleCollection);
+      this.getRecentBeautyArticles(articleCollection);
+      this.getRecentFashionArticles(articleCollection);
+      this.getRecentTravelArticles(articleCollection);
+      this.getRecentLifestyleArticles(articleCollection);
     });
+  }
+
+  getArticleAttributes(articleCollection) {
+    client({
+      method: 'GET',
+      path: articleCollection.entity._links.profile.href,
+      headers: { 'Accept': 'application/schema+json' }
+    }).done(schema => {
+      this.setState({ articleAttributes: Object.keys(schema.entity.properties) });
+    });
+  }
+
+  getLatestArticle(articleCollection) {
+
+    client({
+      method: 'GET',
+      path: articleCollection.entity._links.latest.href
+    }).then(latest => {
+      return latest.entity._embedded.articleResources.map(article =>
+        client({
+          method: 'GET',
+          path: article._links.self.href
+        })
+      );
+    }).then(articlePromises => {
+      return when.all(articlePromises);
+    }).done(latestArticle => {
+
+      this.setState({
+        latestArticle: latestArticle
+      });
+
+      this.getLatestArticleParagraphs(latestArticle);
+    })
+
+  }
+
+  getLatestArticleParagraphs(latestArticle) {
+    latestArticle.map(latestArticle =>
+
+      client({
+        method: 'GET',
+        path: latestArticle.entity._links.paragraphs.href
+      }).then(result => {
+        return result.entity._embedded.articleContents.map(articleContent =>
+          client({
+            method: 'GET',
+            path: articleContent._links.self.href
+          })
+        );
+      }).then(articleContentPromises => {
+        return when.all(articleContentPromises);
+      }).done(paragraphs => {
+        this.setState({
+          latestArticleParagraphs: paragraphs
+        });
+      }));
+  }
+
+  getRecentBeautyArticles(articleCollection) {
+    client({
+      method: 'GET',
+      path: articleCollection.entity._links.recentBeauty.href
+    }).then(recents => {
+      return recents.entity._embedded.articleResources.map(article =>
+        client({
+          method: 'GET',
+          path: article._links.self.href
+        })
+      );
+    }).then(articlePromises => {
+      return when.all(articlePromises);
+    }).done(recentBeautyArticles => {
+      this.setState({
+        recentBeautyArticles: recentBeautyArticles
+      });
+    })
+
+  }
+
+  getRecentFashionArticles(articleCollection) {
+    client({
+      method: 'GET',
+      path: articleCollection.entity._links.recentFashion.href
+    }).then(recents => {
+      return recents.entity._embedded.articleResources.map(article =>
+        client({
+          method: 'GET',
+          path: article._links.self.href
+        })
+      );
+    }).then(articlePromises => {
+      return when.all(articlePromises);
+    }).done(recentFashionArticles => {
+      this.setState({
+        recentFashionArticles: recentFashionArticles
+      });
+    })
+  }
+
+  getRecentTravelArticles(articleCollection) {
+
+    client({
+      method: 'GET',
+      path: articleCollection.entity._links.recentTravel.href
+    }).then(recents => {
+      return recents.entity._embedded.articleResources.map(article =>
+        client({
+          method: 'GET',
+          path: article._links.self.href
+        })
+      );
+    }).then(articlePromises => {
+      return when.all(articlePromises);
+    }).done(recentTravelArticles => {
+      this.setState({
+        recentTravelArticles: recentTravelArticles
+      });
+    })
+  }
+
+  getRecentLifestyleArticles(articleCollection) {
+    client({
+      method: 'GET',
+      path: articleCollection.entity._links.recentLifestyle.href
+    }).then(recents => {
+      return recents.entity._embedded.articleResources.map(article =>
+        client({
+          method: 'GET',
+          path: article._links.self.href
+        })
+      );
+    }).then(articlePromises => {
+      return when.all(articlePromises);
+    }).done(recentLifestyleArticles => {
+      this.setState({
+        recentLifestyleArticles: recentLifestyleArticles
+      });
+    })
   }
 
   updateDisplayedArticle(displayedArticleKey, displayedArticle, displayedArticleParagraphs) {
@@ -171,6 +208,8 @@ class LandingPage extends React.Component {
   }
 
   render() {
+
+    console.log(cookies.getAll);
 
     const blocks = sections.map(section => (
       <Grid key={section} className="section" container spacing={2} item md={12}>
@@ -197,14 +236,15 @@ class LandingPage extends React.Component {
     ));
 
     return (
-      <CookiesProvider>
+      <div>
         <Header />
         <Container className="mainContainer" maxWidth="lg">
+          <CreateArticle attributes={this.state.articleAttributes} />
           <Article key={this.state.latestArticleKey} article={this.state.latestArticle} articleParagraphs={this.state.latestArticleParagraphs} />
           {blocks}
         </Container>
         <Footer />
-      </CookiesProvider >
+      </div>
     );
   }
 }
