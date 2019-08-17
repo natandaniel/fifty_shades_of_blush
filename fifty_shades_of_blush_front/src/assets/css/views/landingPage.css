@@ -1,0 +1,20 @@
+a{
+    text-decoration: none !important;
+}
+
+.section {
+    margin-bottom: 48px !important;
+}
+
+.linkBlock{
+    width: 50%;
+    margin: auto;
+    text-align:center;
+}
+
+.linkBlock .link{
+    font-style :italic;
+}
+.link:hover{
+    color: pink;
+}
