@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import { Typography } from '@material-ui/core';
 
 import '../../assets/css/components/article/createArticle.css'
 
@@ -55,7 +56,9 @@ class CreateArticle extends React.Component {
 
 		return (
 			<div>
-
+				<Typography component="h1" variant="h5">
+					Write new article
+         		</Typography>
 				<form onSubmit={this.handleSubmit}>
 					<TextField
 						id="title"
@@ -88,18 +91,25 @@ class CreateArticle extends React.Component {
 						))}
 					</TextField>
 					<TextField
-						id="standard-textarea"
+						id="body"
 						label="Article Body"
 						placeholder="Write article here ..."
 						multiline
 						className="articleBody"
 						margin="normal"
 					/>
+					<TextField
+						id="image"
+						className="articleImage"
+						type="file"
+						accept="image/*"
+						margin="normal"
+					/>
 					<Button
 						type="submit"
 						fullWidth
 						variant="contained"
-						color="primary"
+						color="secondary"
 						className="submit"
 					>
 						Submit
