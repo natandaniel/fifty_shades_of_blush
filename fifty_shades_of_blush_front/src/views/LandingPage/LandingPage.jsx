@@ -9,19 +9,17 @@ import Header from '../../components/header/Header.jsx'
 import Footer from '../../components/footer/Footer.jsx'
 import ArticleCardGrid from '../../components/article/ArticleCardGrid.jsx';
 import Article from '../../components/article/Article.jsx';
+import Logout from '../../components/logout/Logout.jsx';
 
 import '../../assets/css/views/landingPage.css'
 import { Typography } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
 
 import CreateArticle from '../../components/article/CreateArticle.jsx';
 
 import ArticlesService from '../../tools/dataProvider/ArticlesService';
 
-
+const API_URL = 'http://localhost:8080/api';
 const when = require('when');
-const client = require('../../tools/rest/client');
-const root = 'http://localhost:8080/api';
 
 const sections = [
   'beauty',
@@ -34,8 +32,8 @@ class LandingPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { authenticatedUser: {}, isAuthenticated: false, articleAttributes: [], latestArticle: [], latestArticleKey: "", latestArticleParagraphs: [], recentBeautyArticles: [], recentFashionArticles: [], recentTravelArticles: [], recentLifestyleArticles: [] };
-    this.updateDisplayedArticle = this.updateDisplayedArticle.bind(this);
+    this.state = { isAuthenticated: false, latestArticle: [], latestArticleKey: "", latestArticleParagraphs: [], recentBeautyArticles: [], recentFashionArticles: [], recentTravelArticles: [], recentLifestyleArticles: [] };
+
   }
 
   loadFromServer() {
@@ -130,21 +128,16 @@ class LandingPage extends React.Component {
     })
   }
 
-  logout = () => {
-    client({
-      method: 'POST',
-      path: root + '/perform-logout',
-    });
-    sessionStorage.setItem('isLoggedIn', 'false');
-    this.setState({ isAuthenticated: false });
-  }
-
-  updateDisplayedArticle(displayedArticleKey, displayedArticle, displayedArticleParagraphs) {
+  updateDisplayedArticle = (displayedArticleKey, displayedArticle, displayedArticleParagraphs) => {
     this.setState({
       latestArticleKey: displayedArticleKey,
       latestArticle: displayedArticle,
       latestArticleParagraphs: displayedArticleParagraphs
     });
+  }
+
+  updateIsAuthenticated = (boolean) => {
+    this.setState({isAuthenticated: boolean});
   }
 
   componentDidMount() {
@@ -158,10 +151,8 @@ class LandingPage extends React.Component {
 
     if (sessionStorage.getItem('isLoggedIn') === 'true') {
       createArticleDialog = <Grid item lg={12}> <CreateArticle /></Grid>
-      logout = <Grid item lg={12}><Button variant="contained" color="secondary" onClick={this.logout}>
-        Exit Admin Mode
-    </Button> </Grid>
-    } 
+      logout = <Logout isAuthenticatedHandler={this.updateIsAuthenticated}/>
+    }
 
     const articleSections = sections.map(section => (
       <Grid key={section} className="section" container spacing={2} item md={12}>

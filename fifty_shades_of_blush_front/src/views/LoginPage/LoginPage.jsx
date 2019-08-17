@@ -17,9 +17,7 @@ class LoginPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAuthenticated: false,
       hasLoginFailed: false,
-      showSuccessMessage: false,
       username: "",
       password: ""
     };
@@ -63,7 +61,6 @@ class LoginPage extends React.Component {
         AuthenticationService.registerSuccessfulLogin(this.state.username, this.state.password)
         this.props.history.push('/')
       }).catch(() => {
-        this.setState({ showSuccessMessage: false })
         this.setState({ hasLoginFailed: true })
       })
   }
@@ -78,7 +75,6 @@ class LoginPage extends React.Component {
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         {this.state.hasLoginFailed && <div className="alert alert-warning">Invalid Credentials</div>}
-        {this.state.showSuccessMessage && <div>Login Sucessful</div>}
         <div className="paper">
           <Avatar className="avatar">
             <LockOutlinedIcon />
