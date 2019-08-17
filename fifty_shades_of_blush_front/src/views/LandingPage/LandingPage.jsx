@@ -9,8 +9,10 @@ import Footer from '../../components/footer/Footer.jsx'
 import ArticleCardGrid from '../../components/article/ArticleCardGrid.jsx';
 import Article from '../../components/article/Article.jsx';
 
-import '../../assets/css/landingPage.css'
+import '../../assets/css/views/landingPage.css'
 import { Typography } from '@material-ui/core';
+
+import CreateArticle from '../../components/article/CreateArticle.jsx';
 
 const when = require('when');
 const client = require('../../tools/rest/client');
@@ -200,16 +202,16 @@ class LandingPage extends React.Component {
   }
 
   componentDidMount() {
-    
+
     this.loadFromServer();
 
-    if(this.props.location.state){
+    if (this.props.location.state) {
       this.setState({ authenticatedUser: this.props.location.state.authenticatedUser, isAuthenticated: this.props.location.state.isAuthenticated });
     }
   }
 
   render() {
-    const blocks = sections.map(section => (
+    const articleSections = sections.map(section => (
       <Grid key={section} className="section" container spacing={2} item md={12}>
         <Grid item md={4} xs={1}></Grid>
         <Grid item md={4} xs={10}>
@@ -236,9 +238,12 @@ class LandingPage extends React.Component {
     return (
       <div>
         <Header />
-        <Container className="mainContainer" maxWidth="lg">
-          <Article key={this.state.latestArticleKey} article={this.state.latestArticle} articleParagraphs={this.state.latestArticleParagraphs} />
-          {blocks}
+        <Container>
+          <Grid key="mainGrid" className="" container spacing={2}>
+            <Grid item lg={12}> <CreateArticle /></Grid>
+            <Grid item lg={12}> <Article key={this.state.latestArticleKey} article={this.state.latestArticle} articleParagraphs={this.state.latestArticleParagraphs} /></Grid>
+            {articleSections}
+          </Grid>
         </Container>
         <Footer />
       </div>
