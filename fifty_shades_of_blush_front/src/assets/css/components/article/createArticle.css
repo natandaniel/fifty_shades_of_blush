@@ -1,19 +1,7 @@
-.articleTitle{
-    width: 100%;
+.root{
+    padding: 10px !important;
 }
 
-.articleSubtitle{
-    width: 100%;
-}
-
-.articleCategory{
-    width: 100%;
-}
-
-.articleBody{
-    width: 100%;
-}
-
-.articleImage{
+.textField{
     width: 100%;
 }

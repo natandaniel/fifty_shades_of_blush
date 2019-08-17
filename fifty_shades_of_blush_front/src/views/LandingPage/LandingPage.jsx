@@ -11,6 +11,7 @@ import Article from '../../components/article/Article.jsx';
 
 import '../../assets/css/views/landingPage.css'
 import { Typography } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
 
 import CreateArticle from '../../components/article/CreateArticle.jsx';
 
@@ -193,6 +194,15 @@ class LandingPage extends React.Component {
     })
   }
 
+  logout = () =>{
+    client({
+      method: 'POST',
+      path: root + '/perform-logout',
+    });
+
+    this.setState({isAuthenticated: false});
+  }
+
   updateDisplayedArticle(displayedArticleKey, displayedArticle, displayedArticleParagraphs) {
     this.setState({
       latestArticleKey: displayedArticleKey,
@@ -201,16 +211,35 @@ class LandingPage extends React.Component {
     });
   }
 
+  getAuthenticatedUser(){
+		client({
+			method: 'GET',
+			path: root +'/authenticatedUser'
+		}).done(response => {
+			this.setState({
+				authenticatedUser: response.entity
+      });
+      console.log(this.state.authenticatedUser)
+		});
+	}
+
   componentDidMount() {
-
     this.loadFromServer();
-
-    if (this.props.location.state) {
-      this.setState({ authenticatedUser: this.props.location.state.authenticatedUser, isAuthenticated: this.props.location.state.isAuthenticated });
-    }
+    this.getAuthenticatedUser();
   }
 
   render() {
+
+    let createArticleDialog = <Grid item lg={12} />;
+    let logout = <Grid item lg={12} />
+
+    if (this.state.isAuthenticated) {
+      createArticleDialog = <Grid item lg={12}> <CreateArticle authenticatedUser={this.state.authenticatedUser} /></Grid>
+      logout = <Grid item lg={12}><Button variant="contained" color="secondary" onClick={this.logout}>
+        Exit Admin Mode
+    </Button> </Grid>
+    }
+
     const articleSections = sections.map(section => (
       <Grid key={section} className="section" container spacing={2} item md={12}>
         <Grid item md={4} xs={1}></Grid>
@@ -240,7 +269,8 @@ class LandingPage extends React.Component {
         <Header />
         <Container>
           <Grid key="mainGrid" className="" container spacing={2}>
-            <Grid item lg={12}> <CreateArticle /></Grid>
+            {logout}
+            {createArticleDialog}
             <Grid item lg={12}> <Article key={this.state.latestArticleKey} article={this.state.latestArticle} articleParagraphs={this.state.latestArticleParagraphs} /></Grid>
             {articleSections}
           </Grid>

@@ -27,20 +27,28 @@ class LoginPage extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    console.log("submitting value")
+
     client({
       method: 'POST',
       path: url,
       entity: { "username": this.state.username, "password": this.state.password },
       headers: { 'Content-Type': 'application/json' }
     }).done(response => {
+      if (response.status < 200 || response.status >= 300) {
+        throw new Error(response.statusText);
+      }
       this.setState({ authenticatedUser: response.entity, isAuthenticated: true });
     });
 
   }
 
   render() {
-    return this.state.isAuthenticated === true ? <Redirect push to={{ pathname: "/", state: { isAuthenticated: true, authenticatedUser: this.state.authenticatedUser } }} /> : (
+
+    if (this.state.isAuthenticated) {
+      this.props.history.push("/", { isAuthenticated: true });
+    }
+
+    return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className="paper">

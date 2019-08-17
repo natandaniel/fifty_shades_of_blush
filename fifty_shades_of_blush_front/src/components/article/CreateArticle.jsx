@@ -1,9 +1,8 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { Typography } from '@material-ui/core';
+import { Typography, Paper } from '@material-ui/core';
 
 import '../../assets/css/components/article/createArticle.css'
 
@@ -22,7 +21,7 @@ class CreateArticle extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = {}
+		this.state = { title: "", subtitle: "", category: "", body: "", image: "" }
 	}
 
 	onCreate(newArticle) {
@@ -30,92 +29,98 @@ class CreateArticle extends React.Component {
 		follow(client, root, ['articles']).done(response => {
 			client({
 				method: 'POST',
-				path: response.entity._links.self.href,
+				path: response.entity._links.create.href,
 				entity: newArticle,
-				headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': this.state.csrfToken, 'Authorization': 'natandaniel:1565132107267:f8efa9db74214a4423494df4facf2bec' }
-			})
+				headers: { 'Content-Type': 'application/json', 'Authorization': this.props.authenticatedUser.token }
+			}).done(response => console.log(response));
 		})
 	}
 
 	handleSubmit = (e) => {
 		e.preventDefault();
-		const newArticle = {};
-		this.props.attributes.forEach(attribute => {
-			newArticle[attribute] = ReactDOM.findDOMNode(this.refs[attribute]).value.trim();
-		});
+		const newArticle = { "title": this.state.title, "subtitle": this.state.subtitle, "category": this.state.category, "body": this.state.body, "image": this.state.image };
 		this.onCreate(newArticle);
-
-		this.props.attributes.forEach(attribute => {
-			ReactDOM.findDOMNode(this.refs[attribute]).value = '';
-		});
-
-		window.location = "#";
 	}
 
-	render() {
+	setTitle = event => {
+		this.setState({ title: event.target.value });
+	};
 
+	setSubtitle = event => {
+		this.setState({ subtitle: event.target.value });
+	};
+
+	setCategory = event => {
+		this.setState({ category: event.target.value });
+	};
+
+	setBody = event => {
+		this.setState({ body: event.target.value });
+	};
+
+	setImage = event => {
+		this.setState({ image: event.target.value });
+	};
+
+	render() {
 		return (
 			<div>
-				<Typography component="h1" variant="h5">
-					Write new article
+				<Paper className="root">
+					<Typography component="h1" variant="h5">
+						Write new article
          		</Typography>
-				<form onSubmit={this.handleSubmit}>
-					<TextField
-						id="title"
-						label="Article Title"
-						placeholder="Write title here ..."
-						className="articleTitle"
-						margin="normal"
-					/>
-					<TextField
-						id="subtitle"
-						label="Article Subtitle"
-						placeholder="Write subtitle here ..."
-						className="articleSubtitle"
-						margin="normal"
-					/>
-					<TextField
-						id="category"
-						select
-						className="articleCategory"
-						SelectProps={{
-							native: true,
-						}}
-						helperText="Choose article category"
-						margin="normal"
-					>
-						{categories.map(option => (
-							<option key={option} value={option}>
-								{option}
-							</option>
-						))}
-					</TextField>
-					<TextField
-						id="body"
-						label="Article Body"
-						placeholder="Write article here ..."
-						multiline
-						className="articleBody"
-						margin="normal"
-					/>
-					<TextField
-						id="image"
-						className="articleImage"
-						type="file"
-						accept="image/*"
-						margin="normal"
-					/>
-					<Button
-						type="submit"
-						fullWidth
-						variant="contained"
-						color="secondary"
-						className="submit"
-					>
-						Submit
+					<form onSubmit={this.handleSubmit}>
+						<TextField
+							id="title"
+							label="Article Title"
+							placeholder="Write title here ..."
+							className="textField"
+							margin="normal"
+							onChange={this.setTitle}
+						/>
+						<TextField
+							id="subtitle"
+							label="Article Subtitle"
+							placeholder="Write subtitle here ..."
+							className="textField"
+							margin="normal"
+							onChange={this.setSubtitle}
+						/>
+						<TextField
+							id="category"
+							className="articleCategory"
+							placeholder="BEAUTY, FASHION, TRAVEL or LIFESTYLE..."
+							className="textField"
+							margin="normal"
+							onChange={this.setCategory}
+						/>
+						<TextField
+							id="body"
+							label="Article Body"
+							placeholder="Write article here ..."
+							multiline
+							className="textField"
+							margin="normal"
+							onChange={this.setBody}
+						/>
+						<TextField
+							id="image"
+							className="textField"
+							type="file"
+							accept="image/*"
+							margin="normal"
+							onChange={this.setImage}
+						/>
+						<Button
+							type="submit"
+							variant="contained"
+							color="secondary"
+							className="submit"
+						>
+							Submit
             		</Button>
-				</form>
-
+					</form>
+				</Paper>
 			</div>
 		)
 	}
