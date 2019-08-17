@@ -1,5 +1,4 @@
 import React from 'react';
-import Cookies from 'universal-cookie';
 
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
@@ -9,7 +8,6 @@ import Header from '../../components/header/Header.jsx'
 import Footer from '../../components/footer/Footer.jsx'
 import ArticleCardGrid from '../../components/article/ArticleCardGrid.jsx';
 import Article from '../../components/article/Article.jsx';
-import CreateArticle from '../../components/article/CreateArticle.jsx';
 
 import '../../assets/css/landingPage.css'
 import { Typography } from '@material-ui/core';
@@ -25,8 +23,6 @@ const sections = [
   'travel',
   'lifestyle'
 ];
-
-const cookies = new Cookies();
 
 class LandingPage extends React.Component {
 
@@ -204,8 +200,12 @@ class LandingPage extends React.Component {
   }
 
   componentDidMount() {
+    
     this.loadFromServer();
-    this.setState({ authenticatedUser: this.props.location.state.authenticatedUser, isAuthenticated: this.props.location.state.isAuthenticated });
+
+    if(this.props.location.state){
+      this.setState({ authenticatedUser: this.props.location.state.authenticatedUser, isAuthenticated: this.props.location.state.isAuthenticated });
+    }
   }
 
   render() {
