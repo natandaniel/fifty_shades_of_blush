@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -6,16 +7,8 @@ import { Typography, Paper } from '@material-ui/core';
 
 import '../../assets/css/components/article/createArticle.css'
 
-const client = require('../../tools/rest/client');
-const follow = require('../../tools/rest/follow');
-const root = 'http://localhost:8080/api';
+const API_URL = 'http://localhost:8080/api';
 
-const categories = [
-	'beauty',
-	'fashion',
-	'travel',
-	'lifestyle'
-];
 
 class CreateArticle extends React.Component {
 
@@ -26,14 +19,9 @@ class CreateArticle extends React.Component {
 
 	onCreate(newArticle) {
 
-		follow(client, root, ['articles']).done(response => {
-			client({
-				method: 'POST',
-				path: response.entity._links.create.href,
-				entity: newArticle,
-				headers: { 'Content-Type': 'application/json', 'Authorization': this.props.authenticatedUser.token }
-			}).done(response => console.log(response));
-		})
+		axios.post(`${API_URL}/articles/create`, {
+            newArticle
+        })
 	}
 
 	handleSubmit = (e) => {
@@ -42,25 +30,14 @@ class CreateArticle extends React.Component {
 		this.onCreate(newArticle);
 	}
 
-	setTitle = event => {
-		this.setState({ title: event.target.value });
-	};
-
-	setSubtitle = event => {
-		this.setState({ subtitle: event.target.value });
-	};
-
-	setCategory = event => {
-		this.setState({ category: event.target.value });
-	};
-
-	setBody = event => {
-		this.setState({ body: event.target.value });
-	};
-
-	setImage = event => {
-		this.setState({ image: event.target.value });
-	};
+	handleChange = event => {
+		this.setState(
+		  {
+			[event.target.name]
+			  : event.target.value
+		  }
+		)
+	  }
 
 	render() {
 		return (
@@ -76,7 +53,7 @@ class CreateArticle extends React.Component {
 							placeholder="Write title here ..."
 							className="textField"
 							margin="normal"
-							onChange={this.setTitle}
+							onChange={this.handleChange}
 						/>
 						<TextField
 							id="subtitle"
@@ -84,7 +61,7 @@ class CreateArticle extends React.Component {
 							placeholder="Write subtitle here ..."
 							className="textField"
 							margin="normal"
-							onChange={this.setSubtitle}
+							onChange={this.handleChange}
 						/>
 						<TextField
 							id="category"
@@ -92,7 +69,7 @@ class CreateArticle extends React.Component {
 							placeholder="BEAUTY, FASHION, TRAVEL or LIFESTYLE..."
 							className="textField"
 							margin="normal"
-							onChange={this.setCategory}
+							onChange={this.handleChange}
 						/>
 						<TextField
 							id="body"
@@ -101,7 +78,7 @@ class CreateArticle extends React.Component {
 							multiline
 							className="textField"
 							margin="normal"
-							onChange={this.setBody}
+							onChange={this.handleChange}
 						/>
 						<TextField
 							id="image"
@@ -109,7 +86,7 @@ class CreateArticle extends React.Component {
 							type="file"
 							accept="image/*"
 							margin="normal"
-							onChange={this.setImage}
+							onChange={this.handleChange}
 						/>
 						<Button
 							type="submit"

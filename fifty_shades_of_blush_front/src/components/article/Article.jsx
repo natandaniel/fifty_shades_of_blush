@@ -13,35 +13,37 @@ class Article extends React.Component {
   render() {
 
 
-    const paragraph = this.props.articleParagraphs.map(paragraph =>
-      <div  key={paragraph.entity._links.self.href}>
-        <Typography>{paragraph.entity.content}</Typography>
+    const paragraph = this.props.articleParagraphs.map(paragraph => {
+    
+      return <div key={paragraph.config.url}>
+        <Typography>{paragraph.data.content}</Typography>
         <br />
       </div>
+    }
     );
 
     const display = this.props.article.map(article =>
-      <div key={article.entity._links.self.href}>
+      <div key={article.data._links.self.href}>
         <Paper className="root">
           <Grid container spacing={2}>
             <Grid item md={5} xs={12}>
               <div className="articleInfo">
                 <Typography variant="h5" component="h2">
-                  {article.entity.title}
+                  {article.data.title}
                 </Typography>
                 <Typography variant="subtitle2" color="textSecondary" component="p">
-                  {article.entity.subtitle}
+                  {article.data.subtitle}
                 </Typography>
                 <Typography component="h6">{new Intl.DateTimeFormat('en-US', {
                   year: 'numeric',
                   month: 'long',
                   day: '2-digit'
-                }).format(new Date(article.entity.createdAt))}</Typography>
+                }).format(new Date(article.data.createdAt))}</Typography>
               </div>
             </Grid>
             <Grid item md={7} xs={12}>
               <div className="imgHolder">
-                <img className="img" src={require(`../../assets/img/${article.entity.imgName}.jpg`)} width="55%" alt="article" />
+                <img className="img" src={require(`../../assets/img/${article.data.imgName}.jpg`)} width="55%" alt="article" />
               </div>
             </Grid>
             <Grid item >

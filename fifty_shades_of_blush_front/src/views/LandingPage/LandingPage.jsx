@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
@@ -15,9 +16,11 @@ import Button from '@material-ui/core/Button';
 
 import CreateArticle from '../../components/article/CreateArticle.jsx';
 
+import ArticlesService from '../../tools/dataProvider/ArticlesService';
+
+
 const when = require('when');
 const client = require('../../tools/rest/client');
-const follow = require('../../tools/rest/follow');
 const root = 'http://localhost:8080/api';
 
 const sections = [
@@ -36,171 +39,104 @@ class LandingPage extends React.Component {
   }
 
   loadFromServer() {
+    this.getLatestArticle();
+    this.getRecentBeautyArticles();
+    this.getRecentFashionArticles();
+    this.getRecentTravelArticles();
+    this.getRecentLifestyleArticles();
+  };
 
-    follow(client, root, [
-      { rel: 'articles', params: {} }]
-    ).then(articleCollection => {
+  getLatestArticle() {
+    ArticlesService.getLatestArticleEntity().then(latestArticleEntity => {
+      return latestArticleEntity.data._embedded.articleResources.map(article =>
+        axios.get(article._links.self.href)
+      )
+    }).then(articlePromises => {
+      return when.all(articlePromises);
+    }).then(latestArticleArray => {
 
-
-      this.setState({
-        latestArticleKey: articleCollection.entity._links.latest.href
-      });
-
-      this.getArticleAttributes(articleCollection);
-      this.getLatestArticle(articleCollection);
-      this.getRecentBeautyArticles(articleCollection);
-      this.getRecentFashionArticles(articleCollection);
-      this.getRecentTravelArticles(articleCollection);
-      this.getRecentLifestyleArticles(articleCollection);
+      latestArticleArray.map(latestArticle => {
+        return axios.get(latestArticle.data._links.paragraphs.href)
+          .then(result => {
+            return result.data._embedded.articleContents.map(articleContent =>
+              axios.get(articleContent._links.self.href)
+            );
+          }).then(articleContentPromises => {
+            return when.all(articleContentPromises);
+          }).then(paragraphs => {
+            this.setState({
+              latestArticleKey: latestArticle.config.url,
+              latestArticle: latestArticleArray,
+              latestArticleParagraphs: paragraphs
+            });
+          });
+      })
     });
   }
 
-  getArticleAttributes(articleCollection) {
-    client({
-      method: 'GET',
-      path: articleCollection.entity._links.profile.href,
-      headers: { 'Accept': 'application/schema+json' }
-    }).done(schema => {
-      this.setState({ articleAttributes: Object.keys(schema.entity.properties) });
-    });
-  }
-
-  getLatestArticle(articleCollection) {
-
-    client({
-      method: 'GET',
-      path: articleCollection.entity._links.latest.href
-    }).then(latest => {
-      return latest.entity._embedded.articleResources.map(article =>
-        client({
-          method: 'GET',
-          path: article._links.self.href
-        })
+  getRecentBeautyArticles() {
+    ArticlesService.getRecentBeautyArticlesEntity().then(recentBeautyArticlesEntity => {
+      return recentBeautyArticlesEntity.data._embedded.articleResources.map(article =>
+        axios.get(article._links.self.href)
       );
     }).then(articlePromises => {
       return when.all(articlePromises);
-    }).done(latestArticle => {
-
+    }).then(recentBeautyArticlesArray => {
       this.setState({
-        latestArticle: latestArticle
-      });
-
-      this.getLatestArticleParagraphs(latestArticle);
-    })
-
-  }
-
-  getLatestArticleParagraphs(latestArticle) {
-    latestArticle.map(latestArticle =>
-
-      client({
-        method: 'GET',
-        path: latestArticle.entity._links.paragraphs.href
-      }).then(result => {
-        return result.entity._embedded.articleContents.map(articleContent =>
-          client({
-            method: 'GET',
-            path: articleContent._links.self.href
-          })
-        );
-      }).then(articleContentPromises => {
-        return when.all(articleContentPromises);
-      }).done(paragraphs => {
-        this.setState({
-          latestArticleParagraphs: paragraphs
-        });
-      }));
-  }
-
-  getRecentBeautyArticles(articleCollection) {
-    client({
-      method: 'GET',
-      path: articleCollection.entity._links.recentBeauty.href
-    }).then(recents => {
-      return recents.entity._embedded.articleResources.map(article =>
-        client({
-          method: 'GET',
-          path: article._links.self.href
-        })
-      );
-    }).then(articlePromises => {
-      return when.all(articlePromises);
-    }).done(recentBeautyArticles => {
-      this.setState({
-        recentBeautyArticles: recentBeautyArticles
-      });
-    })
-
-  }
-
-  getRecentFashionArticles(articleCollection) {
-    client({
-      method: 'GET',
-      path: articleCollection.entity._links.recentFashion.href
-    }).then(recents => {
-      return recents.entity._embedded.articleResources.map(article =>
-        client({
-          method: 'GET',
-          path: article._links.self.href
-        })
-      );
-    }).then(articlePromises => {
-      return when.all(articlePromises);
-    }).done(recentFashionArticles => {
-      this.setState({
-        recentFashionArticles: recentFashionArticles
+        recentBeautyArticles: recentBeautyArticlesArray
       });
     })
   }
 
-  getRecentTravelArticles(articleCollection) {
-
-    client({
-      method: 'GET',
-      path: articleCollection.entity._links.recentTravel.href
-    }).then(recents => {
-      return recents.entity._embedded.articleResources.map(article =>
-        client({
-          method: 'GET',
-          path: article._links.self.href
-        })
+  getRecentFashionArticles() {
+    ArticlesService.getRecentBeautyArticlesEntity().then(recentFashionArticlesEntity => {
+      return recentFashionArticlesEntity.data._embedded.articleResources.map(article =>
+        axios.get(article._links.self.href)
       );
     }).then(articlePromises => {
       return when.all(articlePromises);
-    }).done(recentTravelArticles => {
+    }).then(recentFashionArticlesArray => {
       this.setState({
-        recentTravelArticles: recentTravelArticles
+        recentFashionArticles: recentFashionArticlesArray
       });
     })
   }
 
-  getRecentLifestyleArticles(articleCollection) {
-    client({
-      method: 'GET',
-      path: articleCollection.entity._links.recentLifestyle.href
-    }).then(recents => {
-      return recents.entity._embedded.articleResources.map(article =>
-        client({
-          method: 'GET',
-          path: article._links.self.href
-        })
+  getRecentTravelArticles() {
+    ArticlesService.getRecentTravelArticlesEntity().then(recentTravelArticlesEntity => {
+      return recentTravelArticlesEntity.data._embedded.articleResources.map(article =>
+        axios.get(article._links.self.href)
       );
     }).then(articlePromises => {
       return when.all(articlePromises);
-    }).done(recentLifestyleArticles => {
+    }).then(recentTravelArticlesArray => {
       this.setState({
-        recentLifestyleArticles: recentLifestyleArticles
+        recentTravelArticles: recentTravelArticlesArray
       });
     })
   }
 
-  logout = () =>{
+  getRecentLifestyleArticles() {
+    ArticlesService.getRecentLifestyleArticlesEntity().then(recentLifestyleArticlesEntity => {
+      return recentLifestyleArticlesEntity.data._embedded.articleResources.map(article =>
+        axios.get(article._links.self.href)
+      );
+    }).then(articlePromises => {
+      return when.all(articlePromises);
+    }).then(recentLifestyleArticlesArray => {
+      this.setState({
+        recentLifestyleArticles: recentLifestyleArticlesArray
+      });
+    })
+  }
+
+  logout = () => {
     client({
       method: 'POST',
       path: root + '/perform-logout',
     });
-
-    this.setState({isAuthenticated: false});
+    sessionStorage.setItem('isLoggedIn', 'false');
+    this.setState({ isAuthenticated: false });
   }
 
   updateDisplayedArticle(displayedArticleKey, displayedArticle, displayedArticleParagraphs) {
@@ -211,21 +147,8 @@ class LandingPage extends React.Component {
     });
   }
 
-  getAuthenticatedUser(){
-		client({
-			method: 'GET',
-			path: root +'/authenticatedUser'
-		}).done(response => {
-			this.setState({
-				authenticatedUser: response.entity
-      });
-      console.log(this.state.authenticatedUser)
-		});
-	}
-
   componentDidMount() {
     this.loadFromServer();
-    this.getAuthenticatedUser();
   }
 
   render() {
@@ -233,12 +156,12 @@ class LandingPage extends React.Component {
     let createArticleDialog = <Grid item lg={12} />;
     let logout = <Grid item lg={12} />
 
-    if (this.state.isAuthenticated) {
-      createArticleDialog = <Grid item lg={12}> <CreateArticle authenticatedUser={this.state.authenticatedUser} /></Grid>
+    if (sessionStorage.getItem('isLoggedIn') === 'true') {
+      createArticleDialog = <Grid item lg={12}> <CreateArticle /></Grid>
       logout = <Grid item lg={12}><Button variant="contained" color="secondary" onClick={this.logout}>
         Exit Admin Mode
     </Button> </Grid>
-    }
+    } 
 
     const articleSections = sections.map(section => (
       <Grid key={section} className="section" container spacing={2} item md={12}>
