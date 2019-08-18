@@ -31,6 +31,7 @@ class CreateArticle extends React.Component {
 	}
 
 	handleChange = event => {
+		console.log(event.target.name);
 		this.setState(
 		  {
 			[event.target.name]
@@ -53,6 +54,7 @@ class CreateArticle extends React.Component {
 							placeholder="Write title here ..."
 							className="textField"
 							margin="normal"
+							name="title"
 							onChange={this.handleChange}
 						/>
 						<TextField
@@ -61,6 +63,7 @@ class CreateArticle extends React.Component {
 							placeholder="Write subtitle here ..."
 							className="textField"
 							margin="normal"
+							name="subtitle"
 							onChange={this.handleChange}
 						/>
 						<TextField
@@ -69,6 +72,7 @@ class CreateArticle extends React.Component {
 							placeholder="BEAUTY, FASHION, TRAVEL or LIFESTYLE..."
 							className="textField"
 							margin="normal"
+							name="category"
 							onChange={this.handleChange}
 						/>
 						<TextField
@@ -78,6 +82,7 @@ class CreateArticle extends React.Component {
 							multiline
 							className="textField"
 							margin="normal"
+							name="body"
 							onChange={this.handleChange}
 						/>
 						<TextField
@@ -86,6 +91,7 @@ class CreateArticle extends React.Component {
 							type="file"
 							accept="image/*"
 							margin="normal"
+							name="image"
 							onChange={this.handleChange}
 						/>
 						<Button
