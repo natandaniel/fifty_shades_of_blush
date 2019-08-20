@@ -1,5 +1,4 @@
 import React from 'react';
-import { CookiesProvider } from 'react-cookie';
 import Container from '@material-ui/core/Container';
 
 import Header from '../../components/header/Header.jsx'
@@ -114,14 +113,12 @@ class BeautyPage extends React.Component {
   render() {
 
     return (
-      <CookiesProvider>
         <Container className="mainContainer" maxWidth="lg">
           <Header />
           <Article id="displayedArticle" key={this.state.displayedArticleKey} article={this.state.displayedArticle} articleParagraphs={this.state.displayedArticleParagraphs} />
           <ArticleCardGrid recentArticles={this.state.beautyArticles} displayedArticleHandler={this.updateDisplayedArticle} />
           <Footer />
         </Container>
-      </CookiesProvider >
     );
   }
 }

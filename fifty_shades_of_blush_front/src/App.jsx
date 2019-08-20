@@ -3,7 +3,6 @@ import { Router, Route, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import LoginPage from './views/LoginPage/LoginPage.jsx';
 import LandingPage from './views/LandingPage/LandingPage.jsx';
-import AdminPage from "./views/AdminPage/AdminPage.jsx";
 import BeautyPage from './views/BeautyPage/BeautyPage.jsx';
 import FashionPage from './views/FashionPage/FashionPage.jsx';
 import TravelPage from './views/TravelPage/TravelPage.jsx';
@@ -27,7 +26,6 @@ class App extends React.Component {
                 <Switch>
                     <Route exact path="/" component={LandingPage} />
                     <Route exact path="/login" component={LoginPage} />
-                    <Route exact path="/admin" component={AdminPage} />
                     <Route path="/beauty" component={BeautyPage} />
                     <Route path="/fashion" component={FashionPage} />
                     <Route path="/travel" component={TravelPage} />
