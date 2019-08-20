@@ -32,16 +32,23 @@ class LandingPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { isAuthenticated: false, latestArticle: [], latestArticleKey: "", latestArticleParagraphs: [], recentBeautyArticles: [], recentFashionArticles: [], recentTravelArticles: [], recentLifestyleArticles: [] };
+    this.state = { 
+      isAuthenticated: false, 
+      latestArticle: [], 
+      latestArticleParagraphs: [], 
+      recentBeautyArticles: [], 
+      recentFashionArticles: [], 
+      recentTravelArticles: [], 
+      recentLifestyleArticles: [] };
 
   }
 
   loadFromServer() {
     this.getLatestArticle();
-    this.getRecentBeautyArticles();
-    this.getRecentFashionArticles();
-    this.getRecentTravelArticles();
-    this.getRecentLifestyleArticles();
+    // this.getRecentBeautyArticles();
+    // this.getRecentFashionArticles();
+    // this.getRecentTravelArticles();
+    // this.getRecentLifestyleArticles();
   };
 
   getLatestArticle() {
@@ -52,24 +59,8 @@ class LandingPage extends React.Component {
     }).then(articlePromises => {
       return when.all(articlePromises);
     }).then(latestArticleArray => {
-
-      latestArticleArray.map(latestArticle => {
-        return axios.get(latestArticle.data._links.paragraphs.href)
-          .then(result => {
-            return result.data._embedded.articleContents.map(articleContent =>
-              axios.get(articleContent._links.self.href)
-            );
-          }).then(articleContentPromises => {
-            return when.all(articleContentPromises);
-          }).then(paragraphs => {
-            this.setState({
-              latestArticleKey: latestArticle.config.url,
-              latestArticle: latestArticleArray,
-              latestArticleParagraphs: paragraphs
-            });
-          });
+        this.setState({latestArticle: latestArticleArray})
       })
-    });
   }
 
   getRecentBeautyArticles() {
@@ -184,9 +175,9 @@ class LandingPage extends React.Component {
         <Container>
           <Grid key="mainGrid" className="" container spacing={2}>
             {logout}
-            {createArticleDialog}
-            <Grid item lg={12}> <Article key={this.state.latestArticleKey} article={this.state.latestArticle} articleParagraphs={this.state.latestArticleParagraphs} /></Grid>
-            {articleSections}
+            {/* {createArticleDialog} */}
+            <Grid item lg={12}> <Article key="latestArticle" article={this.state.latestArticle} /></Grid>
+            {/* {articleSections} */}
           </Grid>
         </Container>
         <Footer />
