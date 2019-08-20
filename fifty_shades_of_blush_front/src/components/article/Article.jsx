@@ -1,20 +1,58 @@
 import React from 'react';
+import axios from 'axios';
+
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import '../../assets/css/components/article/article.css';
 
+const when = require('when');
+
 class Article extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      paragraphs: [],
+      files: []
+    }
+  }
+
+  loadFromServer() {
+    this.getParagraphs();
+    this.getFiles();
+  };
+
+  getParagraphs() {
+    this.props.article.map(article => {
+      return axios.get(article.data._links.paragraphs.href)
+        .then(result => {
+          return result.data._embedded.articleContents.map(articleContent =>
+            axios.get(articleContent._links.self.href)
+          );
+        }).then(articleContentPromises => {
+          return when.all(articleContentPromises);
+        }).then(paragraphs => {
+          this.setState({
+            paragraphs: paragraphs
+          });
+        });
+    });
+  }
+
+  getFiles() {
+
+  }
+
+  componentDidMount() {
+    this.loadFromServer();
   }
 
   render() {
 
 
-    const paragraph = this.props.articleParagraphs.map(paragraph => {
-    
+    const paragraph = this.state.paragraphs.map(paragraph => {
+
       return <div key={paragraph.config.url}>
         <Typography>{paragraph.data.content}</Typography>
         <br />
@@ -43,7 +81,7 @@ class Article extends React.Component {
             </Grid>
             <Grid item md={7} xs={12}>
               <div className="imgHolder">
-                <img className="img" src={require(`../../assets/img/${article.data.imgName}.jpg`)} width="55%" alt="article" />
+                {/* <img className="img" src={require(`../../assets/img/${article.data.imgName}.jpg`)} width="55%" alt="article" /> */}
               </div>
             </Grid>
             <Grid item >
@@ -58,7 +96,7 @@ class Article extends React.Component {
     return (
       <div>
         {display}
-      </div>
+      </div >
     );
   }
 }
