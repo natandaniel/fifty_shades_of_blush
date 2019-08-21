@@ -73,8 +73,32 @@ class Article extends React.Component {
     }
     );
 
-    const display = this.props.article.map(article =>
-      <div key={article.data._links.self.href}>
+    const display = this.props.article.map(article => {
+
+      let dates = <div />
+
+      if (article.data.createdAt === article.data.updatedAt) {
+        dates =
+          <div>
+            <Typography component="h6">{new Intl.DateTimeFormat('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: '2-digit'
+            }).format(new Date(article.data.createdAt))}</Typography></div>
+      } else {
+        dates = <div><Typography component="h6">{new Intl.DateTimeFormat('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: '2-digit'
+        }).format(new Date(article.data.createdAt))}</Typography>
+          <Typography component="h6">Last modified {new Intl.DateTimeFormat('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit'
+          }).format(new Date(article.data.updatedAt))}</Typography></div>
+      }
+
+      return <div key={article.data._links.self.href}>
         <Paper className="root">
           <Grid container spacing={2}>
             <Grid item md={5} xs={12}>
@@ -85,11 +109,7 @@ class Article extends React.Component {
                 <Typography variant="subtitle2" color="textSecondary" component="p">
                   {article.data.subtitle}
                 </Typography>
-                <Typography component="h6">{new Intl.DateTimeFormat('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: '2-digit'
-                }).format(new Date(article.data.createdAt))}</Typography>
+                {dates}
               </div>
             </Grid>
             <Grid item md={7} xs={12}>
@@ -104,7 +124,8 @@ class Article extends React.Component {
             </Grid>
           </Grid>
         </Paper>
-      </div>);
+      </div>
+    });
 
     return (
       <div>
