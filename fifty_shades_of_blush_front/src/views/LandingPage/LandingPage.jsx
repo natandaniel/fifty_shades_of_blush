@@ -45,19 +45,23 @@ class LandingPage extends React.Component {
 
   loadFromServer() {
     this.getLatestArticle();
-    // this.getRecentBeautyArticles();
-    // this.getRecentFashionArticles();
-    // this.getRecentTravelArticles();
-    // this.getRecentLifestyleArticles();
+    this.getRecentBeautyArticles();
+    this.getRecentFashionArticles();
+    this.getRecentTravelArticles();
+    this.getRecentLifestyleArticles();
   };
 
   getLatestArticle() {
     ArticlesService.getLatestArticleEntity().then(latestArticleEntity => {
-      return latestArticleEntity.data._embedded.articleResources.map(article =>
-        axios.get(article._links.self.href)
-      )
+      if(latestArticleEntity.data._embedded){
+        return latestArticleEntity.data._embedded.articleResources.map(article =>
+          axios.get(article._links.self.href)
+        )
+      }else{
+        return new Array()
+      }
     }).then(articlePromises => {
-      return when.all(articlePromises);
+      return when.all(articlePromises)
     }).then(latestArticleArray => {
         this.setState({latestArticle: latestArticleArray})
       })
@@ -65,57 +69,73 @@ class LandingPage extends React.Component {
 
   getRecentBeautyArticles() {
     ArticlesService.getRecentBeautyArticlesEntity().then(recentBeautyArticlesEntity => {
-      return recentBeautyArticlesEntity.data._embedded.articleResources.map(article =>
-        axios.get(article._links.self.href)
-      );
+      if(recentBeautyArticlesEntity.data._embedded){
+        return recentBeautyArticlesEntity.data._embedded.articleResources.map(article =>
+          axios.get(article._links.self.href)
+        )
+      }else{
+        return new Array()
+      }
     }).then(articlePromises => {
-      return when.all(articlePromises);
+      return when.all(articlePromises)
     }).then(recentBeautyArticlesArray => {
       this.setState({
         recentBeautyArticles: recentBeautyArticlesArray
-      });
+      })
     })
   }
 
   getRecentFashionArticles() {
-    ArticlesService.getRecentBeautyArticlesEntity().then(recentFashionArticlesEntity => {
-      return recentFashionArticlesEntity.data._embedded.articleResources.map(article =>
-        axios.get(article._links.self.href)
-      );
+    ArticlesService.getRecentFashionArticlesEntity().then(recentFashionArticlesEntity => {
+      if(recentFashionArticlesEntity.data._embedded){
+        return recentFashionArticlesEntity.data._embedded.articleResources.map(article =>
+          axios.get(article._links.self.href)
+        )
+      }else{
+        return new Array()
+      }
     }).then(articlePromises => {
-      return when.all(articlePromises);
+      return when.all(articlePromises)
     }).then(recentFashionArticlesArray => {
       this.setState({
         recentFashionArticles: recentFashionArticlesArray
-      });
+      })
     })
   }
 
   getRecentTravelArticles() {
     ArticlesService.getRecentTravelArticlesEntity().then(recentTravelArticlesEntity => {
-      return recentTravelArticlesEntity.data._embedded.articleResources.map(article =>
-        axios.get(article._links.self.href)
-      );
+      if(recentTravelArticlesEntity.data._embedded){
+        return recentTravelArticlesEntity.data._embedded.articleResources.map(article =>
+          axios.get(article._links.self.href)
+        )
+      }else{
+        return new Array()
+      }
     }).then(articlePromises => {
-      return when.all(articlePromises);
+      return when.all(articlePromises)
     }).then(recentTravelArticlesArray => {
       this.setState({
         recentTravelArticles: recentTravelArticlesArray
-      });
+      })
     })
   }
 
   getRecentLifestyleArticles() {
     ArticlesService.getRecentLifestyleArticlesEntity().then(recentLifestyleArticlesEntity => {
-      return recentLifestyleArticlesEntity.data._embedded.articleResources.map(article =>
-        axios.get(article._links.self.href)
-      );
+      if(recentLifestyleArticlesEntity.data._embedded){
+        return recentLifestyleArticlesEntity.data._embedded.articleResources.map(article =>
+          axios.get(article._links.self.href)
+        )
+      }else{
+        return new Array()
+      }
     }).then(articlePromises => {
-      return when.all(articlePromises);
+      return when.all(articlePromises)
     }).then(recentLifestyleArticlesArray => {
       this.setState({
         recentLifestyleArticles: recentLifestyleArticlesArray
-      });
+      })
     })
   }
 
@@ -177,7 +197,7 @@ class LandingPage extends React.Component {
             {logout}
             {/* {createArticleDialog} */}
             <Grid item lg={12}> <Article key="latestArticle" article={this.state.latestArticle} /></Grid>
-            {/* {articleSections} */}
+            {articleSections}
           </Grid>
         </Container>
         <Footer />
