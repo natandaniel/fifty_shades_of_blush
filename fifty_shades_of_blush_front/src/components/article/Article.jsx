@@ -14,24 +14,27 @@ class Article extends React.Component {
     super(props);
     this.state = {
       paragraphs: [],
-      files: []
+      files: [],
+      updateState: true
     }
   }
 
-  loadFromServer() {
-    this.getParagraphs();
-    this.getFiles();
+  loadFromServer = () => {
+    this.getParagraphs()
+    this.getFiles()
+    this.setState({updateState: false})
+    console.log(this.state)
   };
 
-  getParagraphs() {
+  getParagraphs = () => {
     this.props.article.map(article => {
       return axios.get(article.data._links.paragraphs.href)
         .then(result => {
-          return result.data._embedded.articleContents.map(articleContent =>
-            axios.get(articleContent._links.self.href)
+          return result.data._embedded.articleParagraphs.map(paragraph =>
+            axios.get(paragraph._links.self.href)
           )
-        }).then(articleContentPromises => {
-          return when.all(articleContentPromises)
+        }).then(paragraphPromises => {
+          return when.all(paragraphPromises)
         }).then(paragraphs => {
           this.setState({
             paragraphs: paragraphs
@@ -40,7 +43,7 @@ class Article extends React.Component {
     })
   }
 
-  getFiles() {
+  getFiles = () => {
     this.props.article.map(article => {
       return axios.get(article.data._links.files.href)
         .then(result => {
@@ -57,15 +60,17 @@ class Article extends React.Component {
     })
   }
 
-  componentDidMount() {
-    this.loadFromServer();
+  componentDidUpdate() {
+    if (this.state.updateState) {
+      this.loadFromServer()
+    }
   }
 
   render() {
 
+    console.log(this.state)
 
-    const paragraph = this.state.paragraphs.map(paragraph => {
-
+    const paragraphs = this.state.paragraphs.map(paragraph => {
       return <div key={paragraph.config.url}>
         <Typography>{paragraph.data.content}</Typography>
         <br />
@@ -73,8 +78,12 @@ class Article extends React.Component {
     }
     );
 
-    const display = this.props.article.map(article => {
+    const image = this.state.files.map(file => {
+      return <img className="img" src={`data:${file.data.fileType};base64,${file.data.data}`} width="55%" alt="article" />
+    }
+    );
 
+    const display = this.props.article.map(article => {
       let dates = <div />
 
       if (article.data.createdAt === article.data.updatedAt) {
@@ -114,12 +123,13 @@ class Article extends React.Component {
             </Grid>
             <Grid item md={7} xs={12}>
               <div className="imgHolder">
+                {image}
                 {/* <img className="img" src={require(`../../assets/img/${article.data.imgName}.jpg`)} width="55%" alt="article" /> */}
               </div>
             </Grid>
             <Grid item >
               <div className="article">
-                {paragraph}
+                {paragraphs}
               </div>
             </Grid>
           </Grid>
