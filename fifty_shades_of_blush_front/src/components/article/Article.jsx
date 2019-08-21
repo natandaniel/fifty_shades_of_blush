@@ -29,19 +29,32 @@ class Article extends React.Component {
         .then(result => {
           return result.data._embedded.articleContents.map(articleContent =>
             axios.get(articleContent._links.self.href)
-          );
+          )
         }).then(articleContentPromises => {
-          return when.all(articleContentPromises);
+          return when.all(articleContentPromises)
         }).then(paragraphs => {
           this.setState({
             paragraphs: paragraphs
-          });
-        });
-    });
+          })
+        })
+    })
   }
 
   getFiles() {
-
+    this.props.article.map(article => {
+      return axios.get(article.data._links.files.href)
+        .then(result => {
+          return result.data._embedded.articleFiles.map(file =>
+            axios.get(file._links.self.href)
+          )
+        }).then(filePromises => {
+          return when.all(filePromises)
+        }).then(files => {
+          this.setState({
+            files: files
+          })
+        })
+    })
   }
 
   componentDidMount() {
