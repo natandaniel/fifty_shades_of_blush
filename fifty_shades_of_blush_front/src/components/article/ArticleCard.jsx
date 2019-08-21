@@ -48,7 +48,7 @@ class ArticleCard extends React.Component {
             component="img"
             alt={this.props.article.data.type}
             max-height="200px"
-            image={require(`../../assets/img/${this.props.article.data.imgName}.jpg`)}
+            // image={require(`../../assets/img/${this.props.article.data.imgName}.jpg`)}
             title={this.props.article.data.title}
           />
           <CardContent>
