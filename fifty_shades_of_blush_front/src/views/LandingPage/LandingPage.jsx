@@ -14,8 +14,6 @@ import Logout from '../../components/logout/Logout.jsx';
 import '../../assets/css/views/landingPage.css'
 import { Typography } from '@material-ui/core';
 
-import CreateArticle from '../../components/article/CreateArticle.jsx';
-
 import ArticlesService from '../../tools/dataProvider/ArticlesService';
 
 const when = require('when');
@@ -31,7 +29,8 @@ class LandingPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
+      isAuth: false, 
       latestArticle: [], 
       recentBeautyArticles: [], 
       recentFashionArticles: [], 
@@ -142,8 +141,8 @@ class LandingPage extends React.Component {
     });
   }
 
-  updateIsAuthenticated = (boolean) => {
-    this.setState({isAuthenticated: boolean});
+  updateIsAuthenticated = () => {
+    this.setState({isAuth: !this.state.isAuth});
   }
 
   componentDidMount() {
@@ -152,11 +151,9 @@ class LandingPage extends React.Component {
 
   render() {
 
-    let createArticleDialog = <Grid item lg={12} />;
     let logout = <Grid item lg={12} />
 
-    if (sessionStorage.getItem('isLoggedIn') === 'true') {
-      createArticleDialog = <Grid item lg={12}> <CreateArticle /></Grid>
+    if (sessionStorage.getItem('isAuth') === 'true') {
       logout = <Logout isAuthenticatedHandler={this.updateIsAuthenticated}/>
     }
 
@@ -190,7 +187,6 @@ class LandingPage extends React.Component {
         <Container>
           <Grid key="mainGrid" className="" container spacing={2}>
             {logout}
-            {/* {createArticleDialog} */}
             <Grid item lg={12}> <Article key="latestArticle" article={this.state.latestArticle} /></Grid>
             {articleSections}
           </Grid>
