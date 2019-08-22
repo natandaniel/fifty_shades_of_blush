@@ -3,10 +3,7 @@ import { Router, Route, Switch } from "react-router-dom";
 import { createBrowserHistory } from "history";
 import LoginPage from './views/LoginPage/LoginPage.jsx';
 import LandingPage from './views/LandingPage/LandingPage.jsx';
-import BeautyPage from './views/BeautyPage/BeautyPage.jsx';
-import FashionPage from './views/FashionPage/FashionPage.jsx';
-import TravelPage from './views/TravelPage/TravelPage.jsx';
-import LifestylePage from './views/LifestylePage/LifestylePage.jsx';
+import BFTLPage from './views/BFTLPage/BFTLPage.jsx';
 
 var hist = createBrowserHistory();
 
@@ -26,10 +23,10 @@ class App extends React.Component {
                 <Switch>
                     <Route exact path="/" component={LandingPage} />
                     <Route exact path="/login" component={LoginPage} />
-                    <Route path="/beauty" component={BeautyPage} />
-                    <Route path="/fashion" component={FashionPage} />
-                    <Route path="/travel" component={TravelPage} />
-                    <Route path="/lifestyle" component={LifestylePage} />
+                    <Route path="/beauty" render={(props) => <BFTLPage {...props} page={"beauty"} />} />
+                    <Route path="/fashion" render={(props) => <BFTLPage {...props} page={"fashion"} />} />
+                    <Route path="/travel" render={(props) => <BFTLPage {...props} page={"travel"} />} />
+                    <Route path="/lifestyle" render={(props) => <BFTLPage {...props} page={"lifestyle"} />} />
                 </Switch>
             </Router>
         );

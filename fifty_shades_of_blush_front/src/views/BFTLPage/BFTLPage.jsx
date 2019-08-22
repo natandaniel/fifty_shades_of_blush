@@ -11,23 +11,23 @@ import ArticlesService from '../../tools/dataProvider/ArticlesService';
 
 const when = require('when');
 
-class BeautyPage extends React.Component {
+class BFTLPage extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      beautyArticles: [],
+      articles: [],
       displayedArticle: []
     };
   }
 
   loadFromServer() {
-    this.getBeautyArticles()
-    this.getLatestBeautyArticle()
+    this.getBFTLArticles()
+    this.getLatestBFTLArticle()
   }
 
-  getLatestBeautyArticle() {
-    ArticlesService.getLatestBeautyArticleEntity().then(latestArticleEntity => {
+  getLatestBFTLArticle() {
+    ArticlesService.getLatestBFTLArticleEntity(this.props.page).then(latestArticleEntity => {
       if (latestArticleEntity.data._embedded) {
         return latestArticleEntity.data._embedded.articleResources.map(article =>
           axios.get(article._links.self.href)
@@ -42,10 +42,10 @@ class BeautyPage extends React.Component {
     })
   }
 
-  getBeautyArticles() {
-    ArticlesService.getBeautyArticlesEntity().then(beautyArticlesEntity => {
-      if (beautyArticlesEntity.data._embedded) {
-        return beautyArticlesEntity.data._embedded.articleResources.map(article =>
+  getBFTLArticles() {
+    ArticlesService.getBFTLArticlesEntity(this.props.page).then(bftlArticlesEntity => {
+      if (bftlArticlesEntity.data._embedded) {
+        return bftlArticlesEntity.data._embedded.articleResources.map(article =>
           axios.get(article._links.self.href)
         )
       } else {
@@ -53,9 +53,9 @@ class BeautyPage extends React.Component {
       }
     }).then(articlePromises => {
       return when.all(articlePromises)
-    }).then(beautyArticlesEntityArray => {
+    }).then(bftlArticlesEntityArray => {
       this.setState({
-        beautyArticles: beautyArticlesEntityArray
+        articles: bftlArticlesEntityArray
       })
     })
   }
@@ -73,14 +73,16 @@ class BeautyPage extends React.Component {
   render() {
 
     return (
-      <Container className="mainContainer" maxWidth="lg">
+      <div>
         <Header />
-        <Article key="displayedArticle" article={this.state.displayedArticle} />
-        <ArticleCardGrid recentArticles={this.state.beautyArticles} displayedArticleHandler={this.updateDisplayedArticle} />
+        <Container className="mainContainer" maxWidth="lg">
+          <Article key="displayedArticle" article={this.state.displayedArticle} />
+          <ArticleCardGrid recentArticles={this.state.articles} displayedArticleHandler={this.updateDisplayedArticle} />
+        </Container>
         <Footer />
-      </Container>
+      </div>
     );
   }
 }
 
-export default BeautyPage;
+export default BFTLPage;

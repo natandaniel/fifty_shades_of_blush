@@ -65,7 +65,7 @@ class LandingPage extends React.Component {
   }
 
   getRecentBeautyArticles() {
-    ArticlesService.getRecentBeautyArticlesEntity().then(recentBeautyArticlesEntity => {
+    ArticlesService.getRecentBFTLArticlesEntity("beauty").then(recentBeautyArticlesEntity => {
       if(recentBeautyArticlesEntity.data._embedded){
         return recentBeautyArticlesEntity.data._embedded.articleResources.map(article =>
           axios.get(article._links.self.href)
@@ -83,7 +83,7 @@ class LandingPage extends React.Component {
   }
 
   getRecentFashionArticles() {
-    ArticlesService.getRecentFashionArticlesEntity().then(recentFashionArticlesEntity => {
+    ArticlesService.getRecentBFTLArticlesEntity("fashion").then(recentFashionArticlesEntity => {
       if(recentFashionArticlesEntity.data._embedded){
         return recentFashionArticlesEntity.data._embedded.articleResources.map(article =>
           axios.get(article._links.self.href)
@@ -101,7 +101,7 @@ class LandingPage extends React.Component {
   }
 
   getRecentTravelArticles() {
-    ArticlesService.getRecentTravelArticlesEntity().then(recentTravelArticlesEntity => {
+    ArticlesService.getRecentBFTLArticlesEntity("travel").then(recentTravelArticlesEntity => {
       if(recentTravelArticlesEntity.data._embedded){
         return recentTravelArticlesEntity.data._embedded.articleResources.map(article =>
           axios.get(article._links.self.href)
@@ -119,7 +119,7 @@ class LandingPage extends React.Component {
   }
 
   getRecentLifestyleArticles() {
-    ArticlesService.getRecentLifestyleArticlesEntity().then(recentLifestyleArticlesEntity => {
+    ArticlesService.getRecentBFTLArticlesEntity("lifestyle").then(recentLifestyleArticlesEntity => {
       if(recentLifestyleArticlesEntity.data._embedded){
         return recentLifestyleArticlesEntity.data._embedded.articleResources.map(article =>
           axios.get(article._links.self.href)

@@ -8,52 +8,16 @@ class ArticlesService {
         return axios.get(`${API_URL}/articles/latest`)
     }
 
-    getLatestBeautyArticleEntity() {
-        return axios.get(`${API_URL}/articles/beauty/latest`)
+    getBFTLArticlesEntity(page) {
+        return axios.get(`${API_URL}/articles/${page}`)
     }
 
-    getLatestFashionArticleEntity() {
-        return axios.get(`${API_URL}/articles/fashion/latest`)
+    getLatestBFTLArticleEntity(page) {
+        return axios.get(`${API_URL}/articles/${page}/latest`)
     }
 
-    getLatestTravelArticleEntity() {
-        return axios.get(`${API_URL}/articles/travel/latest`)
-    }
-
-    getLatestLifestyleArticleEntity() {
-        return axios.get(`${API_URL}/articles/lifestyle/latest`)
-    }
-
-    getBeautyArticlesEntity() {
-        return axios.get(`${API_URL}/articles/beauty`)
-    }
-
-    getRecentBeautyArticlesEntity() {
-        return axios.get(`${API_URL}/articles/beauty/recent`)
-    }
-
-    getFashionArticlesEntity() {
-        return axios.get(`${API_URL}/articles/fashion`)
-    }
-
-    getRecentFashionArticlesEntity() {
-        return axios.get(`${API_URL}/articles/fashion/recent`)
-    }
-
-    getTravelArticlesEntity() {
-        return axios.get(`${API_URL}/articles/travel`)
-    }
-
-    getRecentTravelArticlesEntity() {
-        return axios.get(`${API_URL}/articles/travel/recent`)
-    }
-
-    getLifestyleArticlesEntity() {
-        return axios.get(`${API_URL}/articles/lifestyle`)
-    }
-
-    getRecentLifestyleArticlesEntity() {
-        return axios.get(`${API_URL}/articles/lifestyle/recent`)
+    getRecentBFTLArticlesEntity(page) {
+        return axios.get(`${API_URL}/articles/${page}/recent`)
     }
 }
 
