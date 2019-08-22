@@ -13,8 +13,8 @@ class Logout extends React.Component {
 
     logout = () => {
         axios.post(`${API_URL}/perform-logout`).then(() => {
-            sessionStorage.setItem('isLoggedIn', 'false');
-            this.props.isAuthenticatedHandler(false);
+            sessionStorage.setItem('isAuth', 'false');
+            this.props.isAuthenticatedHandler();
         })
     }
 
