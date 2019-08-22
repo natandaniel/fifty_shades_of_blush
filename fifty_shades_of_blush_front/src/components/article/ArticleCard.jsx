@@ -16,31 +16,56 @@ class ArticleCard extends React.Component {
 
   constructor(props) {
     super(props);
-    this.displayArticle = this.displayArticle.bind(this);
+    this.state = {
+      files: []
+    }
   }
 
   displayArticle(articleUri) {
     axios.get(articleUri).then(article => {
-      axios.get(article.data._links.paragraphs.href).then(paragraphs => {
-        console.log(paragraphs)
-        return paragraphs.data._embedded.articleContents.map(paragraph =>
-          axios.get(paragraph._links.self.href)
-        );
-      }).then(articleContentPromises => {
-        return when.all(articleContentPromises);
-      }).then(paragraphs => {
-        this.props.displayedArticleHandler(articleUri, [article], paragraphs);
-        scrollIt(
-          document.querySelector('.articleInfo'),
-          1000,
-          'easeOutQuad',
-          () => console.log(`Just finished scrolling to ${window.pageYOffset}px`)
-        );
-      })
+      this.props.displayedArticleHandler([article]);
+      scrollIt(
+        document.querySelector('.articleInfo'),
+        1000,
+        'easeOutQuad',
+        () => console.log(`Just finished scrolling to ${window.pageYOffset}px`)
+      );
     })
   }
 
+
+  loadFromServer(){
+    this.getFiles()
+  };
+
+  getFiles(){
+    axios.get(this.props.article.data._links.files.href)
+      .then(result => {
+        return result.data._embedded.articleFiles.map(file =>
+          axios.get(file._links.self.href)
+        )
+      }).then(filePromises => {
+        return when.all(filePromises)
+      }).then(files => {
+        this.setState({
+          files: files,
+          updateState: false
+        })
+      })
+  }
+
+  componentDidMount() {
+    this.loadFromServer()
+  }
+
   render() {
+    const mainImg = this.state.files.filter(file => file.data.fileName.includes("main")).map(file => {
+      return `data:${file.data.fileType};base64,${file.data.data}`
+    }
+    );
+
+    console.log(this.state.files)
+
     return (
       <Card className="card" key={this.props.article.data._links.self.href}>
         <CardActionArea>
@@ -48,7 +73,7 @@ class ArticleCard extends React.Component {
             component="img"
             alt={this.props.article.data.type}
             max-height="200px"
-            // image={require(`../../assets/img/${this.props.article.data.imgName}.jpg`)}
+            image={mainImg[0]}
             title={this.props.article.data.title}
           />
           <CardContent>
