@@ -20,32 +20,14 @@ class Article extends React.Component {
   }
 
   loadFromServer = () => {
-    this.getParagraphs()
-    this.getFiles()
-    this.setState({updateState: false})
+    this.getFilesAndParagraphs()
     console.log(this.state)
   };
 
-  getParagraphs = () => {
+  getFilesAndParagraphs = () => {
     this.props.article.map(article => {
-      return axios.get(article.data._links.paragraphs.href)
-        .then(result => {
-          return result.data._embedded.articleParagraphs.map(paragraph =>
-            axios.get(paragraph._links.self.href)
-          )
-        }).then(paragraphPromises => {
-          return when.all(paragraphPromises)
-        }).then(paragraphs => {
-          this.setState({
-            paragraphs: paragraphs
-          })
-        })
-    })
-  }
 
-  getFiles = () => {
-    this.props.article.map(article => {
-      return axios.get(article.data._links.files.href)
+      axios.get(article.data._links.files.href)
         .then(result => {
           return result.data._embedded.articleFiles.map(file =>
             axios.get(file._links.self.href)
@@ -53,9 +35,21 @@ class Article extends React.Component {
         }).then(filePromises => {
           return when.all(filePromises)
         }).then(files => {
-          this.setState({
-            files: files
-          })
+
+          axios.get(article.data._links.paragraphs.href)
+            .then(result => {
+              return result.data._embedded.articleParagraphs.map(paragraph =>
+                axios.get(paragraph._links.self.href)
+              )
+            }).then(paragraphPromises => {
+              return when.all(paragraphPromises)
+            }).then(paragraphs => {
+              this.setState({
+                files: files,
+                paragraphs: paragraphs,
+                updateState: false
+              })
+            })
         })
     })
   }
@@ -67,8 +61,6 @@ class Article extends React.Component {
   }
 
   render() {
-
-    console.log(this.state)
 
     const paragraphs = this.state.paragraphs.map(paragraph => {
       return <div key={paragraph.config.url}>
@@ -124,7 +116,6 @@ class Article extends React.Component {
             <Grid item md={7} xs={12}>
               <div className="imgHolder">
                 {image}
-                {/* <img className="img" src={require(`../../assets/img/${article.data.imgName}.jpg`)} width="55%" alt="article" /> */}
               </div>
             </Grid>
             <Grid item >
