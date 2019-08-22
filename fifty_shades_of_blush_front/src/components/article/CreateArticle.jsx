@@ -1,9 +1,10 @@
 import React from 'react';
 import axios from 'axios';
 
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import { Typography, Paper } from '@material-ui/core';
+import { Container, Typography, Paper, Input, Button, TextField } from '@material-ui/core';
+
+import Header from '../../components/header/Header.jsx'
+import Footer from '../../components/footer/Footer.jsx'
 
 import '../../assets/css/components/article/createArticle.css'
 
@@ -14,96 +15,125 @@ class CreateArticle extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = { title: "", subtitle: "", category: "", body: "", image: "" }
+		this.state = { title: "", subtitle: "", category: "", body: "", file: []}
 	}
 
 	onCreate(newArticle) {
 
-		axios.post(`${API_URL}/articles/create`, {
-            newArticle
-        })
+		axios.post(
+			`${API_URL}/articles/create`,
+			newArticle,
+			{ headers: { 'Content-Type': 'multipart/form-data' }}
+		).then(response => {
+			console.log(response)
+		})
+		.catch(exc => {
+			console.log(exc)
+		})
 	}
 
 	handleSubmit = (e) => {
 		e.preventDefault();
-		const newArticle = { "title": this.state.title, "subtitle": this.state.subtitle, "category": this.state.category, "body": this.state.body, "image": this.state.image };
+		console.log(this.state)
+		const newArticle = new FormData();
+		newArticle.append("title", this.state.title);
+		newArticle.append("subtitle", this.state.subtitle);
+		newArticle.append("category", this.state.category);
+		newArticle.append("body", this.state.body);
+		newArticle.append("file", this.state.file);
 		this.onCreate(newArticle);
 	}
 
 	handleChange = event => {
 		console.log(event.target.name);
 		this.setState(
-		  {
-			[event.target.name]
-			  : event.target.value
-		  }
+			{
+				[event.target.name]
+					: event.target.value
+			}
 		)
-	  }
+	}
+
+	handleFileChange = event => {
+		console.log(event.target.name);
+		this.setState(
+			{
+				[event.target.name]
+					: event.target.files[0]
+			}
+		)
+	}
 
 	render() {
+		console.log(this.state);
 		return (
 			<div>
-				<Paper className="root">
-					<Typography component="h1" variant="h5">
-						Write new article
+				<Header />
+				<Container>
+					<Paper className="root">
+						<Typography component="h1" variant="h5">
+							New article
          		</Typography>
-					<form onSubmit={this.handleSubmit}>
-						<TextField
-							id="title"
-							label="Article Title"
-							placeholder="Write title here ..."
-							className="textField"
-							margin="normal"
-							name="title"
-							onChange={this.handleChange}
-						/>
-						<TextField
-							id="subtitle"
-							label="Article Subtitle"
-							placeholder="Write subtitle here ..."
-							className="textField"
-							margin="normal"
-							name="subtitle"
-							onChange={this.handleChange}
-						/>
-						<TextField
-							id="category"
-							className="articleCategory"
-							placeholder="BEAUTY, FASHION, TRAVEL or LIFESTYLE..."
-							className="textField"
-							margin="normal"
-							name="category"
-							onChange={this.handleChange}
-						/>
-						<TextField
-							id="body"
-							label="Article Body"
-							placeholder="Write article here ..."
-							multiline
-							className="textField"
-							margin="normal"
-							name="body"
-							onChange={this.handleChange}
-						/>
-						<TextField
-							id="image"
-							className="textField"
-							type="file"
-							accept="image/*"
-							margin="normal"
-							name="image"
-							onChange={this.handleChange}
-						/>
-						<Button
-							type="submit"
-							variant="contained"
-							color="secondary"
-							className="submit"
-						>
-							Submit
+						<form onSubmit={this.handleSubmit}>
+							<TextField
+								id="title"
+								label="Article Title"
+								placeholder="Write title here ..."
+								className="textField"
+								margin="normal"
+								name="title"
+								onChange={this.handleChange}
+							/>
+							<TextField
+								id="subtitle"
+								label="Article Subtitle"
+								placeholder="Write subtitle here ..."
+								className="textField"
+								margin="normal"
+								name="subtitle"
+								onChange={this.handleChange}
+							/>
+							<TextField
+								id="category"
+								className="articleCategory"
+								placeholder="Article Category : BEAUTY, FASHION, TRAVEL or LIFESTYLE..."
+								className="textField"
+								margin="normal"
+								name="category"
+								onChange={this.handleChange}
+							/>
+							<TextField
+								id="body"
+								label="Article Body"
+								placeholder="Write article here ..."
+								multiline
+								className="textField"
+								margin="normal"
+								name="body"
+								onChange={this.handleChange}
+							/>
+							<Input
+								id="mainCardImage"
+								label="Main Card Image"
+								placeholder="Main Card Image"
+								className="textField"
+								margin="normal"
+								type="file"
+								name="file"
+								onChange={this.handleFileChange}
+							/>
+							<Button
+								type="submit"
+								variant="contained"
+								color="secondary"
+								className="submit"
+							>
+								Submit
             		</Button>
-					</form>
-				</Paper>
+						</form>
+					</Paper>
+				</Container>
+				<Footer />
 			</div>
 		)
 	}
