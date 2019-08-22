@@ -21,7 +21,6 @@ class Article extends React.Component {
 
   loadFromServer = () => {
     this.getFilesAndParagraphs()
-    console.log(this.state)
   };
 
   getFilesAndParagraphs = () => {
@@ -71,8 +70,7 @@ class Article extends React.Component {
     );
 
     const mainImg =  this.state.files.filter(file => file.data.fileName.includes("main")).map(file => {
-      console.log(`${file.data.fileName}`)
-      return <img className="img" src={`data:${file.data.fileType};base64,${file.data.data}`} width="55%" alt="article" />
+      return <img key={file.data.fileName} className="img" src={`data:${file.data.fileType};base64,${file.data.data}`} width="55%" alt="article" />
     }
     );
 
@@ -117,7 +115,6 @@ class Article extends React.Component {
             <Grid item md={7} xs={12}>
               <div className="imgHolder">
                 {mainImg}
-                {/* <img className="img" src={require(`../../assets/img/${article.data.imgName}.jpg`)} width="55%" alt="article" /> */}
               </div>
             </Grid>
             <Grid item >
