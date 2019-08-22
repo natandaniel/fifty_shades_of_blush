@@ -61,7 +61,7 @@ class Article extends React.Component {
   }
 
   render() {
-
+    console.log(this.state)
     const paragraphs = this.state.paragraphs.map(paragraph => {
       return <div key={paragraph.config.url}>
         <Typography>{paragraph.data.content}</Typography>
@@ -70,7 +70,8 @@ class Article extends React.Component {
     }
     );
 
-    const image = this.state.files.map(file => {
+    const mainImg =  this.state.files.filter(file => file.data.fileName.includes("main")).map(file => {
+      console.log(`${file.data.fileName}`)
       return <img className="img" src={`data:${file.data.fileType};base64,${file.data.data}`} width="55%" alt="article" />
     }
     );
@@ -115,7 +116,8 @@ class Article extends React.Component {
             </Grid>
             <Grid item md={7} xs={12}>
               <div className="imgHolder">
-                {image}
+                {mainImg}
+                {/* <img className="img" src={require(`../../assets/img/${article.data.imgName}.jpg`)} width="55%" alt="article" /> */}
               </div>
             </Grid>
             <Grid item >
