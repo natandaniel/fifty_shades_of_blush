@@ -18,7 +18,6 @@ import CreateArticle from '../../components/article/CreateArticle.jsx';
 
 import ArticlesService from '../../tools/dataProvider/ArticlesService';
 
-const API_URL = 'http://localhost:8080/api';
 const when = require('when');
 
 const sections = [
@@ -33,9 +32,7 @@ class LandingPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      isAuthenticated: false, 
       latestArticle: [], 
-      latestArticleParagraphs: [], 
       recentBeautyArticles: [], 
       recentFashionArticles: [], 
       recentTravelArticles: [], 
@@ -139,11 +136,9 @@ class LandingPage extends React.Component {
     })
   }
 
-  updateDisplayedArticle = (displayedArticleKey, displayedArticle, displayedArticleParagraphs) => {
+  updateDisplayedArticle = (displayedArticle) => {
     this.setState({
-      latestArticleKey: displayedArticleKey,
       latestArticle: displayedArticle,
-      latestArticleParagraphs: displayedArticleParagraphs
     });
   }
 
