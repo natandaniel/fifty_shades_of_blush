@@ -15,7 +15,7 @@ class CreateArticle extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = { title: "", subtitle: "", category: "", body: "", file: []}
+		this.state = { title: "", subtitle: "", category: "", body: "", mainCardImage: [], optImgs: [] }
 	}
 
 	onCreate(newArticle) {
@@ -23,13 +23,13 @@ class CreateArticle extends React.Component {
 		axios.post(
 			`${API_URL}/articles/create`,
 			newArticle,
-			{ headers: { 'Content-Type': 'multipart/form-data' }}
+			{ headers: { 'Content-Type': 'multipart/form-data' } }
 		).then(response => {
 			console.log(response)
 		})
-		.catch(exc => {
-			console.log(exc)
-		})
+			.catch(exc => {
+				console.log(exc)
+			})
 	}
 
 	handleSubmit = (e) => {
@@ -40,7 +40,8 @@ class CreateArticle extends React.Component {
 		newArticle.append("subtitle", this.state.subtitle);
 		newArticle.append("category", this.state.category);
 		newArticle.append("body", this.state.body);
-		newArticle.append("file", this.state.file);
+		newArticle.append("mainCardImage", this.state.mainCardImage);
+		newArticle.append("optImgs", this.state.optImgs);
 		this.onCreate(newArticle);
 	}
 
@@ -60,6 +61,16 @@ class CreateArticle extends React.Component {
 			{
 				[event.target.name]
 					: event.target.files[0]
+			}
+		)
+	}
+
+	handleFilessChange = event => {
+		console.log(event.target.name);
+		this.setState(
+			{
+				[event.target.name]
+					: event.target.files
 			}
 		)
 	}
@@ -112,15 +123,26 @@ class CreateArticle extends React.Component {
 								name="body"
 								onChange={this.handleChange}
 							/>
-							<Input
+							<TextField
 								id="mainCardImage"
 								label="Main Card Image"
 								placeholder="Main Card Image"
 								className="textField"
 								margin="normal"
 								type="file"
-								name="file"
+								name="mainCardImage"
 								onChange={this.handleFileChange}
+							/>
+							<Input
+								id="optImages"
+								label="Optional Images"
+								placeholder="Optional Images"
+								className="textField"
+								margin="normal"
+								type="file"
+								inputProps={{ multiple: true }}
+								name="optImgs"
+								onChange={this.handleFilesChange}
 							/>
 							<Button
 								type="submit"
