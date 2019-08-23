@@ -65,16 +65,6 @@ class CreateArticle extends React.Component {
 		)
 	}
 
-	handleFilessChange = event => {
-		console.log(event.target.name);
-		this.setState(
-			{
-				[event.target.name]
-					: event.target.files
-			}
-		)
-	}
-
 	render() {
 		console.log(this.state);
 		return (
@@ -132,17 +122,6 @@ class CreateArticle extends React.Component {
 								type="file"
 								name="mainCardImage"
 								onChange={this.handleFileChange}
-							/>
-							<Input
-								id="optImages"
-								label="Optional Images"
-								placeholder="Optional Images"
-								className="textField"
-								margin="normal"
-								type="file"
-								inputProps={{ multiple: true }}
-								name="optImgs"
-								onChange={this.handleFilesChange}
 							/>
 							<Button
 								type="submit"
