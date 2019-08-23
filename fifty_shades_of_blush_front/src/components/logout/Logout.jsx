@@ -21,11 +21,9 @@ class Logout extends React.Component {
     render() {
 
         return (
-            <div>
-                <Grid item lg={12}>
-                    <Button variant="contained" color="secondary" onClick={this.logout}>EXIT ADMIN</Button>
-                </Grid>
-            </div>
+            <Grid item>
+                <Button variant="contained" color="secondary" onClick={this.logout}>EXIT ADMIN</Button>
+            </Grid>
         );
     }
 }

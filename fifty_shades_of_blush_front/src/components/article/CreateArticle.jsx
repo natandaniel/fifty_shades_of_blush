@@ -28,7 +28,7 @@ class CreateArticle extends React.Component {
 			console.log(response)
 		})
 			.catch(exc => {
-				console.log(exc)
+				alert(exc.message)
 			})
 	}
 

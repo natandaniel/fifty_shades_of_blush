@@ -94,6 +94,12 @@ class ArticleCard extends React.Component {
           <Button size="small" color="primary" onClick={() => this.displayArticle(this.props.article.config.url)}>
             Read
             </Button>
+            <Button size="small" color="primary">
+            Edit
+            </Button>
+            <Button size="small" color="secondary">
+            Delete
+            </Button>
         </CardActions>
       </Card>
     );

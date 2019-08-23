@@ -4,6 +4,7 @@ import axios from 'axios';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
 import Container from '@material-ui/core/Container';
+import Button from '@material-ui/core/Button';
 
 import Header from '../../components/header/Header.jsx'
 import Footer from '../../components/footer/Footer.jsx'
@@ -30,12 +31,13 @@ class LandingPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isAuth: false, 
-      latestArticle: [], 
-      recentBeautyArticles: [], 
-      recentFashionArticles: [], 
-      recentTravelArticles: [], 
-      recentLifestyleArticles: [] };
+      isAuth: false,
+      latestArticle: [],
+      recentBeautyArticles: [],
+      recentFashionArticles: [],
+      recentTravelArticles: [],
+      recentLifestyleArticles: []
+    };
 
   }
 
@@ -49,27 +51,27 @@ class LandingPage extends React.Component {
 
   getLatestArticle() {
     ArticlesService.getLatestArticleEntity().then(latestArticleEntity => {
-      if(latestArticleEntity.data._embedded){
+      if (latestArticleEntity.data._embedded) {
         return latestArticleEntity.data._embedded.articleResources.map(article =>
           axios.get(article._links.self.href)
         )
-      }else{
+      } else {
         return new Array()
       }
     }).then(articlePromises => {
       return when.all(articlePromises)
     }).then(latestArticleArray => {
-        this.setState({latestArticle: latestArticleArray})
-      })
+      this.setState({ latestArticle: latestArticleArray })
+    })
   }
 
   getRecentBeautyArticles() {
     ArticlesService.getRecentBFTLArticlesEntity("beauty").then(recentBeautyArticlesEntity => {
-      if(recentBeautyArticlesEntity.data._embedded){
+      if (recentBeautyArticlesEntity.data._embedded) {
         return recentBeautyArticlesEntity.data._embedded.articleResources.map(article =>
           axios.get(article._links.self.href)
         )
-      }else{
+      } else {
         return new Array()
       }
     }).then(articlePromises => {
@@ -83,11 +85,11 @@ class LandingPage extends React.Component {
 
   getRecentFashionArticles() {
     ArticlesService.getRecentBFTLArticlesEntity("fashion").then(recentFashionArticlesEntity => {
-      if(recentFashionArticlesEntity.data._embedded){
+      if (recentFashionArticlesEntity.data._embedded) {
         return recentFashionArticlesEntity.data._embedded.articleResources.map(article =>
           axios.get(article._links.self.href)
         )
-      }else{
+      } else {
         return new Array()
       }
     }).then(articlePromises => {
@@ -101,11 +103,11 @@ class LandingPage extends React.Component {
 
   getRecentTravelArticles() {
     ArticlesService.getRecentBFTLArticlesEntity("travel").then(recentTravelArticlesEntity => {
-      if(recentTravelArticlesEntity.data._embedded){
+      if (recentTravelArticlesEntity.data._embedded) {
         return recentTravelArticlesEntity.data._embedded.articleResources.map(article =>
           axios.get(article._links.self.href)
         )
-      }else{
+      } else {
         return new Array()
       }
     }).then(articlePromises => {
@@ -119,11 +121,11 @@ class LandingPage extends React.Component {
 
   getRecentLifestyleArticles() {
     ArticlesService.getRecentBFTLArticlesEntity("lifestyle").then(recentLifestyleArticlesEntity => {
-      if(recentLifestyleArticlesEntity.data._embedded){
+      if (recentLifestyleArticlesEntity.data._embedded) {
         return recentLifestyleArticlesEntity.data._embedded.articleResources.map(article =>
           axios.get(article._links.self.href)
         )
-      }else{
+      } else {
         return new Array()
       }
     }).then(articlePromises => {
@@ -142,7 +144,7 @@ class LandingPage extends React.Component {
   }
 
   updateIsAuthenticated = () => {
-    this.setState({isAuth: !this.state.isAuth});
+    this.setState({ isAuth: !this.state.isAuth });
   }
 
   componentDidMount() {
@@ -151,10 +153,10 @@ class LandingPage extends React.Component {
 
   render() {
 
-    let logout = <Grid item lg={12} />
+    let logout = <Grid item xs />
 
     if (sessionStorage.getItem('isAuth') === 'true') {
-      logout = <Logout isAuthenticatedHandler={this.updateIsAuthenticated}/>
+      logout = <Logout isAuthenticatedHandler={this.updateIsAuthenticated} />
     }
 
     const articleSections = sections.map(section => (
@@ -186,6 +188,9 @@ class LandingPage extends React.Component {
         <Header />
         <Container>
           <Grid key="mainGrid" className="" container spacing={2}>
+            <Grid item>
+                    <Button variant="contained" color="primary">CREATE NEW ARTICLE</Button>
+                </Grid>
             {logout}
             <Grid item lg={12}> <Article key="latestArticle" article={this.state.latestArticle} /></Grid>
             {articleSections}
