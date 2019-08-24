@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -24,12 +25,16 @@ public class ArticleFile {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
 
+    @NotBlank
     private String fileName;
+    @NotBlank
     private String fileType;
 
+    @NotBlank
     @Lob
     private byte[] data;
     
+    @NotBlank
     @ManyToOne
 	@JoinColumn(name = "article_id")
     private Article article;
