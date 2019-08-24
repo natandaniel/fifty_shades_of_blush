@@ -1,43 +1,68 @@
 import React from 'react';
-import PropTypes from "prop-types";
-import withStyles from "@material-ui/core/styles/withStyles";
+import {Redirect} from "react-router-dom";
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
-import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
-
-import loginPageStyle from "../../assets/jss/views/loginPage.jsx";
-
-const root = 'http://localhost:8080/api';
-
+import AuthenticationService from '../../tools/authProvider/AuthenticationService';
 
 class LoginPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      username: "",
+      password: "",
+      redirectToReferrer: false
+    };
+  }
+
+  handleChange = event => {
+    this.setState(
+      {
+        [event.target.name]
+          : event.target.value
+      }
+    )
+  }
+
+  login = event => {
+    event.preventDefault();
+    AuthenticationService.executeBasicAuthenticationService(this.state.username, this.state.password)
+      .then((response) => {
+        console.log(response)
+        sessionStorage.setItem('isAuth', 'true');
+        AuthenticationService.registerSuccessfulLogin(this.state.username, this.state.password)
+        this.setState({redirectToReferrer: true});
+      }).catch((exc) => {
+        console.log(exc)
+      })
   }
 
   render() {
-    const { classes } = this.props;
+
+    const { from } = this.props.location.state || { from: { pathname: '/' } }
+
+    console.log(from)
+
+    if (sessionStorage.getItem('isAuth') === 'true') {
+      return <Redirect to={from} />
+    }
+
     return (
       <Container component="main" maxWidth="xs">
         <CssBaseline />
-        <div className={classes.paper}>
-          <Avatar className={classes.avatar}>
+        <div className="paper">
+          <Avatar className="avatar">
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
-        </Typography>
-          <form className={classes.form} method="POST" action={root + "/authenticate"}>
+            ADMIN ACCESS
+          </Typography>
+          <form className="form" noValidate onSubmit={this.login}>
             <TextField
               variant="outlined"
               margin="normal"
@@ -48,6 +73,8 @@ class LoginPage extends React.Component {
               name="username"
               autoComplete="username"
               autoFocus
+              value={this.state.username}
+              onChange={this.handleChange}
             />
             <TextField
               variant="outlined"
@@ -56,35 +83,20 @@ class LoginPage extends React.Component {
               fullWidth
               name="password"
               label="Password"
-              type="password"
               id="password"
               autoComplete="current-password"
-            />
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+              value={this.state.password}
+              onChange={this.handleChange}
             />
             <Button
               type="submit"
               fullWidth
               variant="contained"
               color="primary"
-              className={classes.submit}
+              className="submit"
             >
               Sign In
-          </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-              </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
+            </Button>
           </form>
         </div>
       </Container>
@@ -92,8 +104,4 @@ class LoginPage extends React.Component {
   }
 }
 
-LoginPage.propTypes = {
-  classes: PropTypes.object
-};
-
-export default withStyles(loginPageStyle)(LoginPage);
+export default LoginPage;

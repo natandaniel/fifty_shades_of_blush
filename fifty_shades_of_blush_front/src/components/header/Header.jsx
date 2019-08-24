@@ -59,7 +59,6 @@ class Header extends React.Component {
     componentDidMount() {
         const navbar = document.getElementById("navbar");
         const sticky = navbar.offsetTop;
-        console.log(sticky);
         this.setState({ navbarWidth: navbar.offsetWidth });
         window.addEventListener('scroll', () => this.addStickyClass(navbar, sticky));
     }
