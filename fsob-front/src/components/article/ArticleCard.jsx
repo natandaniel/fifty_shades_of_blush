@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import '../../assets/css/components/article/articleCard.css';
 import { scrollIt } from '../../tools/scrolling/scrollIt';
 
+const API_URL = 'http://localhost:8080/api';
 const when = require('when');
 
 class ArticleCard extends React.Component {
@@ -17,7 +18,8 @@ class ArticleCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      files: []
+      files: [],
+      reload: true
     }
   }
 
@@ -34,11 +36,11 @@ class ArticleCard extends React.Component {
   }
 
 
-  loadFromServer(){
+  loadFromServer() {
     this.getFiles()
   };
 
-  getFiles(){
+  getFiles() {
     axios.get(this.props.article.data._links.files.href)
       .then(result => {
         return result.data._embedded.articleFiles.map(file =>
@@ -49,7 +51,6 @@ class ArticleCard extends React.Component {
       }).then(files => {
         this.setState({
           files: files,
-          updateState: false
         })
       })
   }
@@ -58,13 +59,36 @@ class ArticleCard extends React.Component {
     this.loadFromServer()
   }
 
+  handleDelete = () => {
+    if (window.confirm('Are you sure you wish to delete article?')) {
+      const articleId = this.props.article.data._links.self.href.split("/").pop();
+
+      axios.delete(
+        `${API_URL}/articles/delete/${articleId}`
+      ).then(() => {
+        this.props.refreshPage()
+      }).catch(exc => {
+        alert(exc.message)
+      })
+
+
+    }
+  }
+
   render() {
+
+    let editButton = <Button disabled />
+    let deleteButton = <Button disabled />
+
+    if (sessionStorage.getItem('isAuth') === 'true') {
+      editButton = <Button size="small" color="primary">Edit</Button>
+      deleteButton = <Button size="small" color="secondary" onClick={this.handleDelete}>Delete</Button>
+    }
+
     const mainImg = this.state.files.filter(file => file.data.fileName.includes("main")).map(file => {
       return `data:${file.data.fileType};base64,${file.data.data}`
     }
     );
-
-    console.log(this.state.files)
 
     return (
       <Card className="card" key={this.props.article.data._links.self.href}>
@@ -94,12 +118,8 @@ class ArticleCard extends React.Component {
           <Button size="small" color="primary" onClick={() => this.displayArticle(this.props.article.config.url)}>
             Read
             </Button>
-            <Button size="small" color="primary">
-            Edit
-            </Button>
-            <Button size="small" color="secondary">
-            Delete
-            </Button>
+          {editButton}
+          {deleteButton}
         </CardActions>
       </Card>
     );
