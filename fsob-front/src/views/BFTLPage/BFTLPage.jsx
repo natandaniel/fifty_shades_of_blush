@@ -17,7 +17,8 @@ class BFTLPage extends React.Component {
     super(props);
     this.state = {
       articles: [],
-      displayedArticle: []
+      displayedArticle: [],
+      refresh: false
     };
   }
 
@@ -66,6 +67,10 @@ class BFTLPage extends React.Component {
     });
   }
 
+  refreshPage = () => {
+    this.loadFromServer();
+  }
+
   componentDidMount() {
     this.loadFromServer();
   }
@@ -77,7 +82,7 @@ class BFTLPage extends React.Component {
         <Header />
         <Container className="mainContainer" maxWidth="lg">
           <Article key="displayedArticle" article={this.state.displayedArticle} />
-          <ArticleCardGrid recentArticles={this.state.articles} displayedArticleHandler={this.updateDisplayedArticle} />
+          <ArticleCardGrid recentArticles={this.state.articles} displayedArticleHandler={this.updateDisplayedArticle} refreshPage={this.refreshPage}/>
         </Container>
         <Footer />
       </div>

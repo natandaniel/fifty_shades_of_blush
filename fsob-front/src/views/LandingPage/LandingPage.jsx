@@ -151,6 +151,10 @@ class LandingPage extends React.Component {
     this.loadFromServer();
   }
 
+  refreshPage = () => {
+    this.loadFromServer();
+  }
+
   render() {
 
     let logout = <Grid item xs />
@@ -178,7 +182,7 @@ class LandingPage extends React.Component {
         <Grid item md={4} xs={1}></Grid>
         <Grid item md={12}>
           <ArticleCardGrid displayedArticleHandler={this.updateDisplayedArticle} recentArticles={section === 'beauty' ? this.state.recentBeautyArticles : (
-            section === 'fashion' ? this.state.recentFashionArticles : (section === 'travel' ? this.state.recentTravelArticles : this.state.recentLifestyleArticles))} />
+            section === 'fashion' ? this.state.recentFashionArticles : (section === 'travel' ? this.state.recentTravelArticles : this.state.recentLifestyleArticles))} refreshPage={this.refreshPage} />
         </Grid>
       </Grid>
     ));
@@ -189,8 +193,8 @@ class LandingPage extends React.Component {
         <Container>
           <Grid key="mainGrid" className="" container spacing={2}>
             <Grid item>
-                    <Button variant="contained" color="primary">CREATE NEW ARTICLE</Button>
-                </Grid>
+              <Button variant="contained" color="primary">CREATE NEW ARTICLE</Button>
+            </Grid>
             {logout}
             <Grid item lg={12}> <Article key="latestArticle" article={this.state.latestArticle} /></Grid>
             {articleSections}

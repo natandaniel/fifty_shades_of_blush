@@ -39,7 +39,6 @@ class CreateArticle extends React.Component {
 			newArticle,
 			{ headers: { 'Content-Type': 'multipart/form-data' } }
 		).then(response => {
-			console.log(response)
 			document.getElementById("articleCreationForm").reset()
 		})
 			.catch(exc => {
@@ -61,7 +60,6 @@ class CreateArticle extends React.Component {
 	}
 
 	handleChange = event => {
-		console.log(event.target.name);
 		this.setState(
 			{
 				[event.target.name]
@@ -71,7 +69,6 @@ class CreateArticle extends React.Component {
 	}
 
 	handleFileChange = event => {
-		console.log(event.target.name);
 		this.setState(
 			{
 				[event.target.name]
