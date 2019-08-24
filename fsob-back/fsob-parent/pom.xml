@@ -25,11 +25,11 @@
 	</properties>
 
 	<modules>
-		<module>fsob-domain</module>
-		<module>fsob-data</module>
-		<module>fsob-security</module>
-		<module>fsob-api</module>
-		<module>fsob</module>
+		<module>../fsob-domain</module>
+		<module>../fsob-data</module>
+		<module>../fsob-security</module>
+		<module>../fsob-api</module>
+		<module>../fsob</module>
 	</modules>
 
 </project>
