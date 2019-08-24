@@ -49,14 +49,15 @@ class CreateArticle extends React.Component {
 
 	handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(this.state)
-		const newArticle = new FormData();
-		newArticle.append("title", this.state.title);
-		newArticle.append("subtitle", this.state.subtitle);
-		newArticle.append("category", this.state.category);
-		newArticle.append("body", this.state.body);
-		newArticle.append("mainCardImage", this.state.mainCardImage);
-		this.onCreate(newArticle);
+		if(window.confirm('Are you sure you wish to submit article?')){
+			const newArticle = new FormData();
+			newArticle.append("title", this.state.title);
+			newArticle.append("subtitle", this.state.subtitle);
+			newArticle.append("category", this.state.category);
+			newArticle.append("body", this.state.body);
+			newArticle.append("mainCardImage", this.state.mainCardImage);
+			this.onCreate(newArticle);
+		}
 	}
 
 	handleChange = event => {
