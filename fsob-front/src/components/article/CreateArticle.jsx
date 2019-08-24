@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import { Container, Typography, Paper, Input, Button, TextField } from '@material-ui/core';
+import { Container, Grid, MenuItem, Button, TextField } from '@material-ui/core';
 
 import Header from '../../components/header/Header.jsx'
 import Footer from '../../components/footer/Footer.jsx'
@@ -10,12 +10,26 @@ import '../../assets/css/components/article/createArticle.css'
 
 const API_URL = 'http://localhost:8080/api';
 
+const categories = [
+	{
+		value: 'BEAUTY',
+	},
+	{
+		value: 'FASHION',
+	},
+	{
+		value: 'TRAVEL',
+	},
+	{
+		value: 'LIFESTYLE',
+	},
+];
 
 class CreateArticle extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = { title: "", subtitle: "", category: "", body: "", mainCardImage: [], optImgs: [] }
+		this.state = { title: "", subtitle: "", category: "", body: "", mainCardImage: []}
 	}
 
 	onCreate(newArticle) {
@@ -26,6 +40,7 @@ class CreateArticle extends React.Component {
 			{ headers: { 'Content-Type': 'multipart/form-data' } }
 		).then(response => {
 			console.log(response)
+			document.getElementById("articleCreationForm").reset()
 		})
 			.catch(exc => {
 				alert(exc.message)
@@ -34,15 +49,15 @@ class CreateArticle extends React.Component {
 
 	handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(this.state)
-		const newArticle = new FormData();
-		newArticle.append("title", this.state.title);
-		newArticle.append("subtitle", this.state.subtitle);
-		newArticle.append("category", this.state.category);
-		newArticle.append("body", this.state.body);
-		newArticle.append("mainCardImage", this.state.mainCardImage);
-		newArticle.append("optImgs", this.state.optImgs);
-		this.onCreate(newArticle);
+		if(window.confirm('Are you sure you wish to submit article?')){
+			const newArticle = new FormData();
+			newArticle.append("title", this.state.title);
+			newArticle.append("subtitle", this.state.subtitle);
+			newArticle.append("category", this.state.category);
+			newArticle.append("body", this.state.body);
+			newArticle.append("mainCardImage", this.state.mainCardImage);
+			this.onCreate(newArticle);
+		}
 	}
 
 	handleChange = event => {
@@ -66,73 +81,91 @@ class CreateArticle extends React.Component {
 	}
 
 	render() {
-		console.log(this.state);
+
 		return (
 			<div>
 				<Header />
 				<Container>
-					<Paper className="root">
-						<Typography component="h1" variant="h5">
-							New article
-         		</Typography>
-						<form onSubmit={this.handleSubmit}>
-							<TextField
-								id="title"
-								label="Article Title"
-								placeholder="Write title here ..."
-								className="textField"
-								margin="normal"
-								name="title"
-								onChange={this.handleChange}
-							/>
-							<TextField
-								id="subtitle"
-								label="Article Subtitle"
-								placeholder="Write subtitle here ..."
-								className="textField"
-								margin="normal"
-								name="subtitle"
-								onChange={this.handleChange}
-							/>
-							<TextField
-								id="category"
-								className="articleCategory"
-								placeholder="Article Category : BEAUTY, FASHION, TRAVEL or LIFESTYLE..."
-								className="textField"
-								margin="normal"
-								name="category"
-								onChange={this.handleChange}
-							/>
-							<TextField
-								id="body"
-								label="Article Body"
-								placeholder="Write article here ..."
-								multiline
-								className="textField"
-								margin="normal"
-								name="body"
-								onChange={this.handleChange}
-							/>
-							<TextField
-								id="mainCardImage"
-								label="Main Card Image"
-								placeholder="Main Card Image"
-								className="textField"
-								margin="normal"
-								type="file"
-								name="mainCardImage"
-								onChange={this.handleFileChange}
-							/>
-							<Button
-								type="submit"
-								variant="contained"
-								color="secondary"
-								className="submit"
-							>
-								Submit
-            		</Button>
-						</form>
-					</Paper>
+					<form id="articleCreationForm" onSubmit={this.handleSubmit}>
+						<Grid container spacing={2}>
+
+							<Grid item md={4}>
+								<TextField
+									id="title"
+									label="Article Title"
+									className="textField"
+									name="title"
+									variant="outlined"
+									required
+									onChange={this.handleChange}
+								/>
+							</Grid>
+							<Grid item md={4}>
+								<TextField
+									id="subtitle"
+									label="Article Subtitle"
+									className="textField"
+									name="subtitle"
+									variant="outlined"
+									required
+									onChange={this.handleChange}
+								/>
+							</Grid>
+							<Grid item md={4}>
+								<TextField
+									id="category"
+									label="Article Category"
+									className="textField"
+									name="category"
+									variant="outlined"
+									required
+									select
+									value={this.state.category}
+									onChange={this.handleChange}
+								>
+									{categories.map(option => (
+										<MenuItem key={option.value} value={option.value}>
+											{option.value}
+										</MenuItem>
+									))}</TextField>
+							</Grid>
+							<Grid item md={12}>
+								<TextField
+									id="body"
+									label="Article Body"
+									multiline
+									rows="10"
+									className="textField"
+									margin="normal"
+									name="body"
+									variant="outlined"
+									required
+									onChange={this.handleChange}
+								/>
+							</Grid>
+							<Grid item md={12}>
+								<TextField
+									id="mainCardImage"
+									className="textField"
+									margin="normal"
+									type="file"
+									name="mainCardImage"
+									variant="outlined"
+									onChange={this.handleFileChange}
+								/>
+							</Grid>
+							<Grid item md={6}>
+								<Button
+									type="submit"
+									variant="contained"
+									color="secondary"
+									className="submit"
+								>
+									Submit
+            					</Button>
+							</Grid>
+						</Grid>
+					</form>
 				</Container>
 				<Footer />
 			</div>
