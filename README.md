@@ -1,3 +1,3 @@
 # Fifty Shades Of Blush 
 
-A Beauty Blog.
+Beauty Fashion Travel Lifestyle
