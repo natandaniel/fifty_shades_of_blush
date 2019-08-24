@@ -9,6 +9,8 @@ import fifty.shades.of.blush.domain.Article;
 public interface ArticleRepository extends PagingAndSortingRepository<Article, Long> {
 	
 	Optional<Article> findByTitle(String title);
+	
+	void deleteById(Long articleId);
 
 	Iterable<Article> findByCategoryOrderByCreatedAtDesc(String Category);
 	

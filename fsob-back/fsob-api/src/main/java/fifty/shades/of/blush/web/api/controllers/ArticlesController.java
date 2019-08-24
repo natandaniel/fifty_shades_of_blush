@@ -14,7 +14,9 @@ import org.springframework.hateoas.EntityLinks;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +36,7 @@ import fifty.shades.of.blush.web.api.services.ArticlesService;
 @RequestMapping(path = "/api/articles", produces = "application/hal+json")
 @CrossOrigin(origins = "*")
 public class ArticlesController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(ArticleFilesService.class);
 
 	@Autowired
@@ -68,12 +70,19 @@ public class ArticlesController {
 
 	@PostMapping(path = "/create", consumes = "multipart/form-data")
 	@ResponseStatus(HttpStatus.CREATED)
-	public void createArticle(@RequestParam("title") String title,
-			@RequestParam("subtitle") String subtitle, @RequestParam("category") String category,
-			@RequestParam("body") String body, @RequestParam("mainCardImage") MultipartFile file) throws Exception {
-		
+	public void createArticle(@RequestParam("title") String title, @RequestParam("subtitle") String subtitle,
+			@RequestParam("category") String category, @RequestParam("body") String body,
+			@RequestParam("mainCardImage") MultipartFile file) throws Exception {
+
 		Article newArticle = artService.createArticle(title, subtitle, category);
 		artParaService.insertArticleBody(body, newArticle.getId());
 		artFilesService.uploadMainFile(file, newArticle.getId());
+	}
+
+	@DeleteMapping(path = "/delete/{articleId}")
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public void deleteArticle(@PathVariable("articleId") String articleId) throws Exception {
+		logger.debug(articleId);
+		artService.deleteArticle(Long.valueOf(articleId));
 	}
 }
