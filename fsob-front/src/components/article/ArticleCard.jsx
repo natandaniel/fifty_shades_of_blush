@@ -1,12 +1,7 @@
 import React from 'react';
 import axios from 'axios';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import { withRouter } from 'react-router-dom';
+import { Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Typography } from '@material-ui/core/';
 import '../../assets/css/components/article/articleCard.css';
 import { scrollIt } from '../../tools/scrolling/scrollIt';
 
@@ -18,6 +13,7 @@ class ArticleCard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      article: this.props.article,
       files: [],
       reload: true
     }
@@ -41,7 +37,7 @@ class ArticleCard extends React.Component {
   };
 
   getFiles() {
-    axios.get(this.props.article.data._links.files.href)
+    axios.get(this.state.article.data._links.files.href)
       .then(result => {
         return result.data._embedded.articleFiles.map(file =>
           axios.get(file._links.self.href)
@@ -56,12 +52,13 @@ class ArticleCard extends React.Component {
   }
 
   componentDidMount() {
+    console.log(this.state);
     this.loadFromServer()
   }
 
   handleDelete = () => {
     if (window.confirm('Are you sure you wish to delete article?')) {
-      const articleId = this.props.article.data._links.self.href.split("/").pop();
+      const articleId = this.state.article.data._links.self.href.split("/").pop();
 
       axios.delete(
         `${API_URL}/articles/delete/${articleId}`
@@ -75,13 +72,22 @@ class ArticleCard extends React.Component {
     }
   }
 
+  handleEdit = () => {
+    if (window.confirm('Are you sure you wish to edit this article?')) {
+      this.props.history.push({
+        pathname: "/admin/edit",
+        state: {article: this.state.article.data}
+      });
+    }
+  }
+
   render() {
 
     let editButton = <Button disabled />
     let deleteButton = <Button disabled />
 
     if (sessionStorage.getItem('isAuth') === 'true') {
-      editButton = <Button size="small" color="primary">Edit</Button>
+      editButton = <Button size="small" color="primary" onClick={this.handleEdit}>Edit</Button>
       deleteButton = <Button size="small" color="secondary" onClick={this.handleDelete}>Delete</Button>
     }
 
@@ -91,31 +97,31 @@ class ArticleCard extends React.Component {
     );
 
     return (
-      <Card className="card" key={this.props.article.data._links.self.href}>
+      <Card className="card" key={this.state.article.data._links.self.href}>
         <CardActionArea>
           <CardMedia
             component="img"
-            alt={this.props.article.data.type}
+            alt={this.state.article.data.type}
             max-height="200px"
             image={mainImg[0]}
-            title={this.props.article.data.title}
+            title={this.state.article.data.title}
           />
           <CardContent>
             <Typography gutterBottom variant="h5" component="h2">
-              {this.props.article.data.title}
+              {this.state.article.data.title}
             </Typography>
             <Typography variant="subtitle2" color="textSecondary" component="p">
-              {this.props.article.data.subtitle}
+              {this.state.article.data.subtitle}
             </Typography>
             <Typography component="h6">{new Intl.DateTimeFormat('en-US', {
               year: 'numeric',
               month: 'long',
               day: '2-digit'
-            }).format(new Date(this.props.article.data.createdAt))}</Typography>
+            }).format(new Date(this.state.article.data.createdAt))}</Typography>
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary" onClick={() => this.displayArticle(this.props.article.config.url)}>
+          <Button size="small" color="primary" onClick={() => this.displayArticle(this.state.article.config.url)}>
             Read
             </Button>
           {editButton}
@@ -127,4 +133,4 @@ class ArticleCard extends React.Component {
 
 }
 
-export default ArticleCard;
+export default withRouter(ArticleCard)

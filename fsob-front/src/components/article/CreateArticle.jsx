@@ -131,7 +131,7 @@ class CreateArticle extends React.Component {
 									id="body"
 									label="Article Body"
 									multiline
-									rows="10"
+									rows="25"
 									className="textField"
 									margin="normal"
 									name="body"
