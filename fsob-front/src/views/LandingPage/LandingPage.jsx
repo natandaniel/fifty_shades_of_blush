@@ -2,7 +2,6 @@ import React from 'react';
 import axios from 'axios';
 
 import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
 import Container from '@material-ui/core/Container';
 import Button from '@material-ui/core/Button';
 
@@ -13,7 +12,6 @@ import Article from '../../components/article/Article.jsx';
 import Logout from '../../components/logout/Logout.jsx';
 
 import '../../assets/css/views/landingPage.css'
-import { Typography } from '@material-ui/core';
 
 import ArticlesService from '../../tools/dataProvider/ArticlesService';
 
@@ -56,7 +54,7 @@ class LandingPage extends React.Component {
           axios.get(article._links.self.href)
         )
       } else {
-        return new Array()
+        return []
       }
     }).then(articlePromises => {
       return when.all(articlePromises)
@@ -72,7 +70,7 @@ class LandingPage extends React.Component {
           axios.get(article._links.self.href)
         )
       } else {
-        return new Array()
+        return []
       }
     }).then(articlePromises => {
       return when.all(articlePromises)
@@ -90,7 +88,7 @@ class LandingPage extends React.Component {
           axios.get(article._links.self.href)
         )
       } else {
-        return new Array()
+        return []
       }
     }).then(articlePromises => {
       return when.all(articlePromises)
@@ -108,7 +106,7 @@ class LandingPage extends React.Component {
           axios.get(article._links.self.href)
         )
       } else {
-        return new Array()
+        return []
       }
     }).then(articlePromises => {
       return when.all(articlePromises)
@@ -126,7 +124,7 @@ class LandingPage extends React.Component {
           axios.get(article._links.self.href)
         )
       } else {
-        return new Array()
+        return []
       }
     }).then(articlePromises => {
       return when.all(articlePromises)
@@ -158,7 +156,7 @@ class LandingPage extends React.Component {
   render() {
 
     let logout = <Grid item xs />
-    let createArticle = <Button disabled />
+    let createArticle = <Grid item />
 
     if (sessionStorage.getItem('isAuth') === 'true') {
       logout = <Logout isAuthenticatedHandler={this.updateIsAuthenticated} />
@@ -178,7 +176,7 @@ class LandingPage extends React.Component {
       <div>
         <Header />
         <Container>
-          <Grid key="mainGrid" className="" container spacing={2}>
+          <Grid key="mainGrid" container spacing={2}>
             {logout}
             {createArticle}
             <Grid item lg={12}> <Article key="latestArticle" article={this.state.latestArticle} /></Grid>

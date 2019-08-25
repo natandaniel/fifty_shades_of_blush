@@ -52,7 +52,6 @@ class ArticleCard extends React.Component {
   }
 
   componentDidMount() {
-    console.log(this.state);
     this.loadFromServer()
   }
 
@@ -83,8 +82,8 @@ class ArticleCard extends React.Component {
 
   render() {
 
-    let editButton = <Button disabled />
-    let deleteButton = <Button disabled />
+    let editButton = <div />
+    let deleteButton = <div />
 
     if (sessionStorage.getItem('isAuth') === 'true') {
       editButton = <Button size="small" color="primary" onClick={this.handleEdit}>Edit</Button>

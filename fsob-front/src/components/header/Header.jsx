@@ -1,8 +1,5 @@
 import React from 'react';
-import Toolbar from '@material-ui/core/Toolbar';
-import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
+import {Toolbar, Container, Typography, Grid, Link} from '@material-ui/core/';
 import '../../assets/css/components/header.css'
 
 const headerBgImg = require("./header-bg.JPG");
@@ -27,7 +24,7 @@ function FormRow() {
                     href={section === 'home' ? "/" : (section === 'about me' ? "/about" : "/" + section)}
                     className="toolbarLink"
                 >
-                    {section.toUpperCase()}
+                   <Typography id="section" align="center"> {section.toUpperCase()}</Typography>
                 </Link></Grid>
             ))}
         </React.Fragment>

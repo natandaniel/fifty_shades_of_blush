@@ -25,8 +25,7 @@ class Article extends React.Component {
 
   getFilesAndParagraphs = () => {
     this.props.article.map(article => {
-
-      axios.get(article.data._links.files.href)
+      return axios.get(article.data._links.files.href)
         .then(result => {
           return result.data._embedded.articleFiles.map(file =>
             axios.get(file._links.self.href)
@@ -60,7 +59,6 @@ class Article extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     const paragraphs = this.state.paragraphs.map(paragraph => {
       return <div key={paragraph.config.url}>
         <Typography>{paragraph.data.content}</Typography>

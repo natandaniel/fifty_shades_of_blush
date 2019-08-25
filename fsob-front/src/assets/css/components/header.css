@@ -23,19 +23,9 @@
     color: white;
 }
 
-.link{
-    text-align:center;
-}
-
-.toolbarLink {
-    padding: 1px;
-    flex-shrink: 0;
-}
-
-
-.toolbarLink:hover {
+#section:hover {
     color: pink;
-    text-decoration: none !important;
+
   }
   
 .sticky {
