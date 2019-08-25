@@ -158,28 +158,15 @@ class LandingPage extends React.Component {
   render() {
 
     let logout = <Grid item xs />
+    let createArticle = <Button disabled />
 
     if (sessionStorage.getItem('isAuth') === 'true') {
       logout = <Logout isAuthenticatedHandler={this.updateIsAuthenticated} />
+      createArticle = <Grid item><Button variant="contained" color="primary" href="/admin/create">CREATE ARTICLE</Button></Grid>
     }
 
     const articleSections = sections.map(section => (
       <Grid key={section} className="section" container spacing={2} item md={12}>
-        <Grid item md={4} xs={1}></Grid>
-        <Grid item md={4} xs={10}>
-          <div className="linkBlock">
-            <Typography className="link">  {"recent " + section + " articles"}</Typography>
-            <Link
-              color="inherit"
-              href={"/" + section}
-              to={"/" + section}
-              classes={{ textDecoration: 'muiLink' }}
-            >
-              <Typography className="link">  {"all articles here"}</Typography>
-            </Link>
-          </div>
-        </Grid>
-        <Grid item md={4} xs={1}></Grid>
         <Grid item md={12}>
           <ArticleCardGrid displayedArticleHandler={this.updateDisplayedArticle} recentArticles={section === 'beauty' ? this.state.recentBeautyArticles : (
             section === 'fashion' ? this.state.recentFashionArticles : (section === 'travel' ? this.state.recentTravelArticles : this.state.recentLifestyleArticles))} refreshPage={this.refreshPage} />
@@ -192,10 +179,8 @@ class LandingPage extends React.Component {
         <Header />
         <Container>
           <Grid key="mainGrid" className="" container spacing={2}>
-            <Grid item>
-              <Button variant="contained" color="primary">CREATE NEW ARTICLE</Button>
-            </Grid>
             {logout}
+            {createArticle}
             <Grid item lg={12}> <Article key="latestArticle" article={this.state.latestArticle} /></Grid>
             {articleSections}
           </Grid>

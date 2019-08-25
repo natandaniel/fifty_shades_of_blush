@@ -24,9 +24,8 @@ function FormRow() {
                     color="inherit"
                     noWrap
                     variant="body2"
-                    href={section === 'home' ? "/" : "/" + section}
+                    href={section === 'home' ? "/" : (section === 'about me' ? "/about" : "/" + section)}
                     className="toolbarLink"
-                    to={"/" + section}
                 >
                     {section.toUpperCase()}
                 </Link></Grid>
