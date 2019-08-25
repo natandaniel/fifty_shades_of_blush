@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -70,13 +71,19 @@ public class ArticlesController {
 
 	@PostMapping(path = "/create", consumes = "multipart/form-data")
 	@ResponseStatus(HttpStatus.CREATED)
-	public void createArticle(@RequestParam("title") String title, @RequestParam("subtitle") String subtitle,
+	public Article createArticle(@RequestParam("title") String title, @RequestParam("subtitle") String subtitle,
 			@RequestParam("category") String category, @RequestParam("body") String body,
-			@RequestParam("mainCardImage") MultipartFile file) throws Exception {
+			@RequestParam(value="mainCardImage", required=false) MultipartFile file) throws Exception {
 
-		Article newArticle = artService.createArticle(title, subtitle, category);
-		artParaService.insertArticleBody(body, newArticle.getId());
-		artFilesService.uploadMainFile(file, newArticle.getId());
+		return artService.createArticle(title, subtitle, category, body, file);
+	}
+
+	@PutMapping(path = "/edit/{articleId}", consumes = "multipart/form-data")
+	public Article editArticle(@PathVariable("articleId") String articleId, @RequestParam("title") String title, @RequestParam("subtitle") String subtitle,
+			@RequestParam("category") String category, @RequestParam("body") String body,
+			@RequestParam(value="mainCardImage", required=false) MultipartFile file) throws Exception {
+
+		return artService.editArticle(Long.valueOf(articleId), title, subtitle, category, body, file);
 	}
 
 	@DeleteMapping(path = "/delete/{articleId}")

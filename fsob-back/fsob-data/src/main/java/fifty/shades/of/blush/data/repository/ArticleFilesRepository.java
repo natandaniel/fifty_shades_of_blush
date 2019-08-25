@@ -14,6 +14,8 @@ import fifty.shades.of.blush.domain.ArticleFile;
 public interface ArticleFilesRepository extends JpaRepository<ArticleFile, String> {
 
 	Optional<ArticleFile> findByFileName(String fileName);
+	
+	void deleteByArticleAndFileNameContaining(Article article, String text);
 
 	@Transactional
 	void deleteByArticle(Article article);

@@ -83,30 +83,29 @@ class EditArticle extends React.Component {
 			})
 	}
 
-	onEdit(newArticle) {
+	onEdit(editedArticleId, editedArticle) {
 
 		axios.put(
-			`${API_URL}/articles/edit`,
-			newArticle,
+			`${API_URL}/articles/edit/${editedArticleId}`,
+			editedArticle,
 			{ headers: { 'Content-Type': 'multipart/form-data' } }
 		).then(response => {
-		
+			alert("Article successfully edited !")
+		}).catch(exc => {
+			alert("Failed editing article")
 		})
-			.catch(exc => {
-				alert(exc.message)
-			})
 	}
 
 	handleSubmit = (e) => {
 		e.preventDefault();
 		if (window.confirm('Are you sure you wish to edit article?')) {
-			const newArticle = new FormData();
-			newArticle.append("title", this.state.title);
-			newArticle.append("subtitle", this.state.subtitle);
-			newArticle.append("category", this.state.category);
-			newArticle.append("body", this.state.body);
-			newArticle.append("mainCardImage", this.state.mainCardImage);
-			this.onEdit(newArticle);
+			const editedArticle = new FormData();
+			editedArticle.append("title", this.state.title);
+			editedArticle.append("subtitle", this.state.subtitle);
+			editedArticle.append("category", this.state.category);
+			editedArticle.append("body", this.state.body);
+			editedArticle.append("mainCardImage", this.state.mainCardImage);
+			this.onEdit(this.state.articleData._links.self.href.split("/").pop(), editedArticle);
 		}
 	}
 
