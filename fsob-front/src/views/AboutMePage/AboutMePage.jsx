@@ -24,7 +24,7 @@ class AboutMePage extends React.Component {
         </Typography>
           <br />
           <Typography component="p" align="center">
-            My Name is Julia Fernandez
+            Hi ! I'm Julia Fernandez
         </Typography>
           <Typography component="p" align="center">
             I am mostly passionate about beauty, fashion and home design

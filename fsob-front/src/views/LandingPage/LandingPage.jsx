@@ -156,7 +156,7 @@ class LandingPage extends React.Component {
   render() {
 
     let logout = <Grid item xs />
-    let createArticle = <Button disabled />
+    let createArticle = <Grid item />
 
     if (sessionStorage.getItem('isAuth') === 'true') {
       logout = <Logout isAuthenticatedHandler={this.updateIsAuthenticated} />
@@ -176,7 +176,7 @@ class LandingPage extends React.Component {
       <div>
         <Header />
         <Container>
-          <Grid key="mainGrid" className="" container spacing={2}>
+          <Grid key="mainGrid" container spacing={2}>
             {logout}
             {createArticle}
             <Grid item lg={12}> <Article key="latestArticle" article={this.state.latestArticle} /></Grid>

@@ -59,7 +59,6 @@ class Article extends React.Component {
   }
 
   render() {
-    console.log(this.state)
     const paragraphs = this.state.paragraphs.map(paragraph => {
       return <div key={paragraph.config.url}>
         <Typography>{paragraph.data.content}</Typography>
