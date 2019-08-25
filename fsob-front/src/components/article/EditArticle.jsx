@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-import { Container, Grid, MenuItem, Button, TextField } from '@material-ui/core';
+import { Container, Grid, MenuItem, Button, TextField, Typography } from '@material-ui/core';
 
 import Header from '../header/Header.jsx'
 import Footer from '../footer/Footer.jsx'
@@ -72,7 +72,7 @@ class EditArticle extends React.Component {
 					}).then(paragraphs => {
 
 						paragraphs.map(paragraph => {
-							this.setState({body: this.state.body + paragraph.data.content + "\n\n"})
+							this.setState({ body: this.state.body + paragraph.data.content + "\n\n" })
 						})
 
 						this.setState({
@@ -83,14 +83,14 @@ class EditArticle extends React.Component {
 			})
 	}
 
-	onCreate(newArticle) {
+	onEdit(newArticle) {
 
-		axios.post(
-			`${API_URL}/articles/create`,
+		axios.put(
+			`${API_URL}/articles/edit`,
 			newArticle,
 			{ headers: { 'Content-Type': 'multipart/form-data' } }
 		).then(response => {
-			document.getElementById("articleCreationForm").reset()
+		
 		})
 			.catch(exc => {
 				alert(exc.message)
@@ -99,14 +99,14 @@ class EditArticle extends React.Component {
 
 	handleSubmit = (e) => {
 		e.preventDefault();
-		if (window.confirm('Are you sure you wish to submit article?')) {
+		if (window.confirm('Are you sure you wish to edit article?')) {
 			const newArticle = new FormData();
 			newArticle.append("title", this.state.title);
 			newArticle.append("subtitle", this.state.subtitle);
 			newArticle.append("category", this.state.category);
 			newArticle.append("body", this.state.body);
 			newArticle.append("mainCardImage", this.state.mainCardImage);
-			this.onCreate(newArticle);
+			this.onEdit(newArticle);
 		}
 	}
 
@@ -132,93 +132,110 @@ class EditArticle extends React.Component {
 
 		console.log(this.state)
 
+		const mainImg = this.state.files.filter(file => file.data.fileName.includes("main")).map(file => {
+			return <img key={file.data.fileName} className="img" src={`data:${file.data.fileType};base64,${file.data.data}`} width="700px" alt="article" />
+		}
+		);
+
 		return (
 			<div>
 				<Header />
 				<Container>
-					<form id="articleCreationForm" onSubmit={this.handleSubmit}>
-						<Grid container spacing={2}>
-
-							<Grid item md={4}>
-								<TextField
-									id="title"
-									label="Article Title"
-									className="textField"
-									name="title"
-									value={this.state.title}
-									variant="outlined"
-									required
-									onChange={this.handleChange}
-								/>
-							</Grid>
-							<Grid item md={4}>
-								<TextField
-									id="subtitle"
-									label="Article Subtitle"
-									className="textField"
-									name="subtitle"
-									value={this.state.subtitle}
-									variant="outlined"
-									required
-									onChange={this.handleChange}
-								/>
-							</Grid>
-							<Grid item md={4}>
-								<TextField
-									id="category"
-									label="Article Category"
-									className="textField"
-									name="category"
-									variant="outlined"
-									required
-									select
-									value={this.state.category}
-									onChange={this.handleChange}
-								>
-									{categories.map(option => (
-										<MenuItem key={option.value} value={option.value}>
-											{option.value}
-										</MenuItem>
-									))}</TextField>
-							</Grid>
-							<Grid item md={12}>
-								<TextField
-									id="body"
-									label="Article Body"
-									multiline
-									rows="25"
-									className="textField"
-									margin="normal"
-									name="body"
-									value={this.state.body}
-									variant="outlined"
-									required
-									onChange={this.handleChange}
-								/>
-							</Grid>
-							<Grid item md={12}>
-								<TextField
-									id="mainCardImage"
-									className="textField"
-									margin="normal"
-									type="file"
-									name="mainCardImage"
-									variant="outlined"
-									onChange={this.handleFileChange}
-								/>
-							</Grid>
-							<Grid item md={6}>
-								<Button
-									type="submit"
-									variant="contained"
-									color="secondary"
-									className="submit"
-								>
-									Submit
-            					</Button>
-							</Grid>
+					<Grid container spacing={2}>
+						<Grid item md={6}>
+							{mainImg}
 						</Grid>
-					</form>
+						<Grid item md={6}>
+							<Typography>Current Main Card Image</Typography>
+						</Grid>
+						<Grid container item>
+							<form id="articleEditionForm" onSubmit={this.handleSubmit}>
+								<Grid item container spacing={2}>
+
+									<Grid item md={4}>
+										<TextField
+											id="title"
+											label="Article Title"
+											className="textField"
+											name="title"
+											value={this.state.title}
+											variant="outlined"
+											required
+											onChange={this.handleChange}
+										/>
+									</Grid>
+									<Grid item md={4}>
+										<TextField
+											id="subtitle"
+											label="Article Subtitle"
+											className="textField"
+											name="subtitle"
+											value={this.state.subtitle}
+											variant="outlined"
+											required
+											onChange={this.handleChange}
+										/>
+									</Grid>
+									<Grid item md={4}>
+										<TextField
+											id="category"
+											label="Article Category"
+											className="textField"
+											name="category"
+											variant="outlined"
+											required
+											select
+											value={this.state.category}
+											onChange={this.handleChange}
+										>
+											{categories.map(option => (
+												<MenuItem key={option.value} value={option.value}>
+													{option.value}
+												</MenuItem>
+											))}</TextField>
+									</Grid>
+									<Grid item md={12}>
+										<TextField
+											id="body"
+											label="Article Body"
+											multiline
+											rows="25"
+											className="textField"
+											margin="normal"
+											name="body"
+											value={this.state.body}
+											variant="outlined"
+											required
+											onChange={this.handleChange}
+										/>
+									</Grid>
+									<Grid item md={12}>
+										<TextField
+											id="mainCardImage"
+											className="textField"
+											margin="normal"
+											type="file"
+											name="mainCardImage"
+											variant="outlined"
+											onChange={this.handleFileChange}
+										/>
+									</Grid>
+									<Grid item md={6}>
+										<Button
+											type="submit"
+											variant="contained"
+											color="secondary"
+											className="submit"
+										>
+											Submit
+            					</Button>
+									</Grid>
+								</Grid>
+							</form>
+						</Grid>
+
+					</Grid>
+
 				</Container>
 				<Footer />
 			</div>
