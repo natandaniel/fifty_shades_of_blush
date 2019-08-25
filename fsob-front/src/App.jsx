@@ -4,6 +4,7 @@ import { createBrowserHistory } from "history";
 import LoginPage from './views/LoginPage/LoginPage.jsx';
 import LandingPage from './views/LandingPage/LandingPage.jsx';
 import BFTLPage from './views/BFTLPage/BFTLPage.jsx';
+import AboutMePage from './views/AboutMePage/AboutMePage.jsx';
 import CreateArticle from './components/article/CreateArticle.jsx';
 import EditArticle from './components/article/EditArticle.jsx';
 
@@ -28,6 +29,7 @@ class App extends React.Component {
                     <Route path="/fashion" render={(props) => <BFTLPage {...props} page={"fashion"} />} />
                     <Route path="/travel" render={(props) => <BFTLPage {...props} page={"travel"} />} />
                     <Route path="/lifestyle" render={(props) => <BFTLPage {...props} page={"lifestyle"} />} />
+                    <Route exact path="/about" component={AboutMePage} />
                     <Route exact path="/login" component={LoginPage} />
                     <PrivateRoute exact path="/admin/create" component={CreateArticle} />
                     <PrivateRoute exact path="/admin/edit" component={EditArticle} />
