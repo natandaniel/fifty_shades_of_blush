@@ -158,9 +158,11 @@ class LandingPage extends React.Component {
   render() {
 
     let logout = <Grid item xs />
+    let createArticle = <Button disabled />
 
     if (sessionStorage.getItem('isAuth') === 'true') {
       logout = <Logout isAuthenticatedHandler={this.updateIsAuthenticated} />
+      createArticle = <Grid item><Button variant="contained" color="primary" href="/admin/create">CREATE ARTICLE</Button></Grid>
     }
 
     const articleSections = sections.map(section => (
@@ -192,10 +194,8 @@ class LandingPage extends React.Component {
         <Header />
         <Container>
           <Grid key="mainGrid" className="" container spacing={2}>
-            <Grid item>
-              <Button variant="contained" color="primary">CREATE NEW ARTICLE</Button>
-            </Grid>
             {logout}
+            {createArticle}
             <Grid item lg={12}> <Article key="latestArticle" article={this.state.latestArticle} /></Grid>
             {articleSections}
           </Grid>
