@@ -1,5 +1,7 @@
 package fifty.shades.of.blush.web.api.services;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -10,7 +12,6 @@ import fifty.shades.of.blush.data.repository.ArticleFilesRepository;
 import fifty.shades.of.blush.data.repository.ArticleParagraphsRepository;
 import fifty.shades.of.blush.data.repository.ArticleRepository;
 import fifty.shades.of.blush.domain.Article;
-import fifty.shades.of.blush.domain.ArticleFile;
 
 @Service
 public class ArticlesService {
@@ -30,18 +31,29 @@ public class ArticlesService {
 	@Autowired
 	ArticleFilesService artFilesService;
 
-	public Article createArticle(String title, String subtitle, String category) throws Exception {
+	@Transactional(rollbackOn = Exception.class)
+	public Article createArticle(String title, String subtitle, String category,  String body,
+			MultipartFile file) throws Exception {
 
 		try {
 			artRepo.findByTitle(title).orElseThrow(() -> new ResourceNotFoundException("Article", "id", title));
 		} catch (ResourceNotFoundException e) {
 
-			return artRepo.save(new Article(title, subtitle, category));
+			Article newArticle = artRepo.save(new Article(title, subtitle, category));
+			
+			artParaService.insertArticleBody(body, newArticle.getId());
+			
+			if(file != null) {
+				artFilesService.uploadMainFile(file, newArticle.getId());
+			}
+			
+			return newArticle;
 		}
 
 		throw new Exception("Article with same title already exists");
 	}
 
+	@Transactional(rollbackOn = Exception.class)
 	public Article editArticle(Long articleId, String title, String subtitle, String category, String body,
 			MultipartFile file) throws Exception {
 
