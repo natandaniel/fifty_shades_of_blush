@@ -34,7 +34,7 @@ class BFTLPage extends React.Component {
           axios.get(article._links.self.href)
         )
       } else {
-        return new Array()
+        return []
       }
     }).then(articlePromises => {
       return when.all(articlePromises)
@@ -50,7 +50,7 @@ class BFTLPage extends React.Component {
           axios.get(article._links.self.href)
         )
       } else {
-        return new Array()
+        return []
       }
     }).then(articlePromises => {
       return when.all(articlePromises)

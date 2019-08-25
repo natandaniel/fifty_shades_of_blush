@@ -4,10 +4,6 @@ import ArticleCard from './ArticleCard.jsx';
 
 class ArticleCardGrid extends React.Component {
 
-    constructor(props) {
-        super(props);
-    }
-
     render() {
 
         const recentArticles = this.props.recentArticles.map(article =>

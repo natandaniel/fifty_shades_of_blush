@@ -72,7 +72,7 @@ class EditArticle extends React.Component {
 					}).then(paragraphs => {
 
 						paragraphs.map(paragraph => {
-							this.setState({ body: this.state.body + paragraph.data.content + "\n\n" })
+							return this.setState({ body: this.state.body + paragraph.data.content + "\n\n" })
 						})
 
 						this.setState({
