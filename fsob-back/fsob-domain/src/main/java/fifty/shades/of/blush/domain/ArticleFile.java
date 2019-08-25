@@ -1,6 +1,5 @@
 package fifty.shades.of.blush.domain;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -36,7 +35,7 @@ public class ArticleFile {
 	private byte[] data;
 
 	@NotNull
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "article_id")
 	private Article article;
 
