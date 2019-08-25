@@ -3,11 +3,12 @@ import axios from 'axios';
 
 import { Container, Grid, MenuItem, Button, TextField } from '@material-ui/core';
 
-import Header from '../../components/header/Header.jsx'
-import Footer from '../../components/footer/Footer.jsx'
+import Header from '../header/Header.jsx'
+import Footer from '../footer/Footer.jsx'
 
 import '../../assets/css/components/article/createArticle.css'
 
+const when = require('when');
 const API_URL = 'http://localhost:8080/api';
 
 const categories = [
@@ -25,11 +26,61 @@ const categories = [
 	},
 ];
 
-class CreateArticle extends React.Component {
+class EditArticle extends React.Component {
 
 	constructor(props) {
 		super(props);
-		this.state = { title: "", subtitle: "", category: "", body: "", mainCardImage: []}
+		this.state = {
+			articleData: this.props.location.state.article,
+			title: this.props.location.state.article.title,
+			subtitle: this.props.location.state.article.subtitle,
+			category: this.props.location.state.article.category,
+			body: "",
+			mainCardImage: [],
+			files: [],
+			paragraphs: []
+
+		}
+	}
+
+	componentDidMount() {
+		this.loadFromServer()
+	}
+
+	loadFromServer = () => {
+		this.getFilesAndParagraphs()
+	};
+
+	getFilesAndParagraphs = () => {
+
+		axios.get(this.state.articleData._links.files.href)
+			.then(result => {
+				return result.data._embedded.articleFiles.map(file =>
+					axios.get(file._links.self.href)
+				)
+			}).then(filePromises => {
+				return when.all(filePromises)
+			}).then(files => {
+
+				axios.get(this.state.articleData._links.paragraphs.href)
+					.then(result => {
+						return result.data._embedded.articleParagraphs.map(paragraph =>
+							axios.get(paragraph._links.self.href)
+						)
+					}).then(paragraphPromises => {
+						return when.all(paragraphPromises)
+					}).then(paragraphs => {
+
+						paragraphs.map(paragraph => {
+							this.setState({body: this.state.body + paragraph.data.content + "\n\n"})
+						})
+
+						this.setState({
+							files: files,
+							paragraphs: paragraphs,
+						})
+					})
+			})
 	}
 
 	onCreate(newArticle) {
@@ -48,7 +99,7 @@ class CreateArticle extends React.Component {
 
 	handleSubmit = (e) => {
 		e.preventDefault();
-		if(window.confirm('Are you sure you wish to submit article?')){
+		if (window.confirm('Are you sure you wish to submit article?')) {
 			const newArticle = new FormData();
 			newArticle.append("title", this.state.title);
 			newArticle.append("subtitle", this.state.subtitle);
@@ -79,6 +130,8 @@ class CreateArticle extends React.Component {
 
 	render() {
 
+		console.log(this.state)
+
 		return (
 			<div>
 				<Header />
@@ -92,6 +145,7 @@ class CreateArticle extends React.Component {
 									label="Article Title"
 									className="textField"
 									name="title"
+									value={this.state.title}
 									variant="outlined"
 									required
 									onChange={this.handleChange}
@@ -103,6 +157,7 @@ class CreateArticle extends React.Component {
 									label="Article Subtitle"
 									className="textField"
 									name="subtitle"
+									value={this.state.subtitle}
 									variant="outlined"
 									required
 									onChange={this.handleChange}
@@ -135,6 +190,7 @@ class CreateArticle extends React.Component {
 									className="textField"
 									margin="normal"
 									name="body"
+									value={this.state.body}
 									variant="outlined"
 									required
 									onChange={this.handleChange}
@@ -172,4 +228,4 @@ class CreateArticle extends React.Component {
 }
 
 
-export default CreateArticle;
+export default EditArticle;
