@@ -7,6 +7,7 @@
 		<groupId>fr.ndaniel</groupId>
 		<artifactId>fsob-parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../fsob-parent/</relativePath>
 	</parent>
 	
 	<artifactId>fsob-api</artifactId>
