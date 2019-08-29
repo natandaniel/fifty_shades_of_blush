@@ -13,7 +13,7 @@
 	<artifactId>fsob</artifactId>
 	<name>fsob</name>
 	<description>Fifty Shades Of Blush Spring Boot Application</description>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
