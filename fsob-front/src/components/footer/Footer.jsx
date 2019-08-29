@@ -1,8 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import Container from '@material-ui/core/Container';
+import { Typography, Button, Link, Container } from '@material-ui/core/';
 import { scrollIt } from '../../tools/scrolling/scrollIt';
 
 const useStyles = makeStyles(theme => ({
@@ -30,8 +28,16 @@ export default function Footer() {
                     50 Shades Of Blush
           </Button>
                 <Typography variant="subtitle1" align="center" color="textSecondary" component="p">
-                    ©Copyright 2019 
+                    ©Copyright 2019
           </Typography>
+                <Link
+                    color="inherit"
+                    noWrap
+                    variant="body2"
+                    href="/login"
+                >
+                    <Typography id="section" align="left">Admin</Typography>
+                </Link>
             </Container>
         </footer>
     );
