@@ -1,6 +1,6 @@
 {
   "name": "fifty_shades_of_blush_front",
-  "homepage":"http://50shadesofblush.com",
+  "homepage": "http://50shadesofblush.com",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

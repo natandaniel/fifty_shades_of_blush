@@ -24,12 +24,12 @@ public class DatabaseLoader implements CommandLineRunner {
 
 		try {
 
-			users.findByUsername("natandaniel")
-					.orElseThrow(() -> new ResourceNotFoundException("User", "username", "natandaniel"));
+			users.findByUsername("jferAdmin")
+					.orElseThrow(() -> new ResourceNotFoundException("User", "username", "jferAdmin"));
 
 		} catch (ResourceNotFoundException e) {
 
-			User user = new User("natandaniel", "natandaniel", "ROLE_ADMIN", "ROLE_USER");
+			User user = new User("jferAdmin", "#@n19j1950SOB@#", "ROLE_ADMIN", "ROLE_USER");
 			users.save(user);
 		}
 	}
