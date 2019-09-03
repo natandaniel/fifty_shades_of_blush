@@ -77,7 +77,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	        	.antMatchers("/api/basicauth").authenticated()
 	        	
 	        	.antMatchers(HttpMethod.GET).permitAll()
-	            
+	        	
+	        	.antMatchers("/admin/**").hasRole("ADMIN")
+	        	
 	        .and()
 	            
 	        .httpBasic()
