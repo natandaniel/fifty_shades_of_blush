@@ -19,8 +19,9 @@ class ArticleCard extends React.Component {
     }
   }
 
-  displayArticle(articleUri) {
+  displayArticle= articleUri => {
     axios.get(articleUri).then(article => {
+      console.log(article)
       this.props.displayedArticleHandler([article]);
       scrollIt(
         document.querySelector('.articleInfo'),
@@ -96,6 +97,7 @@ class ArticleCard extends React.Component {
     );
 
     return (
+
       <Card className="card" key={this.state.article.data._links.self.href}>
         <CardActionArea>
           <CardMedia
@@ -120,7 +122,7 @@ class ArticleCard extends React.Component {
           </CardContent>
         </CardActionArea>
         <CardActions>
-          <Button size="small" color="primary" onClick={() => this.displayArticle(this.state.article.config.url)}>
+          <Button size="small" color="primary" onClick={() => this.displayArticle(this.state.article.data._links.article.href)}>
             Read
             </Button>
           {editButton}
