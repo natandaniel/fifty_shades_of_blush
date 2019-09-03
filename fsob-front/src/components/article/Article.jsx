@@ -24,6 +24,7 @@ class Article extends React.Component {
   };
 
   getFilesAndParagraphs = () => {
+    console.log("getting")
     this.props.article.map(article => {
       return axios.get(article.data._links.files.href)
         .then(result => {
@@ -52,8 +53,8 @@ class Article extends React.Component {
     })
   }
 
-  componentDidUpdate() {
-    if (this.state.updateState) {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.article !== this.props.article) {
       this.loadFromServer()
     }
   }
@@ -67,7 +68,7 @@ class Article extends React.Component {
     }
     );
 
-    const mainImg =  this.state.files.filter(file => file.data.fileName.includes("main")).map(file => {
+    const mainImg = this.state.files.filter(file => file.data.fileName.includes("main")).map(file => {
       return <img key={file.data.fileName} className="img" src={`data:${file.data.fileType};base64,${file.data.data}`} width="55%" alt="article" />
     }
     );
