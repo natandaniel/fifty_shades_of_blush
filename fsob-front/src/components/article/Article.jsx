@@ -15,7 +15,6 @@ class Article extends React.Component {
     this.state = {
       paragraphs: [],
       files: [],
-      updateState: true
     }
   }
 
