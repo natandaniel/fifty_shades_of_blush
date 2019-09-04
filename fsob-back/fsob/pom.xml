@@ -54,6 +54,7 @@
 			<groupId>com.google.cloud.sql</groupId>
 			<artifactId>mysql-socket-factory</artifactId>
 			<version>1.0.3</version>
+			<scope>runtime</scope>
 		</dependency>
 
 		<!-- Dev tools and audit -->
