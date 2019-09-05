@@ -5,7 +5,7 @@ import { Card, CardActionArea, CardActions, CardContent, CardMedia, Button, Typo
 import '../../assets/css/components/article/articleCard.css';
 import { scrollIt } from '../../tools/scrolling/scrollIt';
 
-const API_URL = 'http://localhost:8080/api';
+const API_URL = '/api';
 const when = require('when');
 
 class ArticleCard extends React.Component {

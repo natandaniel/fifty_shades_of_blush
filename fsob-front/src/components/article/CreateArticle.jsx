@@ -8,7 +8,7 @@ import Footer from '../../components/footer/Footer.jsx'
 
 import '../../assets/css/components/article/createArticle.css'
 
-const API_URL = 'http://localhost:8080/api';
+const API_URL = '/api';
 
 const categories = [
 	{
