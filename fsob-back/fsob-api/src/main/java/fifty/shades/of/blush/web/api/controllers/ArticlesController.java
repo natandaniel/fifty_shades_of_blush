@@ -29,7 +29,7 @@ import fifty.shades.of.blush.data.repository.ArticleRepository;
 import fifty.shades.of.blush.domain.Article;
 import fifty.shades.of.blush.web.api.resource.ArticleResource;
 import fifty.shades.of.blush.web.api.resource.ArticleResourceAssembler;
-import fifty.shades.of.blush.web.api.services.ArticleFilesService;
+import fifty.shades.of.blush.web.api.services.ArticleFilesDatabaseService;
 import fifty.shades.of.blush.web.api.services.ArticleParagraphsService;
 import fifty.shades.of.blush.web.api.services.ArticlesService;
 
@@ -38,7 +38,7 @@ import fifty.shades.of.blush.web.api.services.ArticlesService;
 @CrossOrigin(origins = "*")
 public class ArticlesController {
 
-	private static final Logger logger = LoggerFactory.getLogger(ArticleFilesService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ArticleFilesDatabaseService.class);
 
 	@Autowired
 	private ArticleRepository articleRepo;
@@ -50,7 +50,7 @@ public class ArticlesController {
 	ArticleParagraphsService artParaService;
 
 	@Autowired
-	ArticleFilesService artFilesService;
+	ArticleFilesDatabaseService artFilesService;
 
 	@Autowired
 	EntityLinks entityLinks;

@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -31,18 +30,14 @@ public class ArticleFile {
 	@NotBlank
 	private String fileType;
 
-	@Lob
-	private byte[] data;
-
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "article_id")
 	private Article article;
 
-	public ArticleFile(String fileName, String fileType, byte[] data, Article article) {
+	public ArticleFile(String fileName, String fileType, Article article) {
 		this.fileName = fileName;
 		this.fileType = fileType;
-		this.data = data;
 		this.article = article;
 	}
 }

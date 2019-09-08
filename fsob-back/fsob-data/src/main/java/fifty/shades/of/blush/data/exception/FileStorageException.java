@@ -1,15 +1,13 @@
 package fifty.shades.of.blush.data.exception;
 
-import java.io.IOException;
+public class FileStorageException extends RuntimeException{
 
-public class FileStorageException extends Exception {
-	
-	public FileStorageException(String msg) {
-		
-	}
-	
-	public FileStorageException(String msg, IOException e) {
-		
-	}
+	public FileStorageException(String message) {
+	        super(message);
+	    }
+
+	    public FileStorageException(String message, Throwable cause) {
+	        super(message, cause);
+	    }
 
 }
