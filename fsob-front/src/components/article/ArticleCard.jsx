@@ -14,14 +14,14 @@ class ArticleCard extends React.Component {
     super(props);
     this.state = {
       article: this.props.article,
-      files: [],
+      fileMetadata: [],
+      fileResources: [],
       reload: true
     }
   }
 
-  displayArticle= articleUri => {
+  displayArticle = articleUri => {
     axios.get(articleUri).then(article => {
-      console.log(article)
       this.props.displayedArticleHandler([article]);
       scrollIt(
         document.querySelector('.articleInfo'),
@@ -45,12 +45,22 @@ class ArticleCard extends React.Component {
         )
       }).then(filePromises => {
         return when.all(filePromises)
-      }).then(files => {
+      }).then(fileMetadata => {
+
+        this.setState({ fileMetadata: fileMetadata });
+
+        return fileMetadata.map(file =>
+          axios.get(`${API_URL}/articles/downloadFile/${file.data.fileName}`)
+        )
+      }).then(filePromises => {
+        return when.all(filePromises)
+      }).then(fileResources => {
         this.setState({
-          files: files,
+          fileResources: fileResources,
         })
       })
   }
+
 
   componentDidMount() {
     this.loadFromServer()
@@ -76,12 +86,15 @@ class ArticleCard extends React.Component {
     if (window.confirm('Are you sure you wish to edit this article?')) {
       this.props.history.push({
         pathname: "/admin/edit",
-        state: {article: this.state.article.data}
+        state: { article: this.state.article.data }
       });
     }
   }
 
   render() {
+
+    console.log(this.state.fileMetadata);
+    console.log(this.state.fileResources);
 
     let editButton = <div />
     let deleteButton = <div />
@@ -91,8 +104,11 @@ class ArticleCard extends React.Component {
       deleteButton = <Button size="small" color="secondary" onClick={this.handleDelete}>Delete</Button>
     }
 
-    const mainImg = this.state.files.filter(file => file.data.fileName.includes("main")).map(file => {
-      return `data:${file.data.fileType};base64,${file.data.data}`
+    const mainImg = this.state.fileMetadata.filter(file => file.data.fileName.includes("main")).map(file => {
+
+      this.state.fileResources.filter(file => file.config.url.includes("main")).map(fileResource => {
+        return `data:${file.data.fileType};base64,${fileResource.data}`
+      })
     }
     );
 
