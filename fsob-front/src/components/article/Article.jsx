@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import '../../assets/css/components/article/article.css';
 
 const when = require('when');
+const API_URL = '/api';
 
 class Article extends React.Component {
 
@@ -14,7 +15,7 @@ class Article extends React.Component {
     super(props);
     this.state = {
       paragraphs: [],
-      files: [],
+      fileMetadata: []
     }
   }
 
@@ -32,7 +33,7 @@ class Article extends React.Component {
           )
         }).then(filePromises => {
           return when.all(filePromises)
-        }).then(files => {
+        }).then(fileMetadata => {
 
           axios.get(article.data._links.paragraphs.href)
             .then(result => {
@@ -43,9 +44,8 @@ class Article extends React.Component {
               return when.all(paragraphPromises)
             }).then(paragraphs => {
               this.setState({
-                files: files,
-                paragraphs: paragraphs,
-                updateState: false
+                fileMetadata: fileMetadata,
+                paragraphs: paragraphs
               })
             })
         })
@@ -67,8 +67,8 @@ class Article extends React.Component {
     }
     );
 
-    const mainImg = this.state.files.filter(file => file.data.fileName.includes("main")).map(file => {
-      return <img key={file.data.fileName} className="img" src={`data:${file.data.fileType};base64,${file.data.data}`} width="55%" alt="article" />
+    const mainImg = this.state.fileMetadata.filter(file => file.data.fileName.includes("main")).map(file => {
+      return <img key={file.data.fileName} className="img" src={`${API_URL}/articles/downloadFile/${file.data.fileName}`} width="55%" alt="article" />
     }
     );
 

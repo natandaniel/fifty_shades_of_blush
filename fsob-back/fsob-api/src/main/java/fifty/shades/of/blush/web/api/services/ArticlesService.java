@@ -29,24 +29,28 @@ public class ArticlesService {
 	ArticleParagraphsService artParaService;
 
 	@Autowired
-	ArticleFilesService artFilesService;
+	ArticleFilesDatabaseService artFilesDBService;
+
+	@Autowired
+	ArticleFilesFileSystemService articleFilesFSService;
 
 	@Transactional(rollbackOn = Exception.class)
-	public Article createArticle(String title, String subtitle, String category,  String body,
-			MultipartFile file) throws Exception {
+	public Article createArticle(String title, String subtitle, String category, String body, MultipartFile file)
+			throws Exception {
 
 		try {
 			artRepo.findByTitle(title).orElseThrow(() -> new ResourceNotFoundException("Article", "id", title));
 		} catch (ResourceNotFoundException e) {
 
 			Article newArticle = artRepo.save(new Article(title, subtitle, category));
-			
+
 			artParaService.insertArticleBody(body, newArticle.getId());
-			
-			if(file != null) {
-				artFilesService.uploadMainFile(file, newArticle.getId());
+
+			if (file != null) {
+				articleFilesFSService.storeMainFile(file, newArticle.getId());
+				artFilesDBService.storeMainFile(file, newArticle.getId());
 			}
-			
+
 			return newArticle;
 		}
 
@@ -79,7 +83,8 @@ public class ArticlesService {
 
 		if (file != null) {
 			artFilesRepo.deleteByArticleAndFileNameContaining(article, "main");
-			artFilesService.uploadMainFile(file, articleId);
+			articleFilesFSService.storeMainFile(file, articleId);
+			artFilesDBService.storeMainFile(file, articleId);
 		}
 
 		return artRepo.save(article);

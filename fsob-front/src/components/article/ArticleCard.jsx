@@ -14,14 +14,12 @@ class ArticleCard extends React.Component {
     super(props);
     this.state = {
       article: this.props.article,
-      files: [],
-      reload: true
+      fileMetadata: []
     }
   }
 
-  displayArticle= articleUri => {
+  displayArticle = articleUri => {
     axios.get(articleUri).then(article => {
-      console.log(article)
       this.props.displayedArticleHandler([article]);
       scrollIt(
         document.querySelector('.articleInfo'),
@@ -45,12 +43,11 @@ class ArticleCard extends React.Component {
         )
       }).then(filePromises => {
         return when.all(filePromises)
-      }).then(files => {
-        this.setState({
-          files: files,
-        })
+      }).then(fileMetadata => {
+        this.setState({ fileMetadata: fileMetadata });
       })
   }
+
 
   componentDidMount() {
     this.loadFromServer()
@@ -76,7 +73,7 @@ class ArticleCard extends React.Component {
     if (window.confirm('Are you sure you wish to edit this article?')) {
       this.props.history.push({
         pathname: "/admin/edit",
-        state: {article: this.state.article.data}
+        state: { article: this.state.article.data }
       });
     }
   }
@@ -91,8 +88,8 @@ class ArticleCard extends React.Component {
       deleteButton = <Button size="small" color="secondary" onClick={this.handleDelete}>Delete</Button>
     }
 
-    const mainImg = this.state.files.filter(file => file.data.fileName.includes("main")).map(file => {
-      return `data:${file.data.fileType};base64,${file.data.data}`
+    const mainImg = this.state.fileMetadata.filter(file => file.data.fileName.includes("main")).map(file => {
+      return `${API_URL}/articles/downloadFile/${file.data.fileName}`
     }
     );
 
@@ -104,7 +101,7 @@ class ArticleCard extends React.Component {
             component="img"
             alt={this.state.article.data.type}
             max-height="200px"
-            image={mainImg[0]}
+            image={mainImg}
             title={this.state.article.data.title}
           />
           <CardContent>

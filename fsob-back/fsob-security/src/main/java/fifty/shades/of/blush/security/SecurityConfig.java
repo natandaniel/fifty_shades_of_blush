@@ -67,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
         
-        	.headers().frameOptions().sameOrigin()
+        	.headers().frameOptions().disable()
         	
         	.and()
         	
@@ -82,6 +82,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	        	.antMatchers("/api/basicauth").authenticated()
 	        	
 	        	.antMatchers(HttpMethod.GET).permitAll()
+	     
+	        	.anyRequest().authenticated()
 	        	
 	        	.antMatchers("/admin/**").hasRole("ADMIN")
 	        	
