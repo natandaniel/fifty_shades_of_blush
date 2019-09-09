@@ -1,6 +1,5 @@
 package fifty.shades.of.blush.data.service;
 
-import java.io.IOException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import fifty.shades.of.blush.data.exception.FileStorageException;
 import fifty.shades.of.blush.data.exception.MyFileNotFoundException;
 import fifty.shades.of.blush.data.repository.ArticleFilesRepository;
 import fifty.shades.of.blush.domain.Article;
@@ -30,20 +28,11 @@ public class DBFileStorageService {
 			throw new Exception("Cannot upload same file");
 		}catch(NoSuchElementException e){
 			
-			try {
+			ArticleFile dbFile = new ArticleFile(fileName, articleFile.getContentType(),
+					article);
 
-				ArticleFile dbFile = new ArticleFile(fileName, articleFile.getContentType(), articleFile.getBytes(),
-						article);
-
-				return articleFilesRepo.save(dbFile);
-			} catch (IOException ex) {
-				throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
-			}
+			return articleFilesRepo.save(dbFile);
 		}
-		
-
-
-		
 	}
 
 	public ArticleFile getFile(String fileId) throws MyFileNotFoundException {
