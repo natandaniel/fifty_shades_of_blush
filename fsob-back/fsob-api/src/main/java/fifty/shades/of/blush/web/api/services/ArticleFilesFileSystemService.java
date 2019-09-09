@@ -8,10 +8,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -96,7 +93,7 @@ public class ArticleFilesFileSystemService {
 		}).collect(Collectors.toList());
 	}
 
-	public ByteArrayResource getFile(String fileName) throws IOException {
+	public Resource getFile(String fileName) throws IOException {
 
 		return FSFileStorageService.getFile(fileName, fileStorageLocation);
 	}

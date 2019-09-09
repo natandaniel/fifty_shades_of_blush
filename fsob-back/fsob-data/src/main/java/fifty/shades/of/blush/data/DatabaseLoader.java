@@ -39,9 +39,9 @@ public class DatabaseLoader implements CommandLineRunner {
 
 		try {
 
-			articleParagraphs.deleteAll();
-			articleFiles.deleteAll();
-			articles.deleteAll();
+//			articleParagraphs.deleteAll();
+//			articleFiles.deleteAll();
+//			articles.deleteAll();
 
 			users.findByUsername("jferAdmin")
 					.orElseThrow(() -> new ResourceNotFoundException("User", "username", "jferAdmin"));

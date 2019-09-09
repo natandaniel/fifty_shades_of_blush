@@ -73,10 +73,10 @@ public class ArticleFilesController {
 	}
 
 	@GetMapping("/downloadFile/{fileName}")
-	public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String fileName, HttpServletRequest request)
+	public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request)
 			throws MyFileNotFoundException, IOException {
 
-		ByteArrayResource resource = articleFilesFSService.getFile(fileName);
+		Resource resource = articleFilesFSService.getFile(fileName);
 
 		String contentType = null;
 		try {

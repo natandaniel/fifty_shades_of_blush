@@ -14,9 +14,7 @@ class ArticleCard extends React.Component {
     super(props);
     this.state = {
       article: this.props.article,
-      fileMetadata: [],
-      fileResources: [],
-      reload: true
+      fileMetadata: []
     }
   }
 
@@ -46,18 +44,7 @@ class ArticleCard extends React.Component {
       }).then(filePromises => {
         return when.all(filePromises)
       }).then(fileMetadata => {
-
         this.setState({ fileMetadata: fileMetadata });
-
-        return fileMetadata.map(file =>
-          axios.get(`${API_URL}/articles/downloadFile/${file.data.fileName}`)
-        )
-      }).then(filePromises => {
-        return when.all(filePromises)
-      }).then(fileResources => {
-        this.setState({
-          fileResources: fileResources,
-        })
       })
   }
 
@@ -93,9 +80,6 @@ class ArticleCard extends React.Component {
 
   render() {
 
-    console.log(this.state.fileMetadata);
-    console.log(this.state.fileResources);
-
     let editButton = <div />
     let deleteButton = <div />
 
@@ -105,10 +89,7 @@ class ArticleCard extends React.Component {
     }
 
     const mainImg = this.state.fileMetadata.filter(file => file.data.fileName.includes("main")).map(file => {
-
-      this.state.fileResources.filter(file => file.config.url.includes("main")).map(fileResource => {
-        return `data:${file.data.fileType};base64,${fileResource.data}`
-      })
+      return `${API_URL}/articles/downloadFile/${file.data.fileName}`
     }
     );
 
@@ -120,7 +101,7 @@ class ArticleCard extends React.Component {
             component="img"
             alt={this.state.article.data.type}
             max-height="200px"
-            image={mainImg[0]}
+            image={mainImg}
             title={this.state.article.data.title}
           />
           <CardContent>
